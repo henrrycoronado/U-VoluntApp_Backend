@@ -53,8 +53,19 @@ public class ActivityRepository : IActivityRepository
 
     public async Task UpdateAsync(Activity activity)
     {
-        var model = DomainPersistenceMapper.ToPersistence(activity);
-        _context.Activities.Update(model);
+        var existing = await _context.Activities
+            .FirstOrDefaultAsync(a => a.UvaCode == activity.UvaCode)
+            ?? throw new InvalidOperationException("Actividad no encontrada para actualizar");
+
+        existing.Name = activity.Name;
+        existing.Description = activity.Description;
+        existing.StartDate = activity.StartDate;
+        existing.EndDate = activity.EndDate;
+        existing.LocationLatitude = activity.LocationLatitude;
+        existing.LocationLongitude = activity.LocationLongitude;
+        existing.StateCode = activity.StateCode;
+        existing.UpdatedAt = activity.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 

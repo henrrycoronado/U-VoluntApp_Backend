@@ -71,8 +71,18 @@ public class VolProgramRepository : IVolProgramRepository
 
     public async Task UpdateAsync(VolProgram program)
     {
-        var model = DomainPersistenceMapper.ToPersistence(program);
-        _context.VolPrograms.Update(model);
+        var existing = await _context.VolPrograms
+            .FirstOrDefaultAsync(p => p.UvaCode == program.UvaCode)
+            ?? throw new InvalidOperationException("Programa no encontrado para actualizar");
+
+        existing.Name = program.Name;
+        existing.Description = program.Description;
+        existing.Acronym = program.Acronym;
+        existing.Color = program.Color;
+        existing.ProfilePhotoUrl = program.ProfilePhotoUrl;
+        existing.CoverPhotoUrl = program.CoverPhotoUrl;
+        existing.StateCode = program.StateCode;
+
         await _context.SaveChangesAsync();
     }
 

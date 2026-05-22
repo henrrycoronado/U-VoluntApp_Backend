@@ -53,8 +53,20 @@ public class ProfileRepository : IProfileRepository
 
     public async Task UpdateAsync(Profile profile)
     {
-        var model = DomainPersistenceMapper.ToPersistence(profile);
-        _context.Profiles.Update(model);
+        var existing = await _context.Profiles
+            .FirstOrDefaultAsync(p => p.UvaCode == profile.UvaCode)
+            ?? throw new InvalidOperationException("Perfil no encontrado para actualizar");
+
+        existing.FirstName = profile.FirstName;
+        existing.LastName = profile.LastName;
+        existing.Phone = profile.Phone;
+        existing.AddressLocation = profile.AddressLocation;
+        existing.CareerCode = profile.CareerCode;
+        existing.PersonalGoalHours = profile.PersonalGoalHours;
+        existing.UpdatedAt = profile.UpdatedAt;
+        existing.PhotoUrl = profile.PhotoUrl;
+        existing.StateCode = profile.StateCode;
+
         await _context.SaveChangesAsync();
     }
 

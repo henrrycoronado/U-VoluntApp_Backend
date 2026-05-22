@@ -73,8 +73,13 @@ public class EnrollmentRepository : IEnrollmentRepository
 
     public async Task UpdateAsync(Enrollment enrollment)
     {
-        var model = DomainPersistenceMapper.ToPersistence(enrollment);
-        _context.Enrollments.Update(model);
+        var existing = await _context.Enrollments
+            .FirstOrDefaultAsync(e => e.UvaCode == enrollment.UvaCode)
+            ?? throw new InvalidOperationException("Inscripción no encontrada para actualizar");
+
+        existing.StateCode = enrollment.StateCode;
+        existing.ActivityGroupCode = enrollment.ActivityGroupCode;
+
         await _context.SaveChangesAsync();
     }
 }
