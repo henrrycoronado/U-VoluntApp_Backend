@@ -32,8 +32,20 @@ public class ProgramContentRepository : IProgramContentRepository
 
     public async Task UpdateAsync(ProgramContent content)
     {
-        var model = DomainPersistenceMapper.ToPersistence(content);
-        _context.ProgramContents.Update(model);
+        var existing = await _context.ProgramContents
+            .FirstOrDefaultAsync(c => c.UvaCode == content.UvaCode)
+            ?? throw new InvalidOperationException("Contenido de programa no encontrado para actualizar");
+
+        existing.Description = content.Description;
+        existing.ActivitiesDescription = content.ActivitiesDescription;
+        existing.ScheduleInfo = content.ScheduleInfo;
+        existing.LeadershipInfo = content.LeadershipInfo;
+        existing.ContactInfo = content.ContactInfo;
+        existing.MissionStatement = content.MissionStatement;
+        existing.ProfilePhotoUrl = content.ProfilePhotoUrl;
+        existing.CoverPhotoUrl = content.CoverPhotoUrl;
+        existing.UpdatedAt = content.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 }

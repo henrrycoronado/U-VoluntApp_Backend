@@ -100,8 +100,13 @@ public class GroupEnrollmentRepository : IGroupEnrollmentRepository
 
     public async Task UpdateAsync(GroupEnrollment groupEnrollment)
     {
-        var model = DomainPersistenceMapper.ToPersistence(groupEnrollment);
-        _context.GroupEnrollments.Update(model);
+        var existing = await _context.GroupEnrollments
+            .FirstOrDefaultAsync(ge => ge.UvaCode == groupEnrollment.UvaCode)
+            ?? throw new InvalidOperationException("Inscripción de grupo no encontrada para actualizar");
+
+        existing.StateCode = groupEnrollment.StateCode;
+        existing.UpdatedAt = groupEnrollment.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 

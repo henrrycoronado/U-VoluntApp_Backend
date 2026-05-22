@@ -78,7 +78,7 @@ public class EnrollmentRepository : IEnrollmentRepository
             ?? throw new InvalidOperationException("Inscripción no encontrada para actualizar");
 
         existing.StateCode = enrollment.StateCode;
-        existing.ActivityGroupCode = enrollment.ActivityGroupCode;
+        existing.UpdatedAt = enrollment.UpdatedAt;
 
         await _context.SaveChangesAsync();
     }

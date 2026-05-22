@@ -63,6 +63,7 @@ public class ActivityRepository : IActivityRepository
         existing.EndDate = activity.EndDate;
         existing.LocationLatitude = activity.LocationLatitude;
         existing.LocationLongitude = activity.LocationLongitude;
+        existing.RegistrationRadiusMeters = activity.RegistrationRadiusMeters;
         existing.StateCode = activity.StateCode;
         existing.UpdatedAt = activity.UpdatedAt;
 

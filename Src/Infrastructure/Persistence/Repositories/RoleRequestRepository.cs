@@ -92,8 +92,18 @@ public class RoleRequestRepository : IRoleRequestRepository
 
     public async Task UpdateAsync(RoleRequest roleRequest)
     {
-        var model = DomainPersistenceMapper.ToPersistence(roleRequest);
-        _context.RoleRequests.Update(model);
+        var existing = await _context.RoleRequests
+            .FirstOrDefaultAsync(r => r.UvaCode == roleRequest.UvaCode)
+            ?? throw new InvalidOperationException("Solicitud de rol no encontrada para actualizar");
+
+        existing.RequestedRoleId = roleRequest.RequestedRoleCode;
+        existing.Reason = roleRequest.Reason;
+        existing.DurationInMonths = roleRequest.DurationInMonths;
+        existing.StateCode = roleRequest.StateCode;
+        existing.ResolvedByProfileCode = roleRequest.ResolvedByProfileCode;
+        existing.ResolvedAt = roleRequest.ResolvedAt;
+        existing.UpdatedAt = roleRequest.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 

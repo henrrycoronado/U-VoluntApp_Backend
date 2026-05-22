@@ -32,8 +32,19 @@ public class ActivityRuleRepository : IActivityRuleRepository
 
     public async Task UpdateAsync(ActivityRule rule)
     {
-        var model = DomainPersistenceMapper.ToPersistence(rule);
-        _context.ActivityRules.Update(model);
+        var existing = await _context.ActivityRules
+            .FirstOrDefaultAsync(r => r.UvaCode == rule.UvaCode)
+            ?? throw new InvalidOperationException("Regla de actividad no encontrada para actualizar");
+
+        existing.RequiresEnrollment = rule.RequiresEnrollment;
+        existing.EnrollmentDeadline = rule.EnrollmentDeadline;
+        existing.RequiresApproval = rule.RequiresApproval;
+        existing.TotalCapacity = rule.TotalCapacity;
+        existing.CostAmount = rule.CostAmount;
+        existing.CountsVolunteerHours = rule.CountsVolunteerHours;
+        existing.PhotoUrl = rule.PhotoUrl;
+        existing.UpdatedAt = rule.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 }

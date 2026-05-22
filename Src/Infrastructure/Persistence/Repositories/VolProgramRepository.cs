@@ -76,12 +76,9 @@ public class VolProgramRepository : IVolProgramRepository
             ?? throw new InvalidOperationException("Programa no encontrado para actualizar");
 
         existing.Name = program.Name;
-        existing.Description = program.Description;
         existing.Acronym = program.Acronym;
-        existing.Color = program.Color;
-        existing.ProfilePhotoUrl = program.ProfilePhotoUrl;
-        existing.CoverPhotoUrl = program.CoverPhotoUrl;
         existing.StateCode = program.StateCode;
+        existing.UpdatedAt = program.UpdatedAt;
 
         await _context.SaveChangesAsync();
     }

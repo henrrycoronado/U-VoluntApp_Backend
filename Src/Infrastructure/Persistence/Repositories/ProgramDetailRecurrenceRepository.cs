@@ -32,8 +32,18 @@ public class ProgramDetailRecurrenceRepository : IProgramDetailRecurrenceReposit
 
     public async Task UpdateAsync(ActivityRecurrenceDetail detail)
     {
-        var model = DomainPersistenceMapper.ToPersistence(detail);
-        _context.ActivityRecurrenceDetails.Update(model);
+        var existing = await _context.ActivityRecurrenceDetails
+            .FirstOrDefaultAsync(d => d.UvaCode == detail.UvaCode)
+            ?? throw new InvalidOperationException("Detalle de recurrencia no encontrado para actualizar");
+
+        existing.DayOfWeek = detail.DayOfWeek;
+        existing.DayOfMonth = detail.DayOfMonth;
+        existing.WeekOfMonth = detail.WeekOfMonth;
+        existing.StartHour = detail.StartHour;
+        existing.EndHour = detail.EndHour;
+        existing.StateCode = detail.StateCode;
+        existing.UpdatedAt = detail.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 }

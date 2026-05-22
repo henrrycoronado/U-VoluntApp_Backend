@@ -53,8 +53,18 @@ public class ActivityGroupRepository : IActivityGroupRepository
 
     public async Task UpdateAsync(ActivityGroup group)
     {
-        var model = DomainPersistenceMapper.ToPersistence(group);
-        _context.ActivityGroups.Update(model);
+        var existing = await _context.ActivityGroups
+            .FirstOrDefaultAsync(g => g.UvaCode == group.UvaCode)
+            ?? throw new InvalidOperationException("Grupo de actividad no encontrado para actualizar");
+
+        existing.Name = group.Name;
+        existing.Details = group.Details;
+        existing.TotalCapacity = group.TotalCapacity;
+        existing.StartDate = group.StartDate;
+        existing.EndDate = group.EndDate;
+        existing.StateCode = group.StateCode;
+        existing.UpdatedAt = group.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 

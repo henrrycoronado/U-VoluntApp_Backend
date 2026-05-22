@@ -133,8 +133,18 @@ public class TrackingLogRepository : ITrackingLogRepository
 
     public async Task UpdateAsync(TrackingLog log)
     {
-        var model = DomainPersistenceMapper.ToPersistence(log);
-        _context.TrackingLogs.Update(model);
+        var existing = await _context.TrackingLogs
+            .FirstOrDefaultAsync(t => t.UvaCode == log.UvaCode)
+            ?? throw new InvalidOperationException("Registro de seguimiento no encontrado para actualizar");
+
+        existing.EntryTime = log.EntryTime;
+        existing.ExitTime = log.ExitTime;
+        existing.CalculatedHours = log.CalculatedHours;
+        existing.StateCode = log.StateCode;
+        existing.CheckInRegisteredByCode = log.CheckInRegisteredByCode;
+        existing.CheckOutRegisteredByCode = log.CheckOutRegisteredByCode;
+        existing.UpdatedAt = log.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 

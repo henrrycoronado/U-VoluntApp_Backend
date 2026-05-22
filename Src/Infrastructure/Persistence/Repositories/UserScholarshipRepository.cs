@@ -131,8 +131,18 @@ public class UserScholarshipRepository : IUserScholarshipRepository
 
     public async Task UpdateAsync(UserScholarship scholarship)
     {
-        var model = DomainPersistenceMapper.ToPersistence(scholarship);
-        _context.UserScholarships.Update(model);
+        var existing = await _context.UserScholarships
+            .FirstOrDefaultAsync(s => s.UvaCode == scholarship.UvaCode)
+            ?? throw new InvalidOperationException("Beca no encontrada para actualizar");
+
+        existing.EvaluatorProfileCode = scholarship.EvaluatorProfileCode;
+        existing.Reason = scholarship.Reason;
+        existing.RequiredHours = scholarship.RequiredHours;
+        existing.StartDate = scholarship.StartDate;
+        existing.EndDate = scholarship.EndDate;
+        existing.StateCode = scholarship.StateCode;
+        existing.UpdatedAt = scholarship.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 

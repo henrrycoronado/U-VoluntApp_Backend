@@ -53,8 +53,15 @@ public class ProgramRecurrenceRepository : IProgramRecurrenceRepository
 
     public async Task UpdateAsync(ActivityRecurrencePattern pattern)
     {
-        var model = DomainPersistenceMapper.ToPersistence(pattern);
-        _context.ActivityRecurrencePatterns.Update(model);
+        var existing = await _context.ActivityRecurrencePatterns
+            .FirstOrDefaultAsync(p => p.UvaCode == pattern.UvaCode)
+            ?? throw new InvalidOperationException("Patrón de recurrencia no encontrado para actualizar");
+
+        existing.Name = pattern.Name;
+        existing.RecurrenceType = pattern.RecurrenceType;
+        existing.StateCode = pattern.StateCode;
+        existing.UpdatedAt = pattern.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 

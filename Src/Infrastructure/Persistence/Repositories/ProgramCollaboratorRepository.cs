@@ -59,8 +59,14 @@ public class ProgramCollaboratorRepository : IProgramCollaboratorRepository
 
     public async Task UpdateAsync(ProgramCollaborator collaborator)
     {
-        var model = DomainPersistenceMapper.ToPersistence(collaborator);
-        _context.ProgramCollaborators.Update(model);
+        var existing = await _context.ProgramCollaborators
+            .FirstOrDefaultAsync(c => c.UvaCode == collaborator.UvaCode)
+            ?? throw new InvalidOperationException("Colaborador no encontrado para actualizar");
+
+        existing.StateCode = collaborator.StateCode;
+        existing.AssignedByProfileCode = collaborator.AssignedByProfileCode;
+        existing.UpdatedAt = collaborator.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 

@@ -46,8 +46,13 @@ public class EvidenceRepository : IEvidenceRepository
 
     public async Task UpdateAsync(Evidence evidence)
     {
-        var model = DomainPersistenceMapper.ToPersistence(evidence);
-        _context.Evidences.Update(model);
+        var existing = await _context.Evidences
+            .FirstOrDefaultAsync(e => e.UvaCode == evidence.UvaCode)
+            ?? throw new InvalidOperationException("Evidencia no encontrada para actualizar");
+
+        existing.Observations = evidence.Observations;
+        existing.UpdatedAt = evidence.UpdatedAt;
+
         await _context.SaveChangesAsync();
     }
 
