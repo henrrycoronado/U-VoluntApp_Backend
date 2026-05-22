@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: |
+            tests/tests.csproj
+            U-VoluntApp_Backend.csproj
+
+      - name: Restore tests
+        run: dotnet restore tests/tests.csproj
+
+      - name: Build tests
+        run: dotnet build tests/tests.csproj --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test tests/tests.csproj --configuration Release --no-build --no-restore --verbosity normal
+
+      - name: Validate Docker compose
+        run: docker compose config

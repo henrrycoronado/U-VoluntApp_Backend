@@ -1,0 +1,8 @@
+#!/bin/sh
+echo "🔍 Verificando formato del código..."
+dotnet format --verify-no-changes
+if [ $? -ne 0 ]; then
+  echo "❌ Ejecuta 'dotnet format' y vuelve a commitear."
+  exit 1
+fi
+echo "✅ Formato correcto."
