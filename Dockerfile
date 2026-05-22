@@ -1,18 +1,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY ["UVoluntapp.API/UVoluntapp.API.csproj", "UVoluntapp.API/"]
-RUN dotnet restore "UVoluntapp.API/UVoluntapp.API.csproj"
+COPY ["U-VoluntApp_Backend.csproj", "./"]
+RUN dotnet restore "U-VoluntApp_Backend.csproj"
 
 COPY . .
-WORKDIR "/src/UVoluntapp.API"
-RUN dotnet publish "UVoluntapp.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "U-VoluntApp_Backend.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
-COPY --from=build /app/publish .
 
+ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "UVoluntapp.API.dll"]
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "U-VoluntApp_Backend.dll"]

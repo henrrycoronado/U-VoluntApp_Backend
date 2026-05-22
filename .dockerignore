@@ -1,0 +1,14 @@
+.git
+.github
+.husky
+.vs
+bin
+obj
+docs/.env
+docs/.env.*
+.env
+.env.*
+*.user
+*.suo
+*.rsuser
+*.csproj.user
