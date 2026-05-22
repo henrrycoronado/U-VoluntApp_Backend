@@ -1,0 +1,8 @@
+#!/bin/sh
+echo "🔨 Verificando compilación..."
+dotnet build --no-incremental -c Release
+if [ $? -ne 0 ]; then
+  echo "❌ El proyecto no compila. Corrige antes de hacer push."
+  exit 1
+fi
+echo "✅ Build exitoso."

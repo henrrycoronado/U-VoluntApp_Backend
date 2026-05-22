@@ -1,0 +1,12 @@
+#!/bin/sh
+commit_msg=$(cat "$1")
+pattern="^(feat|fix|chore|refactor|docs|test)(\(.+\))?: .{1,80}$"
+
+if ! echo "$commit_msg" | grep -qE "$pattern"; then
+  echo "❌ Mensaje inválido: '$commit_msg'"
+  echo "   Formato: tipo(módulo): descripción"
+  echo "   Tipos:   feat | fix | chore | refactor | docs | test"
+  echo "   Ejemplo: feat(auth): implement shadow provisioning"
+  exit 1
+fi
+echo "✅ Mensaje válido."
