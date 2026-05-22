@@ -24,9 +24,9 @@ U_VoluntApp_Backend/
 
 ## Requisitos previos
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - Credenciales de Supabase para Storage (URL y anon key)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download) solo si vas a ejecutar fuera de Docker o crear migraciones manualmente
 
 ## Configuración inicial
 
@@ -43,14 +43,17 @@ dotnet husky install
 cp .env.example .env
 ```
 
-Editar el `.env` con los valores reales:
+Editar el `.env` con los valores reales. Si vas a usar Docker local, deja `DB_CONNECTION_STRING` apuntando a `postgres_db` y no a `localhost`:
 
 ```env
-# Base de datos
-DB_CONNECTION_STRING=Host=localhost;Port=5432;Database=uvoluntapp;Username=uvoluntapp_testUser;Password=TU_PASSWORD
+# Base de datos para Docker local
+POSTGRES_USER=uvoluntapp
+POSTGRES_PASSWORD=change_me_local
+POSTGRES_DB=uvoluntapp
+DB_CONNECTION_STRING=Host=postgres_db;Port=5432;Database=uvoluntapp;Username=uvoluntapp;Password=change_me_local
 
 # JWT
-JWT_SECRET=una_clave_secreta_minimo_32_caracteres
+JWT_SECRET=dev_secret_local_minimo_32_caracteres
 JWT_ISSUER=U_VoluntApp_Backend.Src
 JWT_AUDIENCE=UVoluntapp.Client
 JWT_EXPIRY_MINUTES=60
@@ -59,40 +62,62 @@ JWT_EXPIRY_MINUTES=60
 SUPABASE_URL=https://tu-proyecto.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 
-# Storage configurable (evita rutas quemadas)
-# Base publica para construir URLs (si no se define, se deriva desde SUPABASE_URL)
-STORAGE_PUBLIC_BASE_URL=https://tu-proyecto.supabase.co/storage/v1/object/public
-# Bucket de archivos por defecto (NO se escribe aqui)
-STORAGE_DEFAULTS_BUCKET=Defaults
-# Bucket de carga de archivos nuevos (el backend solo sube aqui)
-STORAGE_UPLOAD_BUCKET=CreatedFiles
-# Carpetas internas dentro de STORAGE_UPLOAD_BUCKET
-STORAGE_FOLDER_PROFILES=profiles
-STORAGE_FOLDER_EVIDENCES=evidences
-
-# SuperUsuario del sistema (mínimo 8 caracteres, al menos 1 dígito)
+# SuperUsuario del sistema
 SUPERUSER_EMAIL=admin@tu-app.com
 SUPERUSER_PASSWORD=Admin1234
+
+# Entorno local
+ASPNETCORE_ENVIRONMENT=Development
+ASPNETCORE_URLS=http://+:8080
+ENABLE_HTTPS_REDIRECTION=false
+
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173,http://localhost:4200
 ```
 
-### 3. Levantar la base de datos
+### 3. Levantar el stack local con Docker
 ```bash
-cd docs
-docker compose up -d
-cd ..
+docker compose up -d --build
 ```
 
-### 4. Aplicar migraciones
+La API quedara disponible en `http://localhost:8080` y Swagger en `http://localhost:8080/swagger` mientras el entorno sea `Development`.
+PostgreSQL queda accesible solo para la API dentro de la red de Docker; no se publica el puerto `5432` al host.
+
+### 4. Plantilla para VPS
+Si quieres desplegar en un VPS usando una imagen ya construida por GitHub Actions, usa `docker-compose.prod.yml`.
+
+Este archivo no compila la aplicación; solo consume la imagen publicada en GHCR. Antes de levantarlo, define en tu `.env` estas variables adicionales:
+
+```env
+API_IMAGE=ghcr.io/henrrycoronado/u-voluntapp-backend:latest
+ASPNETCORE_ENVIRONMENT=Production
+ASPNETCORE_URLS=http://+:8080
+ENABLE_HTTPS_REDIRECTION=false
+```
+
+Luego puedes iniciar el stack con:
+
 ```bash
-dotnet ef database update
+docker compose --env-file .env.prod -f docker-compose.prod.yml up -d
 ```
 
-### 5. Ejecutar el proyecto
+Si prefieres mantener un archivo separado, crea `.env.prod` a partir de tu `.env` local y sobrescribe `API_IMAGE`, `ASPNETCORE_ENVIRONMENT` y `ENABLE_HTTPS_REDIRECTION` para producción.
+
+En este flujo, Nginx puede hacer el proxy inverso y manejar HTTP/HTTPS, mientras la API se mantiene en HTTP interno.
+
+### 5. Reinicio limpio del stack
 ```bash
-dotnet run
+docker compose down -v
+docker compose up -d --build
 ```
 
-Swagger disponible en: `http://localhost:PUERTO_DESIGNADO/swagger`
+### 6. Ejecutar fuera de Docker, si lo necesitas
+Si quieres correr la API con `dotnet run`, cambia `DB_CONNECTION_STRING` a `Host=localhost;...` en tu `.env` local o usa un perfil distinto para desarrollo sin contenedores.
+
+### 7. GitHub Actions
+
+- `CI` valida restauración, compilación y la configuración del compose en cada pull request y push a `develop` o `master`.
+- `CD` construye la imagen Docker y la publica en GHCR con dos etiquetas: una por rama (`develop` o `latest`) y otra por commit SHA.
+- El VPS no necesita compilar nada; solo debe hacer pull de la imagen y levantar el compose de producción.
 
 ### Generar migraciones (EF Core)
 
@@ -174,15 +199,14 @@ Grupos soportados:
 
 ---
 
-## 10. Protocolo de reinicio limpio
+### 10. Protocolo de reinicio limpio
 
 Usar cuando se quiera borrar todos los datos y empezar desde cero:
 ```bash
 cd docs
 docker compose down -v
-docker compose up -d
+docker compose up -d --build
 cd ..
-dotnet ef database update
 ```
 
 ---

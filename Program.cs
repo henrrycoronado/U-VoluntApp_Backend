@@ -214,7 +214,13 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<RequestValidationMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseHttpsRedirection();
+
+var enableHttpsRedirection = builder.Configuration.GetValue("ENABLE_HTTPS_REDIRECTION", builder.Environment.IsDevelopment());
+if (enableHttpsRedirection)
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors("AllowSpecificOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
