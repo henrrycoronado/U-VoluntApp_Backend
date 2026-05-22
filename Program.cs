@@ -7,7 +7,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QuestPDF.Infrastructure;
 using Supabase;
-using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
 using U_VoluntApp_Backend.Src.Application.Services;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
@@ -61,7 +60,11 @@ builder.Services.AddControllers()
                 message = "Credenciales o datos de acceso inválidos.";
             }
 
-            return new BadRequestObjectResult(ApiResponse<object>.Fail(message));
+            return new BadRequestObjectResult(new
+            {
+                error = message,
+                code = StatusCodes.Status400BadRequest,
+            });
         };
     });
 builder.Services.AddEndpointsApiExplorer();

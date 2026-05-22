@@ -33,7 +33,7 @@ public class ProgramCollaboratorController : ControllerBase
     {
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.VolunteerRole);
         var result = await _collaboratorService.GetByProgramIdAsync(programCode, requesterId, requesterRole);
-        return Ok(ApiResponse<ProgramCollaboratorListDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("{uvaCode}")]
@@ -42,10 +42,14 @@ public class ProgramCollaboratorController : ControllerBase
         var result = await _collaboratorService.GetByCodeAsync(uvaCode);
         if (result is null)
         {
-            return NotFound(ApiResponse<object>.Fail("Colaborador no encontrado"));
+            return NotFound(new
+            {
+                error = "Colaborador no encontrado",
+                code = StatusCodes.Status404NotFound,
+            });
         }
 
-        return Ok(ApiResponse<ProgramCollaboratorResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPut("{uvaCode}")]
@@ -53,7 +57,7 @@ public class ProgramCollaboratorController : ControllerBase
     {
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.VolunteerRole);
         var result = await _collaboratorService.UpdateAsync(uvaCode, dto, requesterId, requesterRole);
-        return Ok(ApiResponse<ProgramCollaboratorResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpDelete("{uvaCode}")]

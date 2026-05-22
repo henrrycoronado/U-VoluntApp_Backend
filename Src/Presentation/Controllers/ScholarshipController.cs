@@ -23,7 +23,7 @@ public class ScholarshipController : ControllerBase
     {
         var profileCode = ControllerHelper.GetProfileId(User);
         var result = await _scholarshipService.RequestAsync(dto, profileCode);
-        return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, ApiResponse<ScholarshipResponseDto>.Ok(result));
+        return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
     }
 
     [HttpPost("assign")]
@@ -32,14 +32,14 @@ public class ScholarshipController : ControllerBase
         ControllerHelper.EnsureRole(User, "Admin");
         var evaluatorCode = ControllerHelper.GetProfileId(User);
         var result = await _scholarshipService.AssignApprovedAsync(dto, evaluatorCode);
-        return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, ApiResponse<ScholarshipResponseDto>.Ok(result));
+        return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
     }
 
     [HttpGet("{uvaCode}")]
     public async Task<IActionResult> GetByCode(string uvaCode)
     {
         var result = await _scholarshipService.GetByCodeAsync(uvaCode);
-        return Ok(ApiResponse<ScholarshipResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("mine")]
@@ -47,7 +47,7 @@ public class ScholarshipController : ControllerBase
     {
         var profileCode = ControllerHelper.GetProfileId(User);
         var result = await _scholarshipService.GetMyAsync(profileCode);
-        return Ok(ApiResponse<List<ScholarshipResponseDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("by-profile/{profileCode}")]
@@ -55,7 +55,7 @@ public class ScholarshipController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, "Admin");
         var result = await _scholarshipService.GetByProfileCodeAsync(profileCode);
-        return Ok(ApiResponse<List<ScholarshipResponseDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPatch("{uvaCode}/review")]
@@ -64,7 +64,7 @@ public class ScholarshipController : ControllerBase
         ControllerHelper.EnsureRole(User, "Admin");
         var evaluatorCode = ControllerHelper.GetProfileId(User);
         var result = await _scholarshipService.ReviewAsync(uvaCode, dto, evaluatorCode);
-        return Ok(ApiResponse<ScholarshipResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPatch("{uvaCode}/complete")]
@@ -73,6 +73,6 @@ public class ScholarshipController : ControllerBase
         ControllerHelper.EnsureRole(User, "Admin");
         var evaluatorCode = ControllerHelper.GetProfileId(User);
         var result = await _scholarshipService.CompleteAsync(uvaCode, dto, evaluatorCode);
-        return Ok(ApiResponse<ScholarshipResponseDto>.Ok(result));
+        return Ok(result);
     }
 }

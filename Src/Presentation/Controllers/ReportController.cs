@@ -24,7 +24,7 @@ public class ReportController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetScholarshipPerformanceAsync();
-        return Ok(ApiResponse<List<ScholarshipPerformanceDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("scholarships/by-type/{scholarshipType}")]
@@ -32,7 +32,7 @@ public class ReportController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetScholarshipPerformanceByTypeAsync(scholarshipType);
-        return Ok(ApiResponse<List<ScholarshipPerformanceDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("scholarships/pdf")]
@@ -53,7 +53,7 @@ public class ReportController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetProgramAnalyticsAsync();
-        return Ok(ApiResponse<List<ProgramAnalyticsDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("programs/{programCode}")]
@@ -61,7 +61,7 @@ public class ReportController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetProgramAnalyticsByCodeAsync(programCode);
-        return Ok(ApiResponse<ProgramAnalyticsDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("activities")]
@@ -69,7 +69,7 @@ public class ReportController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetActivityAnalyticsAsync();
-        return Ok(ApiResponse<List<ActivityAnalyticsDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("activities/by-program/{programCode}")]
@@ -77,7 +77,7 @@ public class ReportController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetActivityAnalyticsByProgramAsync(programCode);
-        return Ok(ApiResponse<List<ActivityAnalyticsDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("volunteers")]
@@ -85,7 +85,7 @@ public class ReportController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetVolunteerHistoryAsync();
-        return Ok(ApiResponse<List<VolunteerHistoryDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("volunteers/{profileCode}")]
@@ -93,7 +93,7 @@ public class ReportController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetVolunteerHistoryByProfileCodeAsync(profileCode);
-        return Ok(ApiResponse<VolunteerHistoryDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPost("refresh")]
@@ -101,6 +101,6 @@ public class ReportController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         await _reportService.RefreshAnalyticsAsync();
-        return Ok(ApiResponse<string>.Ok("Vistas materializadas actualizadas correctamente"));
+        return Ok("Vistas materializadas actualizadas correctamente");
     }
 }

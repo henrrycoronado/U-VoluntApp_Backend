@@ -24,14 +24,14 @@ public class ProfileController : ControllerBase
     {
         var profileCode = ControllerHelper.GetProfileId(User);
         var result = await _profileService.GetByCodeAsync(profileCode);
-        return Ok(ApiResponse<ProfileResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("{uvaCode}")]
     public async Task<IActionResult> GetByCode(string uvaCode)
     {
         var result = await _profileService.GetByCodeAsync(uvaCode);
-        return Ok(ApiResponse<ProfileResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPut("me")]
@@ -39,7 +39,7 @@ public class ProfileController : ControllerBase
     {
         var profileCode = ControllerHelper.GetProfileId(User);
         var result = await _profileService.UpdateAsync(profileCode, dto);
-        return Ok(ApiResponse<ProfileResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPatch("me/photo")]
@@ -48,7 +48,7 @@ public class ProfileController : ControllerBase
     {
         var profileCode = ControllerHelper.GetProfileId(User);
         var result = await _profileService.UpdatePhotoAsync(profileCode, photo);
-        return Ok(ApiResponse<ProfileResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpDelete("me")]

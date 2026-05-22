@@ -22,78 +22,78 @@ public class RoleRequestController : ControllerBase
 
     [HttpPost("coordinator")]
     [Consumes("application/json")]
-    public async Task<ActionResult<ApiResponse<RoleRequestResponseDto>>> RequestCoordinator(
+    public async Task<ActionResult<RoleRequestResponseDto>> RequestCoordinator(
         [FromBody] CreateRoleRequestDto dto)
     {
         var requesterCode = ControllerHelper.GetProfileId(User);
         var result = await _roleRequestService.RequestCoordinatorAsync(dto, requesterCode);
-        return Ok(new ApiResponse<RoleRequestResponseDto> { Success = true, Data = result, Message = "Solicitud para Coordinador enviada exitosamente." });
+        return Ok(result);
     }
 
     [HttpPost("admin")]
     [Consumes("application/json")]
     [Authorize(Roles = "Coordinator,Admin,SuperUser")]
-    public async Task<ActionResult<ApiResponse<RoleRequestResponseDto>>> RequestAdmin(
+    public async Task<ActionResult<RoleRequestResponseDto>> RequestAdmin(
         [FromBody] CreateRoleRequestDto dto)
     {
         var requesterCode = ControllerHelper.GetProfileId(User);
         var result = await _roleRequestService.RequestAdminAsync(dto, requesterCode);
-        return Ok(new ApiResponse<RoleRequestResponseDto> { Success = true, Data = result, Message = "Solicitud para Admin enviada exitosamente." });
+        return Ok(result);
     }
 
     [HttpGet("coordinator")]
     [Authorize(Roles = "Admin,SuperUser")]
-    public async Task<ActionResult<ApiResponse<IEnumerable<RoleRequestResponseDto>>>> GetPendingCoordinatorRequests()
+    public async Task<ActionResult<IEnumerable<RoleRequestResponseDto>>> GetPendingCoordinatorRequests()
     {
         var result = await _roleRequestService.GetPendingCoordinatorRequestsAsync();
-        return Ok(ApiResponse<IEnumerable<RoleRequestResponseDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("admin")]
     [Authorize(Roles = "SuperUser")]
-    public async Task<ActionResult<ApiResponse<IEnumerable<RoleRequestResponseDto>>>> GetPendingAdminRequests()
+    public async Task<ActionResult<IEnumerable<RoleRequestResponseDto>>> GetPendingAdminRequests()
     {
         var result = await _roleRequestService.GetPendingAdminRequestsAsync();
-        return Ok(ApiResponse<IEnumerable<RoleRequestResponseDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPost("{uvaCode}/coordinator/approve")]
     [Consumes("application/json")]
     [Authorize(Roles = "Admin,SuperUser")]
-    public async Task<ActionResult<ApiResponse<object>>> ApproveCoordinator(string uvaCode)
+    public async Task<ActionResult<string>> ApproveCoordinator(string uvaCode)
     {
         var adminCode = ControllerHelper.GetProfileId(User);
         await _roleRequestService.ApproveCoordinatorAsync(uvaCode, adminCode);
-        return Ok(new ApiResponse<object> { Success = true, Message = "Solicitud de Coordinador aprobada." });
+        return Ok("Solicitud de Coordinador aprobada.");
     }
 
     [Consumes("application/json")]
     [HttpPost("{uvaCode}/coordinator/reject")]
     [Authorize(Roles = "Admin,SuperUser")]
-    public async Task<ActionResult<ApiResponse<object>>> RejectCoordinator(string uvaCode)
+    public async Task<ActionResult<string>> RejectCoordinator(string uvaCode)
     {
         var adminCode = ControllerHelper.GetProfileId(User);
         await _roleRequestService.RejectCoordinatorAsync(uvaCode, adminCode);
-        return Ok(new ApiResponse<object> { Success = true, Message = "Solicitud de Coordinador rechazada." });
+        return Ok("Solicitud de Coordinador rechazada.");
     }
 
     [Consumes("application/json")]
     [HttpPost("{uvaCode}/admin/approve")]
     [Authorize(Roles = "SuperUser")]
-    public async Task<ActionResult<ApiResponse<object>>> ApproveAdmin(string uvaCode)
+    public async Task<ActionResult<string>> ApproveAdmin(string uvaCode)
     {
         var suCode = ControllerHelper.GetProfileId(User);
         await _roleRequestService.ApproveAdminAsync(uvaCode, suCode);
-        return Ok(new ApiResponse<object> { Success = true, Message = "Solicitud de Admin aprobada." });
+        return Ok("Solicitud de Admin aprobada.");
     }
 
     [Consumes("application/json")]
     [HttpPost("{uvaCode}/admin/reject")]
     [Authorize(Roles = "SuperUser")]
-    public async Task<ActionResult<ApiResponse<object>>> RejectAdmin(string uvaCode)
+    public async Task<ActionResult<string>> RejectAdmin(string uvaCode)
     {
         var suCode = ControllerHelper.GetProfileId(User);
         await _roleRequestService.RejectAdminAsync(uvaCode, suCode);
-        return Ok(new ApiResponse<object> { Success = true, Message = "Solicitud de Admin rechazada." });
+        return Ok("Solicitud de Admin rechazada.");
     }
 }

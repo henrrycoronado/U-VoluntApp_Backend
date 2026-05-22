@@ -3,7 +3,6 @@ namespace U_VoluntApp_Backend.Src.Presentation.Middleware;
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using U_VoluntApp_Backend.Src.Application.DTOs;
 
 public static class RequestValidationMiddlewareExtensions
 {
@@ -89,7 +88,11 @@ public class RequestValidationMiddleware
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)statusCode;
 
-        var response = ApiResponse<object>.Fail(message);
+        var response = new
+        {
+            error = message,
+            code = (int)statusCode,
+        };
         var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
         await context.Response.WriteAsync(JsonSerializer.Serialize(response, options));

@@ -19,36 +19,36 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<ApiResponse<AuthResponseDto>>> Register(
+    public async Task<ActionResult<AuthResponseDto>> Register(
         [FromBody] RegisterRequestDto request)
     {
         var result = await _authService.RegisterAsync(request);
-        return Ok(ApiResponse<AuthResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<ApiResponse<AuthResponseDto>>> Login(
+    public async Task<ActionResult<AuthResponseDto>> Login(
         [FromBody] LoginRequestDto request)
     {
         var result = await _authService.LoginAsync(request);
-        return Ok(ApiResponse<AuthResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPost("refresh")]
-    public async Task<ActionResult<ApiResponse<AuthResponseDto>>> Refresh(
+    public async Task<ActionResult<AuthResponseDto>> Refresh(
         [FromBody] RefreshTokenRequestDto request)
     {
         var result = await _authService.RefreshTokenAsync(request);
-        return Ok(ApiResponse<AuthResponseDto>.Ok(result));
+        return Ok(result);
     }
 
     [Authorize]
     [HttpPost("logout")]
-    public async Task<ActionResult<ApiResponse<object>>> Logout(
+    public async Task<IActionResult> Logout(
         [FromBody] LogoutRequestDto request)
     {
         var profileCode = ControllerHelper.GetProfileId(User);
         await _authService.LogoutAsync(profileCode, request);
-        return Ok(ApiResponse<object>.Ok(null!));
+        return NoContent();
     }
 }

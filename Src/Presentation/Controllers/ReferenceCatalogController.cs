@@ -24,7 +24,7 @@ public class ReferenceCatalogController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.GetStatesAsync(stateGroup);
-        return Ok(ApiResponse<List<ReferenceStateDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPatch("states/{stateGroup}/{stateCode}")]
@@ -32,7 +32,7 @@ public class ReferenceCatalogController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.UpdateStateNameAsync(stateGroup, stateCode, dto.Name);
-        return Ok(ApiResponse<ReferenceStateDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpGet("types/{typeGroup}")]
@@ -40,7 +40,7 @@ public class ReferenceCatalogController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.GetTypesAsync(typeGroup);
-        return Ok(ApiResponse<List<ReferenceTypeDto>>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPost("types/{typeGroup}")]
@@ -48,7 +48,7 @@ public class ReferenceCatalogController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.CreateTypeAsync(typeGroup, dto);
-        return Ok(ApiResponse<ReferenceTypeDto>.Ok(result));
+        return Ok(result);
     }
 
     [HttpPatch("types/{typeGroup}/{typeCode}")]
@@ -56,6 +56,6 @@ public class ReferenceCatalogController : ControllerBase
     {
         ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.UpdateTypeAsync(typeGroup, typeCode, dto);
-        return Ok(ApiResponse<ReferenceTypeDto>.Ok(result));
+        return Ok(result);
     }
 }
