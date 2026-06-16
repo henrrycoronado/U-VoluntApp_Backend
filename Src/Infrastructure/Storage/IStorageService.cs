@@ -1,4 +1,6 @@
-namespace U_VoluntApp_Backend.Src.Application.Interfaces;
+namespace U_VoluntApp_Backend.Src.Infrastructure.Storage;
+
+using Microsoft.AspNetCore.Http;
 
 public interface IStorageService
 {

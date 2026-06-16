@@ -1,20 +1,21 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Reports;
+namespace U_VoluntApp_Backend.Src.Infrastructure.Storage;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Supabase;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
 
-public class SupabaseStorageService : IStorageService
+public class StorageService : IStorageService
 {
     private readonly Client _supabase;
     private readonly string _publicBaseUrl;
     private readonly string _uploadBucket;
     private readonly string _defaultsBucket;
 
-    public SupabaseStorageService(Client supabase, IConfiguration configuration)
+    public StorageService(Client supabase, IConfiguration configuration)
     {
         _supabase = supabase;
+        // Usando llaves genéricas del .env
         _publicBaseUrl = configuration["STORAGE_PUBLIC_BASE_URL"]
             ?? StorageConstants.PublicBaseUrl;
         _uploadBucket = configuration["STORAGE_UPLOAD_BUCKET"]

@@ -4,6 +4,7 @@ using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
 using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Backend.Src.Infrastructure.Reports;
 
 public class ReportService : IReportService
 {

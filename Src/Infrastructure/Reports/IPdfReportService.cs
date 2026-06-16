@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Application.Interfaces;
+namespace U_VoluntApp_Backend.Src.Infrastructure.Reports;
 
 using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 

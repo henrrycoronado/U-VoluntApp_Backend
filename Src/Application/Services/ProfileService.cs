@@ -8,6 +8,7 @@ using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
 using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Backend.Src.Infrastructure.Storage;
 
 public class ProfileService : IProfileService
 {
