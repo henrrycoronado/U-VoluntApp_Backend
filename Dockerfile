@@ -10,7 +10,7 @@ RUN dotnet publish "U-VoluntApp_Backend.csproj" -c Release -o /app/publish /p:Us
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 
-RUN adduser --disabled-password --gecos "" uvoluntappuser && chown -R uvoluntappuser /app
+RUN adduser -D uvoluntappuser && chown -R uvoluntappuser /app
 USER uvoluntappuser
 
 ENV ASPNETCORE_URLS=http://+:8080
