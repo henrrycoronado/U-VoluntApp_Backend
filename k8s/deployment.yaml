@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: backend-api
-        image: ghcr.io/tu-usuario/u-voluntapp-backend:latest # puede cambiar según la configuración de CI/CD
+        image: ghcr.io/henrrycoronado/u-voluntapp-backend:latest
         ports:
         - containerPort: 8080
         resources:
@@ -33,16 +33,14 @@ spec:
         - secretRef:
             name: backend-secrets
         livenessProbe:
-          httpGet:
-            path: /swagger/index.html
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /swagger/index.html
+          tcpSocket:
             port: 8080
           initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 10
           periodSeconds: 5
 ---
 apiVersion: v1
