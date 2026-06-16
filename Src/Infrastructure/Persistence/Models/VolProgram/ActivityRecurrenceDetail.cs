@@ -1,7 +1,5 @@
 namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
 
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
-
 public partial class ActivityRecurrenceDetail
 {
     public long Id { get; set; }
@@ -27,8 +25,6 @@ public partial class ActivityRecurrenceDetail
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime? DeletedAt { get; set; }
-
-    public virtual ActivityState State { get; set; } = null!;
 
     public virtual ActivityRecurrencePattern ActivityRecurrencePattern { get; set; } = null!;
 }

@@ -1,7 +1,6 @@
 namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
 
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
 
 public partial class ActivityGroup
 {
@@ -32,6 +31,4 @@ public partial class ActivityGroup
     public virtual Activity Activity { get; set; } = null!;
 
     public virtual ICollection<GroupEnrollment> GroupEnrollments { get; set; } = new List<GroupEnrollment>();
-
-    public virtual ActivityState State { get; set; } = null!;
 }

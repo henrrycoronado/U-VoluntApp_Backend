@@ -1,7 +1,6 @@
 namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
 
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
 
 public partial class ProgramCollaborator
 {
@@ -28,6 +27,4 @@ public partial class ProgramCollaborator
     public virtual Profile Profile { get; set; } = null!;
 
     public virtual VolProgram Program { get; set; } = null!;
-
-    public virtual ContractState State { get; set; } = null!;
 }

@@ -6,6 +6,7 @@ using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 using U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 
@@ -27,7 +28,9 @@ public class VolProgramService : IVolProgramService
         var manager = await _profileRepository.GetByCodeAsync(managerId)
             ?? throw new InvalidOperationException("Perfil no encontrado");
 
-        string initialStateCode = requesterRole == RoleConstants.AdminRole ? ProgramStateConstants.InactiveCode : ProgramStateConstants.ActiveCode;
+        string initialStateCode = requesterRole == RoleConstants.AdminRole
+            ? ProgramState.Inactive.GetUvaCode()
+            : ProgramState.Active.GetUvaCode();
 
         var program = VolProgram.Create(dto.Name, dto.Acronym ?? string.Empty, managerId, initialStateCode, DateTime.UtcNow);
 
@@ -79,7 +82,7 @@ public class VolProgramService : IVolProgramService
             throw new InvalidOperationException("No tienes permiso para modificar este programa");
         }
 
-        if (program.StateCode == ProgramStateConstants.DeletedCode)
+        if (program.StateCode == ProgramState.Deleted.GetUvaCode())
         {
             throw new InvalidOperationException("No se puede modificar un programa eliminado");
         }
@@ -104,7 +107,7 @@ public class VolProgramService : IVolProgramService
         var program = await _volProgramRepository.GetByCodeAsync(uvaCode)
             ?? throw new InvalidOperationException("Programa no encontrado");
 
-        if (program.StateCode == ProgramStateConstants.DeletedCode)
+        if (program.StateCode == ProgramState.Deleted.GetUvaCode())
         {
             throw new InvalidOperationException("Un programa eliminado no puede cambiar de estado");
         }
@@ -124,12 +127,12 @@ public class VolProgramService : IVolProgramService
             throw new InvalidOperationException("No tienes permiso para eliminar este programa");
         }
 
-        if (program.StateCode != ProgramStateConstants.ActiveCode)
+        if (program.StateCode != ProgramState.Active.GetUvaCode())
         {
             throw new InvalidOperationException("Solo se pueden eliminar programas en estado activo");
         }
 
-        program.SoftDelete(DateTime.UtcNow, ProgramStateConstants.DeletedCode);
+        program.SoftDelete(DateTime.UtcNow, ProgramState.Deleted.GetUvaCode());
         await _volProgramRepository.UpdateAsync(program);
     }
 

@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
 
 public partial class Profile
@@ -45,8 +43,6 @@ public partial class Profile
 
     public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
-    public virtual CareerType? Career { get; set; }
-
     public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 
     public virtual ICollection<ProgramCollaborator> ProgramCollaboratorAssignedByProfiles { get; set; } = new List<ProgramCollaborator>();
@@ -56,8 +52,6 @@ public partial class Profile
     public virtual ICollection<RoleRequest> RoleRequestRequesterProfiles { get; set; } = new List<RoleRequest>();
 
     public virtual ICollection<RoleRequest> RoleRequestResolvedByProfiles { get; set; } = new List<RoleRequest>();
-
-    public virtual ProfileState State { get; set; } = null!;
 
     public virtual ICollection<TrackingLog> TrackingLogCheckInRegisteredBies { get; set; } = new List<TrackingLog>();
 

@@ -1,7 +1,5 @@
 namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking;
 
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types;
-
 public partial class Evidence
 {
     public long Id { get; set; }
@@ -28,9 +26,5 @@ public partial class Evidence
 
     public DateTime? DeletedAt { get; set; }
 
-    public virtual EvidenceType EvidenceType { get; set; } = null!;
-
     public virtual TrackingLog TrackingLog { get; set; } = null!;
-
-    public virtual TrackingType Type { get; set; } = null!;
 }

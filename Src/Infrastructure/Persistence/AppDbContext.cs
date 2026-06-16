@@ -8,9 +8,7 @@ using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Auth;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
 
 public partial class AppDbContext : IdentityDbContext<IdentityUser>
@@ -30,25 +28,11 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
 
     public virtual DbSet<ActivityRule> ActivityRules { get; set; }
 
-    public virtual DbSet<ActivityState> ActivityStates { get; set; }
-
-    public virtual DbSet<ActivityType> ActivityTypes { get; set; }
-
-    public virtual DbSet<CareerType> CareerTypes { get; set; }
-
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
-
-    public virtual DbSet<ScholarshipType> ScholarshipTypes { get; set; }
-
-    public virtual DbSet<ContractState> ContractStates { get; set; }
 
     public virtual DbSet<Enrollment> Enrollments { get; set; }
 
-    public virtual DbSet<EnrollmentState> EnrollmentStates { get; set; }
-
     public virtual DbSet<Evidence> Evidences { get; set; }
-
-    public virtual DbSet<EvidenceType> EvidenceTypes { get; set; }
 
     public virtual DbSet<GroupEnrollment> GroupEnrollments { get; set; }
 
@@ -62,23 +46,13 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
 
     public virtual DbSet<Profile> Profiles { get; set; }
 
-    public virtual DbSet<ProfileState> ProfileStates { get; set; }
-
     public virtual DbSet<ProgramCollaborator> ProgramCollaborators { get; set; }
 
     public virtual DbSet<ProgramContent> ProgramContents { get; set; }
 
-    public virtual DbSet<ProgramState> ProgramStates { get; set; }
-
     public virtual DbSet<RoleRequest> RoleRequests { get; set; }
 
-    public virtual DbSet<RoleRequestState> RoleRequestStates { get; set; }
-
     public virtual DbSet<TrackingLog> TrackingLogs { get; set; }
-
-    public virtual DbSet<TrackingState> TrackingStates { get; set; }
-
-    public virtual DbSet<TrackingType> TrackingTypes { get; set; }
 
     public virtual DbSet<UserScholarship> UserScholarships { get; set; }
 
@@ -127,12 +101,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasPrincipalKey(p => p.UvaCode)
                 .HasConstraintName("activities_activity_recurrence_pattern_id_fkey");
 
-            entity.HasOne(d => d.ActivityType).WithMany(p => p.Activities)
-                .HasForeignKey(d => d.ActivityTypeCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("activities_activity_type_id_fkey");
-
             entity.HasOne(d => d.Program).WithMany(p => p.Activities)
                 .HasForeignKey(d => d.ProgramCode)
                 .HasPrincipalKey(p => p.UvaCode)
@@ -143,12 +111,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasForeignKey(d => d.ResponsibleProfileCode)
                 .HasPrincipalKey(p => p.UvaCode)
                 .HasConstraintName("activities_responsible_profile_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.Activities)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("activities_state_id_fkey");
         });
 
         modelBuilder.Entity<ActivityGroup>(entity =>
@@ -183,12 +145,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("activity_group_activity_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.ActivityGroups)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("activity_group_state_id_fkey");
         });
 
         modelBuilder.Entity<ActivityRecurrenceDetail>(entity =>
@@ -221,12 +177,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("activity_recurrence_detail_activity_recurrence_pattern_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.ActivityRecurrenceDetails)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("activity_recurrence_detail_state_id_fkey");
         });
 
         modelBuilder.Entity<ActivityRecurrencePattern>(entity =>
@@ -258,12 +208,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("activity_recurrence_patterns_program_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.ActivityRecurrencePatterns)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("activity_recurrence_patterns_state_id_fkey");
         });
 
         modelBuilder.Entity<ActivityRule>(entity =>
@@ -307,95 +251,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasConstraintName("activity_rules_activity_id_fkey");
         });
 
-        modelBuilder.Entity<ActivityState>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("activity_state_pkey");
-
-            entity.ToTable("activity_state");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "activity_state_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
-        });
-
-        modelBuilder.Entity<ActivityType>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("activity_type_pkey");
-
-            entity.ToTable("activity_type");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "activity_type_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
-        });
-
-        modelBuilder.Entity<CareerType>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("career_type_pkey");
-
-            entity.ToTable("career_type");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "career_type_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
-        });
-
-        modelBuilder.Entity<ScholarshipType>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("scholarship_type_pkey");
-
-            entity.ToTable("scholarship_type");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "scholarship_type_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
-        });
-
-        modelBuilder.Entity<ContractState>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("contract_state_pkey");
-
-            entity.ToTable("contract_state");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "contract_state_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
-        });
-
         modelBuilder.Entity<Enrollment>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("enrollments_pkey");
@@ -430,28 +285,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("enrollments_enrolled_profile_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.Enrollments)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("enrollments_state_id_fkey");
-        });
-
-        modelBuilder.Entity<EnrollmentState>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("enrollment_state_pkey");
-
-            entity.ToTable("enrollment_state");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "enrollment_state_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
         });
 
         modelBuilder.Entity<Evidence>(entity =>
@@ -477,42 +310,11 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(e => e.TypeCode).HasColumnName("type_code");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
 
-            entity.HasOne(d => d.EvidenceType).WithMany(p => p.Evidences)
-                .HasForeignKey(d => d.EvidenceTypeCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("evidences_evidence_type_id_fkey");
-
             entity.HasOne(d => d.TrackingLog).WithMany(p => p.Evidences)
                 .HasForeignKey(d => d.TrackingLogCode)
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("evidences_tracking_log_id_fkey");
-
-            entity.HasOne(d => d.Type).WithMany(p => p.Evidences)
-                .HasForeignKey(d => d.TypeCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("evidences_type_id_fkey");
-        });
-
-        modelBuilder.Entity<EvidenceType>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("evidence_type_pkey");
-
-            entity.ToTable("evidence_type");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "evidence_type_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
         });
 
         modelBuilder.Entity<GroupEnrollment>(entity =>
@@ -547,12 +349,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("group_enrollment_enrollment_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.GroupEnrollments)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("group_enrollment_state_id_fkey");
         });
 
         modelBuilder.Entity<MvActivityAnalytic>(entity =>
@@ -669,33 +465,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
             entity.HasOne(d => d.IdentityUser).WithOne()
                 .HasForeignKey<Profile>(d => d.IdentityUserId)
                 .HasConstraintName("profiles_identity_user_id_fkey");
-
-            entity.HasOne(d => d.Career).WithMany(p => p.Profiles)
-                .HasForeignKey(d => d.CareerCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .HasConstraintName("profiles_career_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.Profiles)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("profiles_state_id_fkey");
-        });
-
-        modelBuilder.Entity<ProfileState>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("profile_state_pkey");
-
-            entity.ToTable("profile_state");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "profile_state_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
         });
 
         modelBuilder.Entity<ProgramCollaborator>(entity =>
@@ -740,12 +509,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("program_collaborators_program_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.ProgramCollaborators)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("program_collaborators_state_id_fkey");
         });
 
         modelBuilder.Entity<ProgramContent>(entity =>
@@ -778,22 +541,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasPrincipalKey<VolProgram>(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("program_content_program_id_fkey");
-        });
-
-        modelBuilder.Entity<ProgramState>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("program_state_pkey");
-
-            entity.ToTable("program_state");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "program_state_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
         });
 
         modelBuilder.Entity<RoleRequest>(entity =>
@@ -841,28 +588,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
             entity.HasOne(d => d.RequestedRole).WithMany()
                 .HasForeignKey(d => d.RequestedRoleId)
                 .HasConstraintName("role_requests_requested_role_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.RoleRequests)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("role_requests_state_id_fkey");
-        });
-
-        modelBuilder.Entity<RoleRequestState>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("role_request_state_pkey");
-
-            entity.ToTable("role_request_state");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "role_request_state_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
         });
 
         modelBuilder.Entity<TrackingLog>(entity =>
@@ -918,47 +643,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("tracking_logs_enrollment_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.TrackingLogs)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("tracking_logs_state_id_fkey");
-        });
-
-        modelBuilder.Entity<TrackingState>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("tracking_state_pkey");
-
-            entity.ToTable("tracking_state");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "tracking_state_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
-        });
-
-        modelBuilder.Entity<TrackingType>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("tracking_type_pkey");
-
-            entity.ToTable("tracking_type");
-
-            entity.HasIndex(e => e.UvaCode).IsUnique();
-            entity.HasIndex(e => e.Name, "tracking_type_name_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
         });
 
         modelBuilder.Entity<UserScholarship>(entity =>
@@ -1006,18 +690,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasForeignKey(d => d.EvaluatorProfileCode)
                 .HasPrincipalKey(p => p.UvaCode)
                 .HasConstraintName("user_scholarships_evaluator_profile_id_fkey");
-
-            entity.HasOne(d => d.ScholarshipType).WithMany(p => p.UserScholarships)
-                .HasForeignKey(d => d.ScholarshipTypeCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("user_scholarships_scholarship_type_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.UserScholarships)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("user_scholarships_state_id_fkey");
         });
 
         modelBuilder.Entity<VolProgram>(entity =>
@@ -1048,12 +720,6 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasForeignKey(d => d.ManagerProfileCode)
                 .HasPrincipalKey(p => p.UvaCode)
                 .HasConstraintName("vol_programs_manager_profile_id_fkey");
-
-            entity.HasOne(d => d.State).WithMany(p => p.VolPrograms)
-                .HasForeignKey(d => d.StateCode)
-                .HasPrincipalKey(p => p.UvaCode)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("vol_programs_state_id_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

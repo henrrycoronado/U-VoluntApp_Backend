@@ -1,7 +1,6 @@
 namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
 
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking;
 
 public partial class GroupEnrollment
@@ -25,8 +24,6 @@ public partial class GroupEnrollment
     public virtual ActivityGroup ActivityGroup { get; set; } = null!;
 
     public virtual Enrollment Enrollment { get; set; } = null!;
-
-    public virtual ActivityState State { get; set; } = null!;
 
     public virtual ICollection<TrackingLog> TrackingLogs { get; set; } = new List<TrackingLog>();
 }

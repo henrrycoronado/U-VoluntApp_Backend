@@ -2,7 +2,6 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract;
 
 using Microsoft.AspNetCore.Identity;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
 
 public partial class RoleRequest
 {
@@ -35,6 +34,4 @@ public partial class RoleRequest
     public virtual Profile? ResolvedByProfile { get; set; }
 
     public virtual IdentityRole? RequestedRole { get; set; }
-
-    public virtual RoleRequestState State { get; set; } = null!;
 }
