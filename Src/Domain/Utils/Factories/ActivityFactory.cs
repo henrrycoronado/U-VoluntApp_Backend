@@ -3,7 +3,7 @@ namespace U_VoluntApp_Backend.Src.Domain.Utils.Factories;
 using System;
 using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Domain.Entities.Activity;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 
 public class ActivityFactory : IActivityFactory
 {
@@ -53,7 +53,7 @@ public class ActivityFactory : IActivityFactory
             dto.StartDate,
             dto.EndDate,
             DefaultRegistrationRadius,
-            ActivityStateConstants.InactiveCode,
+            ActivityState.Inactive.GetUvaCode(),
             dto.LocationLatitude ?? 0,
             dto.LocationLongitude ?? 0,
             nowUtc);

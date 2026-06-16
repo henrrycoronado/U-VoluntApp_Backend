@@ -18,6 +18,7 @@ using U_VoluntApp_Backend.Src.Application.Interfaces;
 using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Contract;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
@@ -89,7 +90,7 @@ public class IdentityAuthService : IAuthService
                     request.Email,
                     request.FirstName,
                     request.LastName,
-                    ProfileStateConstants.ActiveCode,
+                    ProfileState.Active.GetUvaCode(),
                     nowUtc);
 
                 profile.ApplyUpdate(
@@ -97,7 +98,7 @@ public class IdentityAuthService : IAuthService
                     request.LastName,
                     request.Phone,
                     null,
-                    request.CareerCode ?? CareerTypeConstants.NoneCode,
+                    request.CareerCode ?? CareerType.None.GetUvaCode(),
                     0.00m,
                     nowUtc);
 
@@ -133,7 +134,7 @@ public class IdentityAuthService : IAuthService
                 request.Email,
                 "Usuario",
                 "Nuevo",
-                ProfileStateConstants.ActiveCode,
+                ProfileState.Active.GetUvaCode(),
                 DateTime.UtcNow);
 
             await _profileRepository.AddAsync(profile);

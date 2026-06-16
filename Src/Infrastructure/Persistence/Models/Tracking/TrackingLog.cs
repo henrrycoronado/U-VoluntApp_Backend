@@ -2,7 +2,6 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking;
 
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
 
 public partial class TrackingLog
 {
@@ -41,6 +40,4 @@ public partial class TrackingLog
     public virtual Enrollment Enrollment { get; set; } = null!;
 
     public virtual ICollection<Evidence> Evidences { get; set; } = new List<Evidence>();
-
-    public virtual TrackingState State { get; set; } = null!;
 }

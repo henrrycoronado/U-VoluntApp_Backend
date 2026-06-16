@@ -2,8 +2,6 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
 
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
 
 public partial class Activity
@@ -48,13 +46,9 @@ public partial class Activity
 
     public virtual ActivityRule? ActivityRule { get; set; }
 
-    public virtual ActivityType ActivityType { get; set; } = null!;
-
     public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 
     public virtual VolProgram Program { get; set; } = null!;
 
     public virtual Profile? ResponsibleProfile { get; set; }
-
-    public virtual ActivityState State { get; set; } = null!;
 }

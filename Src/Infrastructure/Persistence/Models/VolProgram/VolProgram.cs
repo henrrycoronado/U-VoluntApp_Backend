@@ -2,7 +2,6 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
 
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
 
 public partial class VolProgram
 {
@@ -33,6 +32,4 @@ public partial class VolProgram
     public virtual ICollection<ProgramCollaborator> ProgramCollaborators { get; set; } = new List<ProgramCollaborator>();
 
     public virtual ProgramContent? ProgramContent { get; set; }
-
-    public virtual ProgramState State { get; set; } = null!;
 }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using U_VoluntApp_Backend.Src.Application.DTOs;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
+using U_VoluntApp_Backend.Src.Infrastructure.Auth;
 using U_VoluntApp_Backend.Src.Presentation.Helpers;
 
 [ApiController]

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
 
 public static class AuthSeeder
@@ -66,7 +66,7 @@ public static class AuthSeeder
                         suEmail,
                         "Super",
                         "User",
-                        ProfileStateConstants.ActiveCode,
+                        ProfileState.Active.GetUvaCode(),
                         nowUtc);
 
                     await profileRepository.AddAsync(suProfile);

@@ -10,7 +10,7 @@ using U_VoluntApp_Backend.Src.Application.Interfaces;
 using U_VoluntApp_Backend.Src.Domain.Entities.Contract;
 using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Contract;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
 
@@ -48,7 +48,7 @@ public class RoleRequestService : IRoleRequestService
             "Coordinator",
             dto.Reason,
             dto.DurationInMonths.Value,
-            RoleRequestStateConstants.PendingCode,
+            RoleRequestState.Pending.GetUvaCode(),
             DateTime.UtcNow);
 
         await _roleRequestRepository.AddAsync(roleRequest);
@@ -80,7 +80,7 @@ public class RoleRequestService : IRoleRequestService
             "Admin",
             dto.Reason,
             null,
-            RoleRequestStateConstants.PendingCode,
+            RoleRequestState.Pending.GetUvaCode(),
             DateTime.UtcNow);
 
         await _roleRequestRepository.AddAsync(roleRequest);
@@ -90,7 +90,7 @@ public class RoleRequestService : IRoleRequestService
 
     public async Task<IEnumerable<RoleRequestResponseDto>> GetPendingCoordinatorRequestsAsync()
     {
-        var filter = new RequestFilter { Page = 1, PageSize = 100, StateName = RoleRequestStateConstants.PendingCode };
+        var filter = new RequestFilter { Page = 1, PageSize = 100, StateName = RoleRequestState.Pending.GetUvaCode() };
         var requests = await _roleRequestRepository.GetAllAsync(filter);
         var coordinatorRequests = requests.Where(r => r.RequestedRoleCode == "Coordinator");
         return coordinatorRequests.Select(MapToDto);
@@ -98,7 +98,7 @@ public class RoleRequestService : IRoleRequestService
 
     public async Task<IEnumerable<RoleRequestResponseDto>> GetPendingAdminRequestsAsync()
     {
-        var filter = new RequestFilter { Page = 1, PageSize = 100, StateName = RoleRequestStateConstants.PendingCode };
+        var filter = new RequestFilter { Page = 1, PageSize = 100, StateName = RoleRequestState.Pending.GetUvaCode() };
         var requests = await _roleRequestRepository.GetAllAsync(filter);
         var adminRequests = requests.Where(r => r.RequestedRoleCode == "Admin");
         return adminRequests.Select(MapToDto);
@@ -114,7 +114,7 @@ public class RoleRequestService : IRoleRequestService
             throw new InvalidOperationException("Esta solicitud no es para Coordinador.");
         }
 
-        request.Approve(adminProfileCode, RoleRequestStateConstants.ActiveCode, DateTime.UtcNow);
+        request.Approve(adminProfileCode, RoleRequestState.Active.GetUvaCode(), DateTime.UtcNow);
         await _roleRequestRepository.UpdateAsync(request);
 
         var profile = await _profileRepository.GetByCodeAsync(request.RequesterProfileCode);
@@ -138,7 +138,7 @@ public class RoleRequestService : IRoleRequestService
             throw new InvalidOperationException("Esta solicitud no es para Coordinador.");
         }
 
-        request.Reject(adminProfileCode, RoleRequestStateConstants.RejectedCode, DateTime.UtcNow);
+        request.Reject(adminProfileCode, RoleRequestState.Rejected.GetUvaCode(), DateTime.UtcNow);
         await _roleRequestRepository.UpdateAsync(request);
     }
 
@@ -152,7 +152,7 @@ public class RoleRequestService : IRoleRequestService
             throw new InvalidOperationException("Esta solicitud no es para Admin.");
         }
 
-        request.Approve(suProfileCode, RoleRequestStateConstants.ActiveCode, DateTime.UtcNow);
+        request.Approve(suProfileCode, RoleRequestState.Active.GetUvaCode(), DateTime.UtcNow);
         await _roleRequestRepository.UpdateAsync(request);
 
         var profile = await _profileRepository.GetByCodeAsync(request.RequesterProfileCode);
@@ -176,7 +176,7 @@ public class RoleRequestService : IRoleRequestService
             throw new InvalidOperationException("Esta solicitud no es para Admin.");
         }
 
-        request.Reject(suProfileCode, RoleRequestStateConstants.RejectedCode, DateTime.UtcNow);
+        request.Reject(suProfileCode, RoleRequestState.Rejected.GetUvaCode(), DateTime.UtcNow);
         await _roleRequestRepository.UpdateAsync(request);
     }
 

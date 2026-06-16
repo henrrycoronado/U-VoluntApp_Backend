@@ -6,7 +6,9 @@ using U_VoluntApp_Backend.Src.Application.Interfaces;
 using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Backend.Src.Infrastructure.Storage;
 
 public class ProfileService : IProfileService
 {
@@ -65,7 +67,7 @@ public class ProfileService : IProfileService
         var profile = await _profileRepository.GetByCodeAsync(uvaCode)
             ?? throw new InvalidOperationException("Perfil no encontrado");
 
-        profile.SoftDelete(DateTime.UtcNow, ProfileStateConstants.DeletedCode);
+        profile.SoftDelete(DateTime.UtcNow, ProfileState.Deleted.GetUvaCode());
 
         await _profileRepository.UpdateAsync(profile);
     }

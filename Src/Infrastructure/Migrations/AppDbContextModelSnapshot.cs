@@ -8,7 +8,7 @@ using U_VoluntApp_Backend.Src.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace U_VoluntApp_Backend.Migrations
+namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -308,13 +308,9 @@ namespace U_VoluntApp_Backend.Migrations
 
                     b.HasIndex("ActivityRecurrencePatternCode");
 
-                    b.HasIndex("ActivityTypeCode");
-
                     b.HasIndex("ProgramCode");
 
                     b.HasIndex("ResponsibleProfileCode");
-
-                    b.HasIndex("StateCode");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
@@ -389,8 +385,6 @@ namespace U_VoluntApp_Backend.Migrations
                         .HasName("activity_group_pkey");
 
                     b.HasIndex("ActivityCode");
-
-                    b.HasIndex("StateCode");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
@@ -636,8 +630,6 @@ namespace U_VoluntApp_Backend.Migrations
 
                     b.HasIndex("ResolvedByProfileCode");
 
-                    b.HasIndex("StateCode");
-
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
@@ -724,10 +716,6 @@ namespace U_VoluntApp_Backend.Migrations
 
                     b.HasIndex("EvaluatorProfileCode");
 
-                    b.HasIndex("ScholarshipTypeCode");
-
-                    b.HasIndex("StateCode");
-
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
@@ -787,8 +775,6 @@ namespace U_VoluntApp_Backend.Migrations
 
                     b.HasIndex("EnrolledProfileCode");
 
-                    b.HasIndex("StateCode");
-
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
@@ -846,8 +832,6 @@ namespace U_VoluntApp_Backend.Migrations
                     b.HasIndex("ActivityGroupCode");
 
                     b.HasIndex("EnrollmentCode");
-
-                    b.HasIndex("StateCode");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
@@ -1111,12 +1095,8 @@ namespace U_VoluntApp_Backend.Migrations
                     b.HasKey("Id")
                         .HasName("profiles_pkey");
 
-                    b.HasIndex("CareerCode");
-
                     b.HasIndex("IdentityUserId")
                         .IsUnique();
-
-                    b.HasIndex("StateCode");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
@@ -1125,230 +1105,6 @@ namespace U_VoluntApp_Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("profiles", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ActivityState", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("activity_state_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "activity_state_name_key")
-                        .IsUnique();
-
-                    b.ToTable("activity_state", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ContractState", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("contract_state_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "contract_state_name_key")
-                        .IsUnique();
-
-                    b.ToTable("contract_state", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.EnrollmentState", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("enrollment_state_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "enrollment_state_name_key")
-                        .IsUnique();
-
-                    b.ToTable("enrollment_state", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ProfileState", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("profile_state_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "profile_state_name_key")
-                        .IsUnique();
-
-                    b.ToTable("profile_state", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ProgramState", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("program_state_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "program_state_name_key")
-                        .IsUnique();
-
-                    b.ToTable("program_state", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.RoleRequestState", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("role_request_state_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "role_request_state_name_key")
-                        .IsUnique();
-
-                    b.ToTable("role_request_state", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.TrackingState", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("tracking_state_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "tracking_state_name_key")
-                        .IsUnique();
-
-                    b.ToTable("tracking_state", (string)null);
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.Evidence", b =>
@@ -1414,11 +1170,7 @@ namespace U_VoluntApp_Backend.Migrations
                     b.HasKey("Id")
                         .HasName("evidences_pkey");
 
-                    b.HasIndex("EvidenceTypeCode");
-
                     b.HasIndex("TrackingLogCode");
-
-                    b.HasIndex("TypeCode");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
@@ -1506,202 +1258,10 @@ namespace U_VoluntApp_Backend.Migrations
 
                     b.HasIndex("GroupEnrollmentCode");
 
-                    b.HasIndex("StateCode");
-
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
                     b.ToTable("tracking_logs", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.ActivityType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("activity_type_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "activity_type_name_key")
-                        .IsUnique();
-
-                    b.ToTable("activity_type", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.CareerType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("career_type_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "career_type_name_key")
-                        .IsUnique();
-
-                    b.ToTable("career_type", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.EvidenceType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("evidence_type_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "evidence_type_name_key")
-                        .IsUnique();
-
-                    b.ToTable("evidence_type", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.ScholarshipType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("scholarship_type_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "scholarship_type_name_key")
-                        .IsUnique();
-
-                    b.ToTable("scholarship_type", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.TrackingType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.HasKey("Id")
-                        .HasName("tracking_type_pkey");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Name" }, "tracking_type_name_key")
-                        .IsUnique();
-
-                    b.ToTable("tracking_type", (string)null);
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrenceDetail", b =>
@@ -1769,8 +1329,6 @@ namespace U_VoluntApp_Backend.Migrations
 
                     b.HasIndex("ActivityRecurrencePatternCode");
 
-                    b.HasIndex("StateCode");
-
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
@@ -1832,8 +1390,6 @@ namespace U_VoluntApp_Backend.Migrations
                         .HasName("activity_recurrence_patterns_pkey");
 
                     b.HasIndex("ProgramCode");
-
-                    b.HasIndex("StateCode");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
@@ -1900,8 +1456,6 @@ namespace U_VoluntApp_Backend.Migrations
                     b.HasIndex("ProfileCode");
 
                     b.HasIndex("ProgramCode");
-
-                    b.HasIndex("StateCode");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
@@ -2036,8 +1590,6 @@ namespace U_VoluntApp_Backend.Migrations
 
                     b.HasIndex("ManagerProfileCode");
 
-                    b.HasIndex("StateCode");
-
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
@@ -2103,13 +1655,6 @@ namespace U_VoluntApp_Backend.Migrations
                         .HasPrincipalKey("UvaCode")
                         .HasConstraintName("activities_activity_recurrence_pattern_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.ActivityType", "ActivityType")
-                        .WithMany("Activities")
-                        .HasForeignKey("ActivityTypeCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("activities_activity_type_id_fkey");
-
                     b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "Program")
                         .WithMany("Activities")
                         .HasForeignKey("ProgramCode")
@@ -2123,22 +1668,11 @@ namespace U_VoluntApp_Backend.Migrations
                         .HasPrincipalKey("UvaCode")
                         .HasConstraintName("activities_responsible_profile_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ActivityState", "State")
-                        .WithMany("Activities")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("activities_state_id_fkey");
-
                     b.Navigation("ActivityRecurrencePattern");
-
-                    b.Navigation("ActivityType");
 
                     b.Navigation("Program");
 
                     b.Navigation("ResponsibleProfile");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.ActivityGroup", b =>
@@ -2150,16 +1684,7 @@ namespace U_VoluntApp_Backend.Migrations
                         .IsRequired()
                         .HasConstraintName("activity_group_activity_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ActivityState", "State")
-                        .WithMany("ActivityGroups")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("activity_group_state_id_fkey");
-
                     b.Navigation("Activity");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.ActivityRule", b =>
@@ -2196,20 +1721,11 @@ namespace U_VoluntApp_Backend.Migrations
                         .HasPrincipalKey("UvaCode")
                         .HasConstraintName("role_requests_resolved_by_profile_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.RoleRequestState", "State")
-                        .WithMany("RoleRequests")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("role_requests_state_id_fkey");
-
                     b.Navigation("RequestedRole");
 
                     b.Navigation("RequesterProfile");
 
                     b.Navigation("ResolvedByProfile");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract.UserScholarship", b =>
@@ -2227,27 +1743,9 @@ namespace U_VoluntApp_Backend.Migrations
                         .HasPrincipalKey("UvaCode")
                         .HasConstraintName("user_scholarships_evaluator_profile_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.ScholarshipType", "ScholarshipType")
-                        .WithMany("UserScholarships")
-                        .HasForeignKey("ScholarshipTypeCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("user_scholarships_scholarship_type_id_fkey");
-
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ContractState", "State")
-                        .WithMany("UserScholarships")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("user_scholarships_state_id_fkey");
-
                     b.Navigation("AssignedProfile");
 
                     b.Navigation("EvaluatorProfile");
-
-                    b.Navigation("ScholarshipType");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", b =>
@@ -2266,18 +1764,9 @@ namespace U_VoluntApp_Backend.Migrations
                         .IsRequired()
                         .HasConstraintName("enrollments_enrolled_profile_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.EnrollmentState", "State")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("enrollments_state_id_fkey");
-
                     b.Navigation("Activity");
 
                     b.Navigation("EnrolledProfile");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.GroupEnrollment", b =>
@@ -2296,30 +1785,13 @@ namespace U_VoluntApp_Backend.Migrations
                         .IsRequired()
                         .HasConstraintName("group_enrollment_enrollment_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ActivityState", "State")
-                        .WithMany("GroupEnrollments")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("group_enrollment_state_id_fkey");
-
                     b.Navigation("ActivityGroup");
 
                     b.Navigation("Enrollment");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.CareerType", "Career")
-                        .WithMany("Profiles")
-                        .HasForeignKey("CareerCode")
-                        .HasPrincipalKey("UvaCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("profiles_career_id_fkey");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithOne()
                         .HasForeignKey("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "IdentityUserId")
@@ -2327,29 +1799,11 @@ namespace U_VoluntApp_Backend.Migrations
                         .IsRequired()
                         .HasConstraintName("profiles_identity_user_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ProfileState", "State")
-                        .WithMany("Profiles")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("profiles_state_id_fkey");
-
-                    b.Navigation("Career");
-
                     b.Navigation("IdentityUser");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.Evidence", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.EvidenceType", "EvidenceType")
-                        .WithMany("Evidences")
-                        .HasForeignKey("EvidenceTypeCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("evidences_evidence_type_id_fkey");
-
                     b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", "TrackingLog")
                         .WithMany("Evidences")
                         .HasForeignKey("TrackingLogCode")
@@ -2357,18 +1811,7 @@ namespace U_VoluntApp_Backend.Migrations
                         .IsRequired()
                         .HasConstraintName("evidences_tracking_log_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.TrackingType", "Type")
-                        .WithMany("Evidences")
-                        .HasForeignKey("TypeCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("evidences_type_id_fkey");
-
-                    b.Navigation("EvidenceType");
-
                     b.Navigation("TrackingLog");
-
-                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", b =>
@@ -2398,13 +1841,6 @@ namespace U_VoluntApp_Backend.Migrations
                         .HasPrincipalKey("UvaCode")
                         .HasConstraintName("tracking_logs_group_enrollment_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.TrackingState", "State")
-                        .WithMany("TrackingLogs")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("tracking_logs_state_id_fkey");
-
                     b.Navigation("CheckInRegisteredBy");
 
                     b.Navigation("CheckOutRegisteredBy");
@@ -2412,8 +1848,6 @@ namespace U_VoluntApp_Backend.Migrations
                     b.Navigation("Enrollment");
 
                     b.Navigation("GroupEnrollment");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrenceDetail", b =>
@@ -2425,16 +1859,7 @@ namespace U_VoluntApp_Backend.Migrations
                         .IsRequired()
                         .HasConstraintName("activity_recurrence_detail_activity_recurrence_pattern_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ActivityState", "State")
-                        .WithMany("ActivityRecurrenceDetails")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("activity_recurrence_detail_state_id_fkey");
-
                     b.Navigation("ActivityRecurrencePattern");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrencePattern", b =>
@@ -2446,16 +1871,7 @@ namespace U_VoluntApp_Backend.Migrations
                         .IsRequired()
                         .HasConstraintName("activity_recurrence_patterns_program_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ActivityState", "State")
-                        .WithMany("ActivityRecurrencePatterns")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("activity_recurrence_patterns_state_id_fkey");
-
                     b.Navigation("Program");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ProgramCollaborator", b =>
@@ -2480,20 +1896,11 @@ namespace U_VoluntApp_Backend.Migrations
                         .IsRequired()
                         .HasConstraintName("program_collaborators_program_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ContractState", "State")
-                        .WithMany("ProgramCollaborators")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("program_collaborators_state_id_fkey");
-
                     b.Navigation("AssignedByProfile");
 
                     b.Navigation("Profile");
 
                     b.Navigation("Program");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ProgramContent", b =>
@@ -2516,16 +1923,7 @@ namespace U_VoluntApp_Backend.Migrations
                         .HasPrincipalKey("UvaCode")
                         .HasConstraintName("vol_programs_manager_profile_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ProgramState", "State")
-                        .WithMany("VolPrograms")
-                        .HasForeignKey("StateCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("vol_programs_state_id_fkey");
-
                     b.Navigation("ManagerProfile");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.Activity", b =>
@@ -2579,77 +1977,7 @@ namespace U_VoluntApp_Backend.Migrations
                     b.Navigation("VolPrograms");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ActivityState", b =>
-                {
-                    b.Navigation("Activities");
-
-                    b.Navigation("ActivityGroups");
-
-                    b.Navigation("ActivityRecurrenceDetails");
-
-                    b.Navigation("ActivityRecurrencePatterns");
-
-                    b.Navigation("GroupEnrollments");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ContractState", b =>
-                {
-                    b.Navigation("ProgramCollaborators");
-
-                    b.Navigation("UserScholarships");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.EnrollmentState", b =>
-                {
-                    b.Navigation("Enrollments");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ProfileState", b =>
-                {
-                    b.Navigation("Profiles");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.ProgramState", b =>
-                {
-                    b.Navigation("VolPrograms");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.RoleRequestState", b =>
-                {
-                    b.Navigation("RoleRequests");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States.TrackingState", b =>
-                {
-                    b.Navigation("TrackingLogs");
-                });
-
             modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", b =>
-                {
-                    b.Navigation("Evidences");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.ActivityType", b =>
-                {
-                    b.Navigation("Activities");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.CareerType", b =>
-                {
-                    b.Navigation("Profiles");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.EvidenceType", b =>
-                {
-                    b.Navigation("Evidences");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.ScholarshipType", b =>
-                {
-                    b.Navigation("UserScholarships");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types.TrackingType", b =>
                 {
                     b.Navigation("Evidences");
                 });

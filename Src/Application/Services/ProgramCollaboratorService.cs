@@ -6,6 +6,7 @@ using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 using U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 
@@ -42,7 +43,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
             var collaborators = await _collaboratorRepository.GetByProgramCodeAsync(dto.ProgramCode, filter);
             var requesterAsCollaborator = collaborators.FirstOrDefault(c => c.ProfileCode == requesterId);
 
-            if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractStateConstants.ActiveCode)
+            if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractState.Active.GetUvaCode())
             {
                 throw new InvalidOperationException(
                     "Solo Admin o manager del programa pueden agregar colaboradores");
@@ -57,8 +58,8 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         }
 
         string stateCode = requesterRole == RoleConstants.AdminRole
-            ? ContractStateConstants.ActiveCode
-            : ContractStateConstants.PendingCode;
+            ? ContractState.Active.GetUvaCode()
+            : ContractState.Pending.GetUvaCode();
 
         var collaborator = ProgramCollaborator.Create(
             dto.ProgramCode,
@@ -109,7 +110,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         return await MapToResponseAsync(collaborator);
     }
 
-    public async Task<bool> CanUserAccessProgramAsync(string userId, string programCode, string minStateCode = ContractStateConstants.ActiveCode)
+    public async Task<bool> CanUserAccessProgramAsync(string userId, string programCode, string minStateCode = "stage-2")
     {
         var profile = await _profileRepository.GetByCodeAsync(userId);
         if (profile is null)
@@ -144,7 +145,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
             var collaborators = await _collaboratorRepository.GetByProgramCodeAsync(collaborator.ProgramCode, filter);
             var requesterAsCollaborator = collaborators.FirstOrDefault(c => c.ProfileCode == requesterId);
 
-            if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractStateConstants.ActiveCode)
+            if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractState.Active.GetUvaCode())
             {
                 throw new InvalidOperationException(
                     "Solo Admin o manager del programa pueden actualizar colaboradores");
@@ -169,7 +170,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
             var collaborators = await _collaboratorRepository.GetByProgramCodeAsync(collaborator.ProgramCode, filter);
             var requesterAsCollaborator = collaborators.FirstOrDefault(c => c.ProfileCode == requesterId);
 
-            if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractStateConstants.ActiveCode)
+            if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractState.Active.GetUvaCode())
             {
                 throw new InvalidOperationException(
                     "Solo Admin o manager del programa pueden eliminar colaboradores");

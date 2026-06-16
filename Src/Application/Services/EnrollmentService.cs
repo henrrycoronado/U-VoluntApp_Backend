@@ -7,6 +7,7 @@ using U_VoluntApp_Backend.Src.Domain.Entities.Enrollment;
 using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Activity;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Enrollment;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
@@ -42,7 +43,7 @@ public class EnrollmentService : IEnrollmentService
         var activity = await _activityRepository.GetByCodeAsync(dto.ActivityCode)
             ?? throw new InvalidOperationException("Actividad no encontrada");
 
-        if (activity.StateCode != ActivityStateConstants.ActiveCode)
+        if (activity.StateCode != ActivityState.Active.GetUvaCode())
         {
             throw new InvalidOperationException("Solo se puede inscribir en actividades activas");
         }
@@ -66,7 +67,7 @@ public class EnrollmentService : IEnrollmentService
             if (rule.TotalCapacity > 0)
             {
                 var currentEnrollments = await _enrollmentRepository.GetByActivityCodeAsync(dto.ActivityCode, filter);
-                var approvedCount = currentEnrollments.Count(e => e.StateCode == EnrollmentStateConstants.ActiveCode);
+                var approvedCount = currentEnrollments.Count(e => e.StateCode == EnrollmentState.Active.GetUvaCode());
                 if (approvedCount >= rule.TotalCapacity)
                 {
                     throw new InvalidOperationException("La actividad ha alcanzado su capacidad máxima");
@@ -86,8 +87,8 @@ public class EnrollmentService : IEnrollmentService
         }
 
         string stateCode = (rule is not null && rule.RequiresApproval)
-            ? EnrollmentStateConstants.PendingCode
-            : EnrollmentStateConstants.ActiveCode;
+            ? EnrollmentState.Pending.GetUvaCode()
+            : EnrollmentState.Active.GetUvaCode();
 
         var enrollment = Enrollment.Create(dto.ActivityCode, profileCode, stateCode, DateTime.UtcNow);
 
@@ -159,7 +160,7 @@ public class EnrollmentService : IEnrollmentService
         var enrollment = await _enrollmentRepository.GetByCodeAsync(uvaCode)
             ?? throw new InvalidOperationException("Inscripción no encontrada");
 
-        if (enrollment.StateCode != EnrollmentStateConstants.PendingCode)
+        if (enrollment.StateCode != EnrollmentState.Pending.GetUvaCode())
         {
             throw new InvalidOperationException("Solo se pueden revisar inscripciones en estado Pendiente");
         }
@@ -175,7 +176,7 @@ public class EnrollmentService : IEnrollmentService
             throw new InvalidOperationException("No tienes permiso para revisar esta inscripción");
         }
 
-        string newStateCode = dto.Approved ? EnrollmentStateConstants.ActiveCode : EnrollmentStateConstants.RejectedCode;
+        string newStateCode = dto.Approved ? EnrollmentState.Active.GetUvaCode() : EnrollmentState.Rejected.GetUvaCode();
         enrollment.ChangeState(newStateCode, DateTime.UtcNow);
 
         await _enrollmentRepository.UpdateAsync(enrollment);
@@ -191,13 +192,13 @@ public class EnrollmentService : IEnrollmentService
             throw new InvalidOperationException("No puedes cancelar una inscripción que no es tuya");
         }
 
-        if (enrollment.StateCode == EnrollmentStateConstants.RejectedCode
-            || enrollment.StateCode == EnrollmentStateConstants.CanceledCode)
+        if (enrollment.StateCode == EnrollmentState.Rejected.GetUvaCode()
+            || enrollment.StateCode == EnrollmentState.Canceled.GetUvaCode())
         {
             throw new InvalidOperationException("No se puede cancelar una inscripción rechazada o ya cancelada");
         }
 
-        enrollment.ChangeState(EnrollmentStateConstants.CanceledCode, DateTime.UtcNow);
+        enrollment.ChangeState(EnrollmentState.Canceled.GetUvaCode(), DateTime.UtcNow);
 
         await _enrollmentRepository.UpdateAsync(enrollment);
     }

@@ -1,8 +1,6 @@
 namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract;
 
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Types;
 
 public partial class UserScholarship
 {
@@ -35,8 +33,4 @@ public partial class UserScholarship
     public virtual Profile AssignedProfile { get; set; } = null!;
 
     public virtual Profile? EvaluatorProfile { get; set; }
-
-    public virtual ScholarshipType ScholarshipType { get; set; } = null!;
-
-    public virtual ContractState State { get; set; } = null!;
 }

@@ -22,6 +22,7 @@ using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Repositories;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Seeders;
 using U_VoluntApp_Backend.Src.Infrastructure.Reports;
+using U_VoluntApp_Backend.Src.Infrastructure.Storage;
 using U_VoluntApp_Backend.Src.Presentation.Middleware;
 
 QuestPDF.Settings.License = LicenseType.Community;
@@ -38,10 +39,10 @@ var jwtAudience = builder.Configuration["JWT_AUDIENCE"]
     ?? throw new InvalidOperationException("Falta JWT_AUDIENCE");
 var connectionString = builder.Configuration["DB_CONNECTION_STRING"]
     ?? throw new InvalidOperationException("Falta DB_CONNECTION_STRING");
-var supabaseUrl = builder.Configuration["SUPABASE_URL"]
-    ?? throw new InvalidOperationException("Falta SUPABASE_URL");
-var supabaseKey = builder.Configuration["SUPABASE_SERVICE_ROLE_KEY"]
-    ?? throw new InvalidOperationException("Falta SUPABASE_SERVICE_ROLE_KEY");
+var storageUrl = builder.Configuration["STORAGE_URL"]
+    ?? throw new InvalidOperationException("Falta STORAGE_URL");
+var storageKey = builder.Configuration["STORAGE_SERVICE_ROLE_KEY"]
+    ?? throw new InvalidOperationException("Falta STORAGE_SERVICE_ROLE_KEY");
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
@@ -84,7 +85,7 @@ builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<IRoleRequestRepository, RoleRequestRepository>();
 
 builder.Services.AddScoped<IAuthService, IdentityAuthService>();
-builder.Services.AddScoped<IStorageService, SupabaseStorageService>();
+builder.Services.AddScoped<IStorageService, StorageService>();
 
 builder.Services.AddScoped<IVolProgramService, VolProgramService>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
@@ -100,7 +101,7 @@ builder.Services.AddScoped<IPdfReportService, ScholarshipPdfService>();
 builder.Services.AddScoped<IRoleRequestService, RoleRequestService>();
 
 builder.Services.AddScoped<Supabase.Client>(_ =>
-    new Supabase.Client(supabaseUrl, supabaseKey, new SupabaseOptions
+    new Supabase.Client(storageUrl, storageKey, new SupabaseOptions
     {
         AutoRefreshToken = false,
         AutoConnectRealtime = false,
@@ -199,12 +200,12 @@ using (var scope = app.Services.CreateScope())
     var profileRepo = scope.ServiceProvider.GetRequiredService<IProfileRepository>();
     var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
-    await StateSeeder.SeedAsync(db);
-    await TypeSeeder.SeedAsync(db);
     await AuthSeeder.SeedRolesAndSuperUserAsync(roleManager, userManager, profileRepo, config);
+    await DataSeeder.SeedInitialDataAsync(db, config);
 }
 
-if (app.Environment.IsDevelopment())
+var showSwagger = builder.Configuration.GetValue<bool>("SHOW_SWAGGER", builder.Environment.IsDevelopment());
+if (showSwagger || app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>

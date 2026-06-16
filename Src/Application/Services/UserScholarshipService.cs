@@ -5,7 +5,7 @@ using U_VoluntApp_Backend.Src.Application.Interfaces;
 using U_VoluntApp_Backend.Src.Domain.Entities.Contract;
 using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Contract;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
 
@@ -44,7 +44,7 @@ public class UserScholarshipService : IUserScholarshipService
 
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
         var active = await _scholarshipRepository.GetByProfileCodeAsync(dto.ProfileCode, filter);
-        if (active.Any(s => s.StateCode == ContractStateConstants.ActiveCode))
+        if (active.Any(s => s.StateCode == ContractState.Active.GetUvaCode()))
         {
             throw new InvalidOperationException("El voluntario ya tiene una beca activa");
         }
@@ -60,7 +60,7 @@ public class UserScholarshipService : IUserScholarshipService
             dto.ScholarshipTypeCode,
             dto.RequiredHours,
             dto.Reason,
-            ContractStateConstants.ActiveCode,
+            ContractState.Active.GetUvaCode(),
             DateTime.UtcNow);
 
         await _scholarshipRepository.AddAsync(scholarship);
@@ -77,13 +77,13 @@ public class UserScholarshipService : IUserScholarshipService
         {
             var filter = new RequestFilter { Page = 1, PageSize = 100 };
             var active = await _scholarshipRepository.GetByProfileCodeAsync(scholarship.AssignedProfileCode, filter);
-            if (active.Any(s => s.StateCode == ContractStateConstants.ActiveCode))
+            if (active.Any(s => s.StateCode == ContractState.Active.GetUvaCode()))
             {
                 throw new InvalidOperationException("El voluntario ya tiene una beca activa");
             }
         }
 
-        string newStateCode = dto.Approve ? ContractStateConstants.ActiveCode : ContractStateConstants.RejectedCode;
+        string newStateCode = dto.Approve ? ContractState.Active.GetUvaCode() : ContractState.Rejected.GetUvaCode();
         scholarship.Review(newStateCode, evaluatorCode, dto.RequiredHours ?? scholarship.RequiredHours, DateTime.UtcNow);
 
         await _scholarshipRepository.UpdateAsync(scholarship);
@@ -96,7 +96,7 @@ public class UserScholarshipService : IUserScholarshipService
         var scholarship = await _scholarshipRepository.GetByCodeAsync(uvaCode)
             ?? throw new InvalidOperationException("Beca no encontrada");
 
-        scholarship.Complete(dto.EndDate ?? DateTime.UtcNow, ContractStateConstants.CanceledCode, DateTime.UtcNow); // Use a better state for completed if available
+        scholarship.Complete(dto.EndDate ?? DateTime.UtcNow, ContractState.Canceled.GetUvaCode(), DateTime.UtcNow); // Use a better state for completed if available
 
         await _scholarshipRepository.UpdateAsync(scholarship);
 
@@ -159,7 +159,7 @@ public class UserScholarshipService : IUserScholarshipService
     {
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
         var active = await _scholarshipRepository.GetByProfileCodeAsync(profileCode, filter);
-        if (active.Any(s => s.StateCode == ContractStateConstants.ActiveCode))
+        if (active.Any(s => s.StateCode == ContractState.Active.GetUvaCode()))
         {
             throw new InvalidOperationException("Ya tienes una beca activa");
         }
@@ -174,7 +174,7 @@ public class UserScholarshipService : IUserScholarshipService
             scholarshipTypeCode,
             100.00m, // Default hours
             reason,
-            ContractStateConstants.PendingCode,
+            ContractState.Pending.GetUvaCode(),
             DateTime.UtcNow);
 
         await _scholarshipRepository.AddAsync(scholarship);

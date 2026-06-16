@@ -8,11 +8,13 @@ using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
 using U_VoluntApp_Backend.Src.Domain.Entities.Tracking;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Activity;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Enrollment;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Tracking;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
+using U_VoluntApp_Backend.Src.Infrastructure.Storage;
 
 public class TrackingService : ITrackingService
 {
@@ -58,7 +60,7 @@ public class TrackingService : ITrackingService
             throw new InvalidOperationException("No puedes hacer check-in de otra persona");
         }
 
-        if (enrollment.StateCode != EnrollmentStateConstants.ActiveCode)
+        if (enrollment.StateCode != EnrollmentState.Active.GetUvaCode())
         {
             throw new InvalidOperationException("La inscripción debe estar aprobada para hacer check-in");
         }
@@ -94,7 +96,7 @@ public class TrackingService : ITrackingService
             }
         }
 
-        var log = TrackingLog.Create(dto.EnrollmentCode, null, TrackingStateConstants.ActiveCode, DateTime.UtcNow);
+        var log = TrackingLog.Create(dto.EnrollmentCode, null, TrackingState.Active.GetUvaCode(), DateTime.UtcNow);
         log.CheckIn(DateTime.UtcNow, activity.StartDate, activity.EndDate, profileCode, DateTime.UtcNow);
 
         await _trackingLogRepository.AddAsync(log);
@@ -103,8 +105,8 @@ public class TrackingService : ITrackingService
         var evidence = Evidence.Create(
             log.UvaCode,
             evidencePath,
-            EvidenceTypeConstants.CheckInCode,
-            TrackingTypeConstants.ScanningCode,
+            EvidenceType.CheckIn.GetUvaCode(),
+            TrackingType.Scanning.GetUvaCode(),
             dto.Latitude ?? 0,
             dto.Longitude ?? 0,
             DateTime.UtcNow);
@@ -127,7 +129,7 @@ public class TrackingService : ITrackingService
             throw new InvalidOperationException("No puedes hacer check-out de otra persona");
         }
 
-        if (log.StateCode != TrackingStateConstants.ActiveCode)
+        if (log.StateCode != TrackingState.Active.GetUvaCode())
         {
             throw new InvalidOperationException("Este registro ya fue completado o eliminado");
         }
@@ -164,8 +166,8 @@ public class TrackingService : ITrackingService
         var evidence = Evidence.Create(
             log.UvaCode,
             evidencePath,
-            EvidenceTypeConstants.CheckOutCode,
-            TrackingTypeConstants.ScanningCode,
+            EvidenceType.CheckOut.GetUvaCode(),
+            TrackingType.Scanning.GetUvaCode(),
             dto.Latitude ?? 0,
             dto.Longitude ?? 0,
             DateTime.UtcNow);
@@ -186,7 +188,7 @@ public class TrackingService : ITrackingService
         if (requesterRole != RoleConstants.AdminRole)
         {
             var hasAccess = await _programCollaboratorService.CanUserAccessProgramAsync(
-                requesterId, activity.ProgramCode, ContractStateConstants.ActiveCode);
+                requesterId, activity.ProgramCode, ContractState.Active.GetUvaCode());
 
             if (!hasAccess)
             {
@@ -194,7 +196,7 @@ public class TrackingService : ITrackingService
             }
         }
 
-        if (enrollment.StateCode != EnrollmentStateConstants.ActiveCode)
+        if (enrollment.StateCode != EnrollmentState.Active.GetUvaCode())
         {
             throw new InvalidOperationException("La inscripción debe estar aprobada");
         }
@@ -206,7 +208,7 @@ public class TrackingService : ITrackingService
             throw new InvalidOperationException("Ya existe un registro activo para esta inscripción");
         }
 
-        var log = TrackingLog.Create(dto.EnrollmentCode, null, TrackingStateConstants.ActiveCode, DateTime.UtcNow);
+        var log = TrackingLog.Create(dto.EnrollmentCode, null, TrackingState.Active.GetUvaCode(), DateTime.UtcNow);
         log.CheckIn(dto.EntryTime, activity.StartDate, activity.EndDate, requesterId, DateTime.UtcNow);
 
         if (dto.ExitTime.HasValue)
@@ -234,7 +236,7 @@ public class TrackingService : ITrackingService
         if (requesterRole != RoleConstants.AdminRole)
         {
             var hasAccess = await _programCollaboratorService.CanUserAccessProgramAsync(
-                requesterId, activity.ProgramCode, ContractStateConstants.ActiveCode);
+                requesterId, activity.ProgramCode, ContractState.Active.GetUvaCode());
 
             if (!hasAccess)
             {
@@ -242,7 +244,7 @@ public class TrackingService : ITrackingService
             }
         }
 
-        if (log.StateCode != TrackingStateConstants.ActiveCode)
+        if (log.StateCode != TrackingState.Active.GetUvaCode())
         {
             throw new InvalidOperationException("Este registro ya fue completado o eliminado");
         }

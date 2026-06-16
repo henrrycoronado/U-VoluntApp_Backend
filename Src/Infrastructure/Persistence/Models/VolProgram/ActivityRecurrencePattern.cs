@@ -1,7 +1,6 @@
 namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
 
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.States;
 
 public partial class ActivityRecurrencePattern
 {
@@ -28,6 +27,4 @@ public partial class ActivityRecurrencePattern
     public virtual ICollection<ActivityRecurrenceDetail> ActivityRecurrenceDetails { get; set; } = new List<ActivityRecurrenceDetail>();
 
     public virtual VolProgram Program { get; set; } = null!;
-
-    public virtual ActivityState State { get; set; } = null!;
 }
