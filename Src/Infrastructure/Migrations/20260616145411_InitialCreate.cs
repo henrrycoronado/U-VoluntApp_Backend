@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace U_VoluntApp_Backend.Migrations
+namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -12,37 +12,6 @@ namespace U_VoluntApp_Backend.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "activity_state",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("activity_state_pkey", x => x.id);
-                    table.UniqueConstraint("AK_activity_state_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "activity_type",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("activity_type_pkey", x => x.id);
-                    table.UniqueConstraint("AK_activity_type_uva_code", x => x.uva_code);
-                });
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -83,157 +52,27 @@ namespace U_VoluntApp_Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "career_type",
+                name: "refresh_tokens",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
+                    identity_user_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: false),
+                    profile_code = table.Column<string>(type: "text", nullable: false),
+                    token_hash = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    expires_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    revoked_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    replaced_by_token_hash = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
+                    created_by_ip = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    revoked_by_ip = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    user_agent = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
+                    reason_revoked = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("career_type_pkey", x => x.id);
-                    table.UniqueConstraint("AK_career_type_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "contract_state",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("contract_state_pkey", x => x.id);
-                    table.UniqueConstraint("AK_contract_state_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "enrollment_state",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("enrollment_state_pkey", x => x.id);
-                    table.UniqueConstraint("AK_enrollment_state_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "evidence_type",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("evidence_type_pkey", x => x.id);
-                    table.UniqueConstraint("AK_evidence_type_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "profile_state",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("profile_state_pkey", x => x.id);
-                    table.UniqueConstraint("AK_profile_state_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "program_state",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("program_state_pkey", x => x.id);
-                    table.UniqueConstraint("AK_program_state_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "role_request_state",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("role_request_state_pkey", x => x.id);
-                    table.UniqueConstraint("AK_role_request_state_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "scholarship_type",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("scholarship_type_pkey", x => x.id);
-                    table.UniqueConstraint("AK_scholarship_type_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tracking_state",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("tracking_state_pkey", x => x.id);
-                    table.UniqueConstraint("AK_tracking_state_uva_code", x => x.uva_code);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tracking_type",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    uva_code = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("tracking_type_pkey", x => x.id);
-                    table.UniqueConstraint("AK_tracking_type_uva_code", x => x.uva_code);
+                    table.PrimaryKey("refresh_tokens_pkey", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -368,22 +207,11 @@ namespace U_VoluntApp_Backend.Migrations
                     table.PrimaryKey("profiles_pkey", x => x.id);
                     table.UniqueConstraint("AK_profiles_uva_code", x => x.uva_code);
                     table.ForeignKey(
-                        name: "profiles_career_id_fkey",
-                        column: x => x.career_code,
-                        principalTable: "career_type",
-                        principalColumn: "uva_code",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "profiles_identity_user_id_fkey",
                         column: x => x.identity_user_id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "profiles_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "profile_state",
-                        principalColumn: "uva_code");
                 });
 
             migrationBuilder.CreateTable(
@@ -423,11 +251,6 @@ namespace U_VoluntApp_Backend.Migrations
                         column: x => x.resolved_by_profile_code,
                         principalTable: "profiles",
                         principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "role_requests_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "role_request_state",
-                        principalColumn: "uva_code");
                 });
 
             migrationBuilder.CreateTable(
@@ -462,16 +285,6 @@ namespace U_VoluntApp_Backend.Migrations
                         column: x => x.evaluator_profile_code,
                         principalTable: "profiles",
                         principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "user_scholarships_scholarship_type_id_fkey",
-                        column: x => x.scholarship_type_code,
-                        principalTable: "scholarship_type",
-                        principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "user_scholarships_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "contract_state",
-                        principalColumn: "uva_code");
                 });
 
             migrationBuilder.CreateTable(
@@ -498,11 +311,6 @@ namespace U_VoluntApp_Backend.Migrations
                         column: x => x.manager_profile_code,
                         principalTable: "profiles",
                         principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "vol_programs_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "program_state",
-                        principalColumn: "uva_code");
                 });
 
             migrationBuilder.CreateTable(
@@ -528,11 +336,6 @@ namespace U_VoluntApp_Backend.Migrations
                         name: "activity_recurrence_patterns_program_id_fkey",
                         column: x => x.program_code,
                         principalTable: "vol_programs",
-                        principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "activity_recurrence_patterns_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "activity_state",
                         principalColumn: "uva_code");
                 });
 
@@ -568,11 +371,6 @@ namespace U_VoluntApp_Backend.Migrations
                         name: "program_collaborators_program_id_fkey",
                         column: x => x.program_code,
                         principalTable: "vol_programs",
-                        principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "program_collaborators_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "contract_state",
                         principalColumn: "uva_code");
                 });
 
@@ -638,11 +436,6 @@ namespace U_VoluntApp_Backend.Migrations
                         principalTable: "activity_recurrence_patterns",
                         principalColumn: "uva_code");
                     table.ForeignKey(
-                        name: "activities_activity_type_id_fkey",
-                        column: x => x.activity_type_code,
-                        principalTable: "activity_type",
-                        principalColumn: "uva_code");
-                    table.ForeignKey(
                         name: "activities_program_id_fkey",
                         column: x => x.program_code,
                         principalTable: "vol_programs",
@@ -651,11 +444,6 @@ namespace U_VoluntApp_Backend.Migrations
                         name: "activities_responsible_profile_id_fkey",
                         column: x => x.responsible_profile_code,
                         principalTable: "profiles",
-                        principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "activities_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "activity_state",
                         principalColumn: "uva_code");
                 });
 
@@ -685,11 +473,6 @@ namespace U_VoluntApp_Backend.Migrations
                         column: x => x.activity_recurrence_pattern_code,
                         principalTable: "activity_recurrence_patterns",
                         principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "activity_recurrence_detail_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "activity_state",
-                        principalColumn: "uva_code");
                 });
 
             migrationBuilder.CreateTable(
@@ -718,11 +501,6 @@ namespace U_VoluntApp_Backend.Migrations
                         name: "activity_group_activity_id_fkey",
                         column: x => x.activity_code,
                         principalTable: "activities",
-                        principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "activity_group_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "activity_state",
                         principalColumn: "uva_code");
                 });
 
@@ -782,11 +560,6 @@ namespace U_VoluntApp_Backend.Migrations
                         column: x => x.enrolled_profile_code,
                         principalTable: "profiles",
                         principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "enrollments_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "enrollment_state",
-                        principalColumn: "uva_code");
                 });
 
             migrationBuilder.CreateTable(
@@ -816,11 +589,6 @@ namespace U_VoluntApp_Backend.Migrations
                         name: "group_enrollment_enrollment_id_fkey",
                         column: x => x.enrollment_code,
                         principalTable: "enrollments",
-                        principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "group_enrollment_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "activity_state",
                         principalColumn: "uva_code");
                 });
 
@@ -867,11 +635,6 @@ namespace U_VoluntApp_Backend.Migrations
                         column: x => x.group_enrollment_code,
                         principalTable: "group_enrollment",
                         principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "tracking_logs_state_id_fkey",
-                        column: x => x.state_code,
-                        principalTable: "tracking_state",
-                        principalColumn: "uva_code");
                 });
 
             migrationBuilder.CreateTable(
@@ -896,19 +659,9 @@ namespace U_VoluntApp_Backend.Migrations
                 {
                     table.PrimaryKey("evidences_pkey", x => x.id);
                     table.ForeignKey(
-                        name: "evidences_evidence_type_id_fkey",
-                        column: x => x.evidence_type_code,
-                        principalTable: "evidence_type",
-                        principalColumn: "uva_code");
-                    table.ForeignKey(
                         name: "evidences_tracking_log_id_fkey",
                         column: x => x.tracking_log_code,
                         principalTable: "tracking_logs",
-                        principalColumn: "uva_code");
-                    table.ForeignKey(
-                        name: "evidences_type_id_fkey",
-                        column: x => x.type_code,
-                        principalTable: "tracking_type",
                         principalColumn: "uva_code");
                 });
 
@@ -916,11 +669,6 @@ namespace U_VoluntApp_Backend.Migrations
                 name: "IX_activities_activity_recurrence_pattern_code",
                 table: "activities",
                 column: "activity_recurrence_pattern_code");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_activities_activity_type_code",
-                table: "activities",
-                column: "activity_type_code");
 
             migrationBuilder.CreateIndex(
                 name: "IX_activities_program_code",
@@ -931,11 +679,6 @@ namespace U_VoluntApp_Backend.Migrations
                 name: "IX_activities_responsible_profile_code",
                 table: "activities",
                 column: "responsible_profile_code");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_activities_state_code",
-                table: "activities",
-                column: "state_code");
 
             migrationBuilder.CreateIndex(
                 name: "IX_activities_uva_code",
@@ -949,11 +692,6 @@ namespace U_VoluntApp_Backend.Migrations
                 column: "activity_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_activity_group_state_code",
-                table: "activity_group",
-                column: "state_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_activity_group_uva_code",
                 table: "activity_group",
                 column: "uva_code",
@@ -965,11 +703,6 @@ namespace U_VoluntApp_Backend.Migrations
                 column: "activity_recurrence_pattern_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_activity_recurrence_detail_state_code",
-                table: "activity_recurrence_detail",
-                column: "state_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_activity_recurrence_detail_uva_code",
                 table: "activity_recurrence_detail",
                 column: "uva_code",
@@ -979,11 +712,6 @@ namespace U_VoluntApp_Backend.Migrations
                 name: "IX_activity_recurrence_patterns_program_code",
                 table: "activity_recurrence_patterns",
                 column: "program_code");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_activity_recurrence_patterns_state_code",
-                table: "activity_recurrence_patterns",
-                column: "state_code");
 
             migrationBuilder.CreateIndex(
                 name: "IX_activity_recurrence_patterns_uva_code",
@@ -1000,30 +728,6 @@ namespace U_VoluntApp_Backend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_activity_rules_uva_code",
                 table: "activity_rules",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "activity_state_name_key",
-                table: "activity_state",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_activity_state_uva_code",
-                table: "activity_state",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "activity_type_name_key",
-                table: "activity_type",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_activity_type_uva_code",
-                table: "activity_type",
                 column: "uva_code",
                 unique: true);
 
@@ -1065,42 +769,6 @@ namespace U_VoluntApp_Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "career_type_name_key",
-                table: "career_type",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_career_type_uva_code",
-                table: "career_type",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "contract_state_name_key",
-                table: "contract_state",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_contract_state_uva_code",
-                table: "contract_state",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "enrollment_state_name_key",
-                table: "enrollment_state",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_enrollment_state_uva_code",
-                table: "enrollment_state",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_enrollments_activity_code",
                 table: "enrollments",
                 column: "activity_code");
@@ -1111,42 +779,15 @@ namespace U_VoluntApp_Backend.Migrations
                 column: "enrolled_profile_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_enrollments_state_code",
-                table: "enrollments",
-                column: "state_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_enrollments_uva_code",
                 table: "enrollments",
                 column: "uva_code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "evidence_type_name_key",
-                table: "evidence_type",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_evidence_type_uva_code",
-                table: "evidence_type",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_evidences_evidence_type_code",
-                table: "evidences",
-                column: "evidence_type_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_evidences_tracking_log_code",
                 table: "evidences",
                 column: "tracking_log_code");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_evidences_type_code",
-                table: "evidences",
-                column: "type_code");
 
             migrationBuilder.CreateIndex(
                 name: "IX_evidences_uva_code",
@@ -1165,43 +806,16 @@ namespace U_VoluntApp_Backend.Migrations
                 column: "enrollment_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_group_enrollment_state_code",
-                table: "group_enrollment",
-                column: "state_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_group_enrollment_uva_code",
                 table: "group_enrollment",
                 column: "uva_code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_profile_state_uva_code",
-                table: "profile_state",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "profile_state_name_key",
-                table: "profile_state",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_profiles_career_code",
-                table: "profiles",
-                column: "career_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_profiles_identity_user_id",
                 table: "profiles",
                 column: "identity_user_id",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_profiles_state_code",
-                table: "profiles",
-                column: "state_code");
 
             migrationBuilder.CreateIndex(
                 name: "IX_profiles_uva_code",
@@ -1231,11 +845,6 @@ namespace U_VoluntApp_Backend.Migrations
                 column: "program_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_program_collaborators_state_code",
-                table: "program_collaborators",
-                column: "state_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_program_collaborators_uva_code",
                 table: "program_collaborators",
                 column: "uva_code",
@@ -1254,27 +863,25 @@ namespace U_VoluntApp_Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_program_state_uva_code",
-                table: "program_state",
+                name: "IX_refresh_tokens_identity_user_id",
+                table: "refresh_tokens",
+                column: "identity_user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_refresh_tokens_profile_code",
+                table: "refresh_tokens",
+                column: "profile_code");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_refresh_tokens_token_hash",
+                table: "refresh_tokens",
+                column: "token_hash",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_refresh_tokens_uva_code",
+                table: "refresh_tokens",
                 column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "program_state_name_key",
-                table: "program_state",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_role_request_state_uva_code",
-                table: "role_request_state",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "role_request_state_name_key",
-                table: "role_request_state",
-                column: "name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1293,26 +900,9 @@ namespace U_VoluntApp_Backend.Migrations
                 column: "resolved_by_profile_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_role_requests_state_code",
-                table: "role_requests",
-                column: "state_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_role_requests_uva_code",
                 table: "role_requests",
                 column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_scholarship_type_uva_code",
-                table: "scholarship_type",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "scholarship_type_name_key",
-                table: "scholarship_type",
-                column: "name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1336,38 +926,9 @@ namespace U_VoluntApp_Backend.Migrations
                 column: "group_enrollment_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tracking_logs_state_code",
-                table: "tracking_logs",
-                column: "state_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_tracking_logs_uva_code",
                 table: "tracking_logs",
                 column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tracking_state_uva_code",
-                table: "tracking_state",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "tracking_state_name_key",
-                table: "tracking_state",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tracking_type_uva_code",
-                table: "tracking_type",
-                column: "uva_code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "tracking_type_name_key",
-                table: "tracking_type",
-                column: "name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1381,16 +942,6 @@ namespace U_VoluntApp_Backend.Migrations
                 column: "evaluator_profile_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_user_scholarships_scholarship_type_code",
-                table: "user_scholarships",
-                column: "scholarship_type_code");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_user_scholarships_state_code",
-                table: "user_scholarships",
-                column: "state_code");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_user_scholarships_uva_code",
                 table: "user_scholarships",
                 column: "uva_code",
@@ -1400,11 +951,6 @@ namespace U_VoluntApp_Backend.Migrations
                 name: "IX_vol_programs_manager_profile_code",
                 table: "vol_programs",
                 column: "manager_profile_code");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_vol_programs_state_code",
-                table: "vol_programs",
-                column: "state_code");
 
             migrationBuilder.CreateIndex(
                 name: "IX_vol_programs_uva_code",
@@ -1447,37 +993,22 @@ namespace U_VoluntApp_Backend.Migrations
                 name: "program_content");
 
             migrationBuilder.DropTable(
+                name: "refresh_tokens");
+
+            migrationBuilder.DropTable(
                 name: "role_requests");
 
             migrationBuilder.DropTable(
                 name: "user_scholarships");
 
             migrationBuilder.DropTable(
-                name: "evidence_type");
-
-            migrationBuilder.DropTable(
                 name: "tracking_logs");
-
-            migrationBuilder.DropTable(
-                name: "tracking_type");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "role_request_state");
-
-            migrationBuilder.DropTable(
-                name: "scholarship_type");
-
-            migrationBuilder.DropTable(
-                name: "contract_state");
-
-            migrationBuilder.DropTable(
                 name: "group_enrollment");
-
-            migrationBuilder.DropTable(
-                name: "tracking_state");
 
             migrationBuilder.DropTable(
                 name: "activity_group");
@@ -1489,34 +1020,16 @@ namespace U_VoluntApp_Backend.Migrations
                 name: "activities");
 
             migrationBuilder.DropTable(
-                name: "enrollment_state");
-
-            migrationBuilder.DropTable(
                 name: "activity_recurrence_patterns");
-
-            migrationBuilder.DropTable(
-                name: "activity_type");
 
             migrationBuilder.DropTable(
                 name: "vol_programs");
 
             migrationBuilder.DropTable(
-                name: "activity_state");
-
-            migrationBuilder.DropTable(
                 name: "profiles");
 
             migrationBuilder.DropTable(
-                name: "program_state");
-
-            migrationBuilder.DropTable(
-                name: "career_type");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "profile_state");
         }
     }
 }
