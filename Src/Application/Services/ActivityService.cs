@@ -6,6 +6,7 @@ using U_VoluntApp_Backend.Src.Domain.Entities.Activity;
 using U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
 using U_VoluntApp_Backend.Src.Domain.Utils.Factories;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Activity;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
@@ -46,7 +47,7 @@ public class ActivityService : IActivityService
             throw new InvalidOperationException("No tienes permiso para agregar actividades a este programa");
         }
 
-        if (program.StateCode == ProgramStateConstants.DeletedCode)
+        if (program.StateCode == ProgramState.Deleted.GetUvaCode())
         {
             throw new InvalidOperationException("No se pueden agregar actividades a un programa eliminado");
         }
@@ -62,7 +63,7 @@ public class ActivityService : IActivityService
             dto.StartDate,
             dto.EndDate,
             50, // Default radius
-            ActivityStateConstants.InactiveCode,
+            ActivityState.Inactive.GetUvaCode(),
             dto.LocationLatitude ?? 0,
             dto.LocationLongitude ?? 0,
             nowUtc);
@@ -90,7 +91,7 @@ public class ActivityService : IActivityService
                 var group = ActivityGroup.Create(
                     activity.UvaCode,
                     groupDto.Name,
-                    ActivityStateConstants.ActiveCode,
+                    ActivityState.Active.GetUvaCode(),
                     groupDto.Details,
                     groupDto.Capacity ?? 0,
                     groupDto.StartDate,
@@ -116,17 +117,17 @@ public class ActivityService : IActivityService
             throw new InvalidOperationException("No tienes permiso para agregar actividades a este programa");
         }
 
-        if (program.StateCode == ProgramStateConstants.DeletedCode)
+        if (program.StateCode == ProgramState.Deleted.GetUvaCode())
         {
             throw new InvalidOperationException("No se pueden agregar actividades a un programa eliminado");
         }
 
         var (activity, rule) = dto.ActivityTypeCode switch
         {
-            ActivityTypeConstants.WorkshopCode => _activityFactory.CreateWorkshop(dto),
-            ActivityTypeConstants.MentoringCode => _activityFactory.CreateMentoring(dto),
-            ActivityTypeConstants.BrigadeCode => _activityFactory.CreateBrigade(dto),
-            ActivityTypeConstants.EventCode => _activityFactory.CreateEvent(dto),
+            var code when code == ActivityType.Workshop.GetUvaCode() => _activityFactory.CreateWorkshop(dto),
+            var code when code == ActivityType.Mentoring.GetUvaCode() => _activityFactory.CreateMentoring(dto),
+            var code when code == ActivityType.Brigade.GetUvaCode() => _activityFactory.CreateBrigade(dto),
+            var code when code == ActivityType.Event.GetUvaCode() => _activityFactory.CreateEvent(dto),
             _ => throw new InvalidOperationException("Tipo de actividad no válido")
         };
 
@@ -191,7 +192,7 @@ public class ActivityService : IActivityService
             throw new InvalidOperationException("No tienes permiso para modificar esta actividad");
         }
 
-        if (activity.StateCode == ActivityStateConstants.CanceledCode)
+        if (activity.StateCode == ActivityState.Canceled.GetUvaCode())
         {
             throw new InvalidOperationException("No se puede modificar una actividad cancelada");
         }
@@ -227,7 +228,7 @@ public class ActivityService : IActivityService
             throw new InvalidOperationException("No tienes permiso para cambiar el estado de esta actividad");
         }
 
-        if (activity.StateCode == ActivityStateConstants.DeletedCode)
+        if (activity.StateCode == ActivityState.Deleted.GetUvaCode())
         {
             throw new InvalidOperationException("Una actividad eliminada no puede cambiar de estado");
         }
@@ -251,12 +252,12 @@ public class ActivityService : IActivityService
             throw new InvalidOperationException("No tienes permiso para eliminar esta actividad");
         }
 
-        if (activity.StateCode != ActivityStateConstants.InactiveCode)
+        if (activity.StateCode != ActivityState.Inactive.GetUvaCode())
         {
             throw new InvalidOperationException("Solo se pueden eliminar actividades en estado Inactivo");
         }
 
-        activity.SoftDelete(ActivityStateConstants.DeletedCode, DateTime.UtcNow);
+        activity.SoftDelete(ActivityState.Deleted.GetUvaCode(), DateTime.UtcNow);
         await _activityRepository.UpdateAsync(activity);
     }
 
