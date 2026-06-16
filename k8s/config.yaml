@@ -5,10 +5,11 @@ metadata:
   namespace: default
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
-  JWT_ISSUER: "uvoluntapp-api"
-  JWT_AUDIENCE: "uvoluntapp-client"
+  JWT_ISSUER: "U_VoluntApp_Backend.Src"
+  JWT_AUDIENCE: "UVoluntapp.Client"
   JWT_EXPIRY_MINUTES: "60"
   ENABLE_HTTPS_REDIRECTION: "false"
+  CORS_ALLOWED_ORIGINS: "*"
 ---
 apiVersion: v1
 kind: Secret
@@ -19,7 +20,7 @@ type: Opaque
 data:
   DB_CONNECTION_STRING: "" 
   JWT_SECRET: ""
-  SUPABASE_URL: ""
-  SUPABASE_SERVICE_ROLE_KEY: ""
+  STORAGE_URL: ""
+  STORAGE_SERVICE_ROLE_KEY: ""
   SUPERUSER_EMAIL: ""
   SUPERUSER_PASSWORD: ""
