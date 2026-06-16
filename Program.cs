@@ -180,10 +180,11 @@ builder.Services.AddCors(options =>
 
     options.AddPolicy("AllowSpecificOrigins", policy =>
     {
-        policy.WithOrigins(allowedOrigins)
+        policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials()
+
+              // AllowCredentials()
               .WithExposedHeaders("X-Response-Time-Ms");
     });
 });
