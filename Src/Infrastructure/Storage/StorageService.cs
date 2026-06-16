@@ -15,7 +15,7 @@ public class StorageService : IStorageService
     public StorageService(Client supabase, IConfiguration configuration)
     {
         _supabase = supabase;
-        // Usando llaves genéricas del .env
+
         _publicBaseUrl = configuration["STORAGE_PUBLIC_BASE_URL"]
             ?? StorageConstants.PublicBaseUrl;
         _uploadBucket = configuration["STORAGE_UPLOAD_BUCKET"]

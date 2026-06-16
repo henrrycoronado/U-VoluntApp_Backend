@@ -76,6 +76,7 @@ jobs:
             --from-literal=STORAGE_SERVICE_ROLE_KEY="${{ secrets.STORAGE_SERVICE_ROLE_KEY }}" \
             --from-literal=SUPERUSER_EMAIL="${{ secrets.SUPERUSER_EMAIL }}" \
             --from-literal=SUPERUSER_PASSWORD="${{ secrets.SUPERUSER_PASSWORD }}" \
+            --from-literal=SHOW_SWAGGER="${{ secrets.SHOW_SWAGGER }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
           # 2. Aplicar manifiestos

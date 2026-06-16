@@ -13,8 +13,6 @@ using U_VoluntApp_Backend.Src.Application.Services;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Backend.Src.Domain.Utils.Factories;
 using U_VoluntApp_Backend.Src.Infrastructure.Auth;
-using U_VoluntApp_Backend.Src.Infrastructure.Storage;
-using U_VoluntApp_Backend.Src.Infrastructure.Reports;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Activity;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Contract;
@@ -24,6 +22,8 @@ using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Tracking;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Repositories;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Seeders;
+using U_VoluntApp_Backend.Src.Infrastructure.Reports;
+using U_VoluntApp_Backend.Src.Infrastructure.Storage;
 using U_VoluntApp_Backend.Src.Presentation.Middleware;
 
 QuestPDF.Settings.License = LicenseType.Community;
@@ -201,7 +201,8 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedInitialDataAsync(db, config);
 }
 
-if (app.Environment.IsDevelopment())
+var showSwagger = builder.Configuration.GetValue<bool>("SHOW_SWAGGER", builder.Environment.IsDevelopment());
+if (showSwagger || app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>
