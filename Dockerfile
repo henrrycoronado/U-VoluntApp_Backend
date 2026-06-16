@@ -10,13 +10,16 @@ RUN dotnet publish "U-VoluntApp_Backend.csproj" -c Release -o /app/publish /p:Us
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 
-RUN adduser -D uvoluntappuser && chown -R uvoluntappuser /app
-USER uvoluntappuser
+# Las imágenes de .NET 8.0+ ya incluyen un usuario 'app' (UID 16534)
+# Solo necesitamos asegurarnos de que el directorio /app le pertenezca
+COPY --from=build /app/publish .
+RUN chown -R app:app /app
+
+USER app
 
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 EXPOSE 8080
 
-COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "U-VoluntApp_Backend.dll"]
