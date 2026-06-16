@@ -196,9 +196,8 @@ using (var scope = app.Services.CreateScope())
     var profileRepo = scope.ServiceProvider.GetRequiredService<IProfileRepository>();
     var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
-    await StateSeeder.SeedAsync(db);
-    await TypeSeeder.SeedAsync(db);
     await AuthSeeder.SeedRolesAndSuperUserAsync(roleManager, userManager, profileRepo, config);
+    await DataSeeder.SeedInitialDataAsync(db, config);
 }
 
 if (app.Environment.IsDevelopment())
