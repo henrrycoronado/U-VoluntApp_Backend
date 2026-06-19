@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
+using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
 using U_VoluntApp_Backend.Src.Presentation.Helpers;
 
 [ApiController]
@@ -50,9 +51,9 @@ public class ScholarshipController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("assign")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> Assign([FromBody] CreateScholarshipForProfileDto dto)
     {
-        ControllerHelper.EnsureRole(User, "Admin");
         var evaluatorCode = ControllerHelper.GetProfileId(User);
         var result = await _scholarshipService.AssignApprovedAsync(dto, evaluatorCode);
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
@@ -106,9 +107,9 @@ public class ScholarshipController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("by-profile/{profileCode}")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> GetByProfile(string profileCode)
     {
-        ControllerHelper.EnsureRole(User, "Admin");
         var result = await _scholarshipService.GetByProfileCodeAsync(profileCode);
         return Ok(result);
     }
@@ -126,9 +127,9 @@ public class ScholarshipController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{uvaCode}/review")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> Review(string uvaCode, [FromBody] ReviewScholarshipDto dto)
     {
-        ControllerHelper.EnsureRole(User, "Admin");
         var evaluatorCode = ControllerHelper.GetProfileId(User);
         var result = await _scholarshipService.ReviewAsync(uvaCode, dto, evaluatorCode);
         return Ok(result);
@@ -147,9 +148,9 @@ public class ScholarshipController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{uvaCode}/complete")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> Complete(string uvaCode, [FromBody] CompleteScholarshipDto dto)
     {
-        ControllerHelper.EnsureRole(User, "Admin");
         var evaluatorCode = ControllerHelper.GetProfileId(User);
         var result = await _scholarshipService.CompleteAsync(uvaCode, dto, evaluatorCode);
         return Ok(result);

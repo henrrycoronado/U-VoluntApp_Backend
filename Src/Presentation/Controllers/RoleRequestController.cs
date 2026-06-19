@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
+using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
 using U_VoluntApp_Backend.Src.Presentation.Helpers;
 
 [ApiController]
@@ -34,6 +35,7 @@ public class RoleRequestController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("coordinator")]
     [Consumes("application/json")]
+    [Authorize(Roles = RoleConstants.VolunteerRole)]
     public async Task<ActionResult<RoleRequestResponseDto>> RequestCoordinator(
             [FromBody] CreateRoleRequestDto dto)
     {
@@ -55,7 +57,7 @@ public class RoleRequestController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("admin")]
     [Consumes("application/json")]
-    [Authorize(Roles = "Coordinator,Admin,SuperUser")]
+    [Authorize(Roles = RoleConstants.CoordinatorRole)]
     public async Task<ActionResult<RoleRequestResponseDto>> RequestAdmin(
             [FromBody] CreateRoleRequestDto dto)
     {
@@ -65,7 +67,7 @@ public class RoleRequestController : ControllerBase
     }
 
     [HttpGet("coordinator")]
-    [Authorize(Roles = "Admin,SuperUser")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole},{RoleConstants.SuperUserRole}")]
     public async Task<ActionResult<IEnumerable<RoleRequestResponseDto>>> GetPendingCoordinatorRequests()
     {
         var result = await _roleRequestService.GetPendingCoordinatorRequestsAsync();
@@ -73,7 +75,7 @@ public class RoleRequestController : ControllerBase
     }
 
     [HttpGet("admin")]
-    [Authorize(Roles = "SuperUser")]
+    [Authorize(Roles = RoleConstants.SuperUserRole)]
     public async Task<ActionResult<IEnumerable<RoleRequestResponseDto>>> GetPendingAdminRequests()
     {
         var result = await _roleRequestService.GetPendingAdminRequestsAsync();
@@ -93,7 +95,7 @@ public class RoleRequestController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("{uvaCode}/coordinator/approve")]
     [Consumes("application/json")]
-    [Authorize(Roles = "Admin,SuperUser")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole},{RoleConstants.SuperUserRole}")]
     public async Task<ActionResult<string>> ApproveCoordinator(string uvaCode)
     {
         var adminCode = ControllerHelper.GetProfileId(User);
@@ -114,7 +116,7 @@ public class RoleRequestController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("{uvaCode}/coordinator/reject")]
     [Consumes("application/json")]
-    [Authorize(Roles = "Admin,SuperUser")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole},{RoleConstants.SuperUserRole}")]
     public async Task<ActionResult<string>> RejectCoordinator(string uvaCode)
     {
         var adminCode = ControllerHelper.GetProfileId(User);
@@ -135,7 +137,7 @@ public class RoleRequestController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("{uvaCode}/admin/approve")]
     [Consumes("application/json")]
-    [Authorize(Roles = "SuperUser")]
+    [Authorize(Roles = RoleConstants.SuperUserRole)]
     public async Task<ActionResult<string>> ApproveAdmin(string uvaCode)
     {
         var suCode = ControllerHelper.GetProfileId(User);
@@ -156,7 +158,7 @@ public class RoleRequestController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("{uvaCode}/admin/reject")]
     [Consumes("application/json")]
-    [Authorize(Roles = "SuperUser")]
+    [Authorize(Roles = RoleConstants.SuperUserRole)]
     public async Task<ActionResult<string>> RejectAdmin(string uvaCode)
     {
         var suCode = ControllerHelper.GetProfileId(User);

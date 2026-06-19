@@ -107,9 +107,9 @@ public class EnrollmentController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{uvaCode}/review")]
+    [Authorize(Roles = $"{RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> Review(string uvaCode, [FromBody] ReviewEnrollmentDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.CoordinatorRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.CoordinatorRole);
         await _enrollmentService.ReviewAsync(uvaCode, dto, requesterId, requesterRole);
         return NoContent();

@@ -72,10 +72,10 @@ public class TrackingController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("manual")]
+    [Authorize(Roles = $"{RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> ManualCheckIn([FromBody] ManualCheckInDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.CoordinatorRole);
-        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, "Coordinator");
+        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.CoordinatorRole);
         var result = await _trackingService.ManualCheckInAsync(dto, requesterId, requesterRole);
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
     }
@@ -92,10 +92,10 @@ public class TrackingController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("manual/checkout")]
+    [Authorize(Roles = $"{RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> ManualCheckOut([FromBody] ManualCheckOutDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.CoordinatorRole);
-        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, "Coordinator");
+        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.CoordinatorRole);
         var result = await _trackingService.ManualCheckOutAsync(dto, requesterId, requesterRole);
         return Ok(result);
     }

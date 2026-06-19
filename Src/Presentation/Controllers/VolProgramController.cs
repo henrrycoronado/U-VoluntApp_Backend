@@ -32,9 +32,9 @@ public class VolProgramController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
+    [Authorize(Roles = $"{RoleConstants.AdminRole},{RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> Create([FromBody] CreateVolProgramDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
         var result = await _volProgramService.CreateAsync(dto, requesterId, requesterRole);
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
@@ -90,9 +90,9 @@ public class VolProgramController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPut("{uvaCode}")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole},{RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> Update(string uvaCode, [FromBody] UpdateVolProgramDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
         var result = await _volProgramService.UpdateAsync(uvaCode, dto, requesterId, requesterRole);
         return Ok(result);
@@ -111,9 +111,9 @@ public class VolProgramController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{uvaCode}/state")]
+    [Authorize(Roles = RoleConstants.SuperUserRole)]
     public async Task<IActionResult> ChangeState(string uvaCode, [FromBody] ChangeVolProgramStateDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.SuperUserRole);
         await _volProgramService.ChangeStateAsync(uvaCode, dto, requesterId, requesterRole);
         return NoContent();
@@ -131,10 +131,10 @@ public class VolProgramController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{uvaCode}")]
+    [Authorize(Roles = RoleConstants.SuperUserRole)]
     public async Task<IActionResult> Delete(string uvaCode)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole);
-        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
+        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.SuperUserRole);
         await _volProgramService.DeleteAsync(uvaCode, requesterId, requesterRole);
         return NoContent();
     }

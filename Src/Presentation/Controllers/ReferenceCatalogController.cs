@@ -34,7 +34,6 @@ public class ReferenceCatalogController : ControllerBase
     [HttpGet("states/{stateGroup}")]
     public async Task<IActionResult> GetStates(string stateGroup)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.GetStatesAsync(stateGroup);
         return Ok(result);
     }
@@ -53,9 +52,9 @@ public class ReferenceCatalogController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("states/{stateGroup}/{stateCode}")]
+    [Authorize(Roles = RoleConstants.SuperUserRole)]
     public async Task<IActionResult> UpdateStateName(string stateGroup, string stateCode, [FromBody] UpdateReferenceStateNameDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.UpdateStateNameAsync(stateGroup, stateCode, dto.Name);
         return Ok(result);
     }
@@ -74,7 +73,6 @@ public class ReferenceCatalogController : ControllerBase
     [HttpGet("types/{typeGroup}")]
     public async Task<IActionResult> GetTypes(string typeGroup)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.GetTypesAsync(typeGroup);
         return Ok(result);
     }
@@ -92,9 +90,9 @@ public class ReferenceCatalogController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("types/{typeGroup}")]
+    [Authorize(Roles = RoleConstants.SuperUserRole)]
     public async Task<IActionResult> CreateType(string typeGroup, [FromBody] CreateReferenceTypeDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.CreateTypeAsync(typeGroup, dto);
         return Ok(result);
     }
@@ -113,9 +111,9 @@ public class ReferenceCatalogController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("types/{typeGroup}/{typeCode}")]
+    [Authorize(Roles = RoleConstants.SuperUserRole)]
     public async Task<IActionResult> UpdateType(string typeGroup, string typeCode, [FromBody] UpdateReferenceTypeDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.SuperUserRole);
         var result = await _referenceCatalogService.UpdateTypeAsync(typeGroup, typeCode, dto);
         return Ok(result);
     }

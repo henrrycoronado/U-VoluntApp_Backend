@@ -32,9 +32,9 @@ public class ActivityController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> Create([FromBody] CreateActivityDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.CoordinatorRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
         var result = await _activityService.CreateAsync(dto, requesterId, requesterRole);
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
@@ -52,9 +52,9 @@ public class ActivityController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("simple")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> CreateSimple([FromBody] CreateActivitySimpleDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.CoordinatorRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
         var result = await _activityService.CreateSimpleAsync(dto, requesterId, requesterRole);
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
@@ -93,7 +93,6 @@ public class ActivityController : ControllerBase
     [HttpGet("by-program/{programCode}")]
     public async Task<IActionResult> GetByProgram(string programCode)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.CoordinatorRole, RoleConstants.VolunteerRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
         var result = await _activityService.GetByProgramAsync(programCode, requesterId, requesterRole);
         return Ok(result);
@@ -112,9 +111,9 @@ public class ActivityController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPut("{uvaCode}")]
+    [Authorize(Roles = $"{RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> Update(string uvaCode, [FromBody] UpdateActivityDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.CoordinatorRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
         var result = await _activityService.UpdateAsync(uvaCode, dto, requesterId, requesterRole);
         return Ok(result);
@@ -133,9 +132,9 @@ public class ActivityController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{uvaCode}/state")]
+    [Authorize(Roles = $"{RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> ChangeState(string uvaCode, [FromBody] ChangeActivityStateDto dto)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.CoordinatorRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
         await _activityService.ChangeStateAsync(uvaCode, dto, requesterId, requesterRole);
         return NoContent();
@@ -153,9 +152,9 @@ public class ActivityController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{uvaCode}")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> Delete(string uvaCode)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.CoordinatorRole);
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
         await _activityService.DeleteAsync(uvaCode, requesterId, requesterRole);
         return NoContent();
