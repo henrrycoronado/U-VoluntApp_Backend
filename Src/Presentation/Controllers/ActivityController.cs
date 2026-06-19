@@ -1,6 +1,7 @@
 namespace U_VoluntApp_Backend.Src.Presentation.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
@@ -19,6 +20,17 @@ public class ActivityController : ControllerBase
         _activityService = activityService;
     }
 
+    /// <summary>
+    /// Crea una actividad nuevo.
+    /// </summary>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateActivityDto dto)
     {
@@ -28,6 +40,17 @@ public class ActivityController : ControllerBase
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
     }
 
+    /// <summary>
+    /// Crea una actividad de forma simplificada.
+    /// </summary>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("simple")]
     public async Task<IActionResult> CreateSimple([FromBody] CreateActivitySimpleDto dto)
     {
@@ -37,6 +60,17 @@ public class ActivityController : ControllerBase
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
     }
 
+    /// <summary>
+    /// Obtiene los detalles de una actividad específico.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{uvaCode}")]
     public async Task<IActionResult> GetByCode(string uvaCode)
     {
@@ -45,6 +79,17 @@ public class ActivityController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Obtiene la lista de actividades asociados a un programa.
+    /// </summary>
+    /// <param name="programCode">El parametro programCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("by-program/{programCode}")]
     public async Task<IActionResult> GetByProgram(string programCode)
     {
@@ -54,6 +99,18 @@ public class ActivityController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Actualiza los datos de una actividad existente.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPut("{uvaCode}")]
     public async Task<IActionResult> Update(string uvaCode, [FromBody] UpdateActivityDto dto)
     {
@@ -63,6 +120,18 @@ public class ActivityController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Cambia el estado de una actividad.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{uvaCode}/state")]
     public async Task<IActionResult> ChangeState(string uvaCode, [FromBody] ChangeActivityStateDto dto)
     {
@@ -72,6 +141,17 @@ public class ActivityController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Elimina una actividad del sistema.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{uvaCode}")]
     public async Task<IActionResult> Delete(string uvaCode)
     {

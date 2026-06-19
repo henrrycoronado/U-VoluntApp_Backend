@@ -41,11 +41,11 @@ public class EnrollmentService : IEnrollmentService
     public async Task<EnrollmentResponseDto> EnrollAsync(CreateEnrollmentDto dto, string profileCode)
     {
         var activity = await _activityRepository.GetByCodeAsync(dto.ActivityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         if (activity.StateCode != ActivityState.Active.GetUvaCode())
         {
-            throw new InvalidOperationException("Solo se puede inscribir en actividades activas");
+            throw new UnauthorizedAccessException("Solo se puede inscribir en actividades activas");
         }
 
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
@@ -77,7 +77,7 @@ public class EnrollmentService : IEnrollmentService
             if (dto.ActivityGroupCode != null)
             {
                 var group = await _activityGroupRepository.GetByCodeAsync(dto.ActivityGroupCode)
-                    ?? throw new InvalidOperationException("Grupo no encontrado");
+                    ?? throw new KeyNotFoundException("Grupo no encontrado");
 
                 if (group.ActivityCode != activity.UvaCode)
                 {
@@ -101,10 +101,10 @@ public class EnrollmentService : IEnrollmentService
     public async Task<EnrollmentResponseDto> GetByCodeAsync(string uvaCode)
     {
         var enrollment = await _enrollmentRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Inscripción no encontrada");
+            ?? throw new KeyNotFoundException("Inscripción no encontrada");
 
         var activity = await _activityRepository.GetByCodeAsync(enrollment.ActivityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         var profile = await _profileRepository.GetByCodeAsync(enrollment.EnrolledProfileCode);
         return MapToResponse(enrollment, activity, profile);
@@ -113,14 +113,14 @@ public class EnrollmentService : IEnrollmentService
     public async Task<List<EnrollmentResponseDto>> GetByActivityAsync(string activityCode, string requesterId, string requesterRole)
     {
         var activity = await _activityRepository.GetByCodeAsync(activityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes acceso a las inscripciones de esta actividad");
+            throw new UnauthorizedAccessException("No tienes acceso a las inscripciones de esta actividad");
         }
 
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
@@ -158,22 +158,22 @@ public class EnrollmentService : IEnrollmentService
     public async Task ReviewAsync(string uvaCode, ReviewEnrollmentDto dto, string requesterId, string requesterRole)
     {
         var enrollment = await _enrollmentRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Inscripción no encontrada");
+            ?? throw new KeyNotFoundException("Inscripción no encontrada");
 
         if (enrollment.StateCode != EnrollmentState.Pending.GetUvaCode())
         {
-            throw new InvalidOperationException("Solo se pueden revisar inscripciones en estado Pendiente");
+            throw new UnauthorizedAccessException("Solo se pueden revisar inscripciones en estado Pendiente");
         }
 
         var activity = await _activityRepository.GetByCodeAsync(enrollment.ActivityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes permiso para revisar esta inscripción");
+            throw new UnauthorizedAccessException("No tienes permiso para revisar esta inscripción");
         }
 
         string newStateCode = dto.Approved ? EnrollmentState.Active.GetUvaCode() : EnrollmentState.Rejected.GetUvaCode();
@@ -185,7 +185,7 @@ public class EnrollmentService : IEnrollmentService
     public async Task CancelAsync(string uvaCode, string profileCode)
     {
         var enrollment = await _enrollmentRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Inscripción no encontrada");
+            ?? throw new KeyNotFoundException("Inscripción no encontrada");
 
         if (enrollment.EnrolledProfileCode != profileCode)
         {

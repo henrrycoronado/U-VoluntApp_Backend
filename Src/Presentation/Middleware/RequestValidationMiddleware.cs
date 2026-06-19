@@ -85,16 +85,20 @@ public class RequestValidationMiddleware
 
     private static async Task WriteValidationErrorResponse(HttpContext context, string message, HttpStatusCode statusCode)
     {
-        context.Response.ContentType = "application/json";
+        context.Response.ContentType = "application/problem+json";
         context.Response.StatusCode = (int)statusCode;
 
-        var response = new
+        var problemDetails = new Microsoft.AspNetCore.Mvc.ProblemDetails
         {
-            error = message,
-            code = (int)statusCode,
+            Status = (int)statusCode,
+            Title = "Error de Validación",
+            Detail = message,
+            Instance = context.Request.Path
         };
+        problemDetails.Extensions["traceId"] = context.TraceIdentifier;
+
         var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-        await context.Response.WriteAsync(JsonSerializer.Serialize(response, options));
+        await context.Response.WriteAsync(JsonSerializer.Serialize(problemDetails, options));
     }
 }

@@ -1,6 +1,7 @@
 namespace U_VoluntApp_Backend.Src.Presentation.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
@@ -19,6 +20,17 @@ public class VolProgramController : ControllerBase
         _volProgramService = volProgramService;
     }
 
+    /// <summary>
+    /// Crea un programa nuevo.
+    /// </summary>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateVolProgramDto dto)
     {
@@ -28,6 +40,16 @@ public class VolProgramController : ControllerBase
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
     }
 
+    /// <summary>
+    /// Obtiene una lista paginada de programas.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -36,6 +58,17 @@ public class VolProgramController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Obtiene los detalles de un programa específico.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{uvaCode}")]
     public async Task<IActionResult> GetByCode(string uvaCode)
     {
@@ -44,6 +77,18 @@ public class VolProgramController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Actualiza los datos de un programa existente.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPut("{uvaCode}")]
     public async Task<IActionResult> Update(string uvaCode, [FromBody] UpdateVolProgramDto dto)
     {
@@ -53,6 +98,18 @@ public class VolProgramController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Cambia el estado de un programa.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{uvaCode}/state")]
     public async Task<IActionResult> ChangeState(string uvaCode, [FromBody] ChangeVolProgramStateDto dto)
     {
@@ -62,6 +119,17 @@ public class VolProgramController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Elimina un programa del sistema.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{uvaCode}")]
     public async Task<IActionResult> Delete(string uvaCode)
     {

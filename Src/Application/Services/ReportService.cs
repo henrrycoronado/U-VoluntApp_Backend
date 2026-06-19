@@ -45,7 +45,7 @@ public class ReportService : IReportService
     public async Task<ProgramAnalyticsDto> GetProgramAnalyticsByCodeAsync(string programCode)
     {
         var record = await _reportRepository.GetProgramAnalyticsByCodeAsync(programCode)
-            ?? throw new InvalidOperationException("Programa no encontrado en analitica");
+            ?? throw new KeyNotFoundException("Programa no encontrado en analitica");
 
         return MapToDto(record);
     }
@@ -71,7 +71,7 @@ public class ReportService : IReportService
     public async Task<VolunteerHistoryDto> GetVolunteerHistoryByProfileCodeAsync(string profileCode)
     {
         var record = await _reportRepository.GetVolunteerHistoryByProfileCodeAsync(profileCode)
-            ?? throw new InvalidOperationException("Historial de voluntario no encontrado");
+            ?? throw new KeyNotFoundException("Historial de voluntario no encontrado");
 
         return MapToDto(record);
     }

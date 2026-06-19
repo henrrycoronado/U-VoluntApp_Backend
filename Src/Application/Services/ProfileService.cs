@@ -26,7 +26,7 @@ public class ProfileService : IProfileService
     public async Task<ProfileResponseDto> GetByCodeAsync(string uvaCode)
     {
         var profile = await _profileRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Perfil no encontrado");
+            ?? throw new KeyNotFoundException("Perfil no encontrado");
 
         return MapToResponse(profile);
     }
@@ -34,7 +34,7 @@ public class ProfileService : IProfileService
     public async Task<ProfileResponseDto> UpdateAsync(string uvaCode, UpdateProfileDto dto)
     {
         var profile = await _profileRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Perfil no encontrado");
+            ?? throw new KeyNotFoundException("Perfil no encontrado");
 
         profile.ApplyUpdate(
             dto.FirstName ?? profile.FirstName,
@@ -52,7 +52,7 @@ public class ProfileService : IProfileService
     public async Task<ProfileResponseDto> UpdatePhotoAsync(string uvaCode, IFormFile photo)
     {
         var profile = await _profileRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Perfil no encontrado");
+            ?? throw new KeyNotFoundException("Perfil no encontrado");
 
         var photoUrl = await _storageService.UploadAsync(photo, StorageConstants.ProfileFolder);
 
@@ -65,7 +65,7 @@ public class ProfileService : IProfileService
     public async Task DeleteAsync(string uvaCode)
     {
         var profile = await _profileRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Perfil no encontrado");
+            ?? throw new KeyNotFoundException("Perfil no encontrado");
 
         profile.SoftDelete(DateTime.UtcNow, ProfileState.Deleted.GetUvaCode());
 

@@ -53,7 +53,7 @@ public class TrackingService : ITrackingService
     public async Task<TrackingLogResponseDto> CheckInAsync(CheckInDto dto, string profileCode)
     {
         var enrollment = await _enrollmentRepository.GetByCodeAsync(dto.EnrollmentCode)
-            ?? throw new InvalidOperationException("Inscripción no encontrada");
+            ?? throw new KeyNotFoundException("Inscripción no encontrada");
 
         if (enrollment.EnrolledProfileCode != profileCode)
         {
@@ -78,7 +78,7 @@ public class TrackingService : ITrackingService
         }
 
         var activity = await _activityRepository.GetByCodeAsync(enrollment.ActivityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         if (activity.RegistrationRadiusMeters > 0)
         {
@@ -119,10 +119,10 @@ public class TrackingService : ITrackingService
     public async Task<TrackingLogResponseDto> CheckOutAsync(CheckOutDto dto, string profileCode)
     {
         var log = await _trackingLogRepository.GetByCodeAsync(dto.TrackingLogCode)
-            ?? throw new InvalidOperationException("Registro de tracking no encontrado");
+            ?? throw new KeyNotFoundException("Registro de tracking no encontrado");
 
         var enrollment = await _enrollmentRepository.GetByCodeAsync(log.EnrollmentCode)
-            ?? throw new InvalidOperationException("Inscripción no encontrada");
+            ?? throw new KeyNotFoundException("Inscripción no encontrada");
 
         if (enrollment.EnrolledProfileCode != profileCode)
         {
@@ -140,7 +140,7 @@ public class TrackingService : ITrackingService
         }
 
         var activity = await _activityRepository.GetByCodeAsync(enrollment.ActivityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         if (activity.RegistrationRadiusMeters > 0)
         {
@@ -180,10 +180,10 @@ public class TrackingService : ITrackingService
     public async Task<TrackingLogResponseDto> ManualCheckInAsync(ManualCheckInDto dto, string requesterId, string requesterRole)
     {
         var enrollment = await _enrollmentRepository.GetByCodeAsync(dto.EnrollmentCode)
-            ?? throw new InvalidOperationException("Inscripción no encontrada");
+            ?? throw new KeyNotFoundException("Inscripción no encontrada");
 
         var activity = await _activityRepository.GetByCodeAsync(enrollment.ActivityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         if (requesterRole != RoleConstants.AdminRole)
         {
@@ -192,7 +192,7 @@ public class TrackingService : ITrackingService
 
             if (!hasAccess)
             {
-                throw new InvalidOperationException("No tienes acceso a este programa");
+                throw new UnauthorizedAccessException("No tienes acceso a este programa");
             }
         }
 
@@ -225,13 +225,13 @@ public class TrackingService : ITrackingService
     public async Task<TrackingLogResponseDto> ManualCheckOutAsync(ManualCheckOutDto dto, string requesterId, string requesterRole)
     {
         var log = await _trackingLogRepository.GetByCodeAsync(dto.TrackingLogCode)
-            ?? throw new InvalidOperationException("Registro de tracking no encontrado");
+            ?? throw new KeyNotFoundException("Registro de tracking no encontrado");
 
         var enrollment = await _enrollmentRepository.GetByCodeAsync(log.EnrollmentCode)
-            ?? throw new InvalidOperationException("Inscripción no encontrada");
+            ?? throw new KeyNotFoundException("Inscripción no encontrada");
 
         var activity = await _activityRepository.GetByCodeAsync(enrollment.ActivityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         if (requesterRole != RoleConstants.AdminRole)
         {
@@ -240,7 +240,7 @@ public class TrackingService : ITrackingService
 
             if (!hasAccess)
             {
-                throw new InvalidOperationException("No tienes acceso a este programa");
+                throw new UnauthorizedAccessException("No tienes acceso a este programa");
             }
         }
 
@@ -260,13 +260,13 @@ public class TrackingService : ITrackingService
     public async Task<TrackingLogResponseDto> GetByCodeAsync(string uvaCode)
     {
         var log = await _trackingLogRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Registro no encontrado");
+            ?? throw new KeyNotFoundException("Registro no encontrado");
 
         var enrollment = await _enrollmentRepository.GetByCodeAsync(log.EnrollmentCode)
-            ?? throw new InvalidOperationException("Inscripción no encontrada");
+            ?? throw new KeyNotFoundException("Inscripción no encontrada");
 
         var activity = await _activityRepository.GetByCodeAsync(enrollment.ActivityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         var profile = await _profileRepository.GetByCodeAsync(enrollment.EnrolledProfileCode);
         return await MapToResponseWithAuditAsync(log, activity, profile);
@@ -275,10 +275,10 @@ public class TrackingService : ITrackingService
     public async Task<List<TrackingLogResponseDto>> GetByEnrollmentAsync(string enrollmentCode)
     {
         var enrollment = await _enrollmentRepository.GetByCodeAsync(enrollmentCode)
-            ?? throw new InvalidOperationException("Inscripción no encontrada");
+            ?? throw new KeyNotFoundException("Inscripción no encontrada");
 
         var activity = await _activityRepository.GetByCodeAsync(enrollment.ActivityCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
         var logs = await _trackingLogRepository.GetByEnrollmentCodeAsync(enrollmentCode, filter);

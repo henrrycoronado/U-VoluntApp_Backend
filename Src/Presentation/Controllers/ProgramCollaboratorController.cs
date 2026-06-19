@@ -1,6 +1,7 @@
 namespace U_VoluntApp_Backend.Src.Presentation.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
@@ -19,6 +20,17 @@ public class ProgramCollaboratorController : ControllerBase
         _collaboratorService = collaboratorService;
     }
 
+    /// <summary>
+    /// Procesa la acción Add para un colaborador.
+    /// </summary>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] AddProgramCollaboratorDto dto)
     {
@@ -28,6 +40,17 @@ public class ProgramCollaboratorController : ControllerBase
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
     }
 
+    /// <summary>
+    /// Procesa la acción GetByProgramId para un colaborador.
+    /// </summary>
+    /// <param name="programCode">El parametro programCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("program/{programCode}")]
     public async Task<IActionResult> GetByProgramId(string programCode)
     {
@@ -36,6 +59,17 @@ public class ProgramCollaboratorController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Obtiene los detalles de un colaborador específico.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{uvaCode}")]
     public async Task<IActionResult> GetByCode(string uvaCode)
     {
@@ -52,6 +86,18 @@ public class ProgramCollaboratorController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Actualiza los datos de un colaborador existente.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPut("{uvaCode}")]
     public async Task<IActionResult> Update(string uvaCode, [FromBody] UpdateProgramCollaboratorDto dto)
     {
@@ -60,6 +106,17 @@ public class ProgramCollaboratorController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Elimina un colaborador del sistema.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{uvaCode}")]
     public async Task<IActionResult> Delete(string uvaCode)
     {

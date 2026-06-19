@@ -67,12 +67,12 @@ public class RoleRequestService : IRoleRequestService
         var identityUser = await _userManager.FindByIdAsync(profile.IdentityUserId);
         if (identityUser == null)
         {
-            throw new InvalidOperationException($"Usuario {profile.IdentityUserId} no encontrado");
+            throw new KeyNotFoundException($"Usuario {profile.IdentityUserId} no encontrado");
         }
 
         if (!await _userManager.IsInRoleAsync(identityUser, "Coordinator"))
         {
-            throw new InvalidOperationException("Solo los Coordinadores pueden enviar solicitud para ser Administrador.");
+            throw new UnauthorizedAccessException("Solo los Coordinadores pueden enviar solicitud para ser Administrador.");
         }
 
         var roleRequest = RoleRequest.Create(
@@ -107,7 +107,7 @@ public class RoleRequestService : IRoleRequestService
     public async Task ApproveCoordinatorAsync(string uvaCode, string adminProfileCode)
     {
         var request = await _roleRequestRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException($"Solicitud de rol {uvaCode} no encontrada");
+            ?? throw new KeyNotFoundException($"Solicitud de rol {uvaCode} no encontrada");
 
         if (request.RequestedRoleCode != "Coordinator")
         {
@@ -131,7 +131,7 @@ public class RoleRequestService : IRoleRequestService
     public async Task RejectCoordinatorAsync(string uvaCode, string adminProfileCode)
     {
         var request = await _roleRequestRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException($"Solicitud de rol {uvaCode} no encontrada");
+            ?? throw new KeyNotFoundException($"Solicitud de rol {uvaCode} no encontrada");
 
         if (request.RequestedRoleCode != "Coordinator")
         {
@@ -145,7 +145,7 @@ public class RoleRequestService : IRoleRequestService
     public async Task ApproveAdminAsync(string uvaCode, string suProfileCode)
     {
         var request = await _roleRequestRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException($"Solicitud de rol {uvaCode} no encontrada");
+            ?? throw new KeyNotFoundException($"Solicitud de rol {uvaCode} no encontrada");
 
         if (request.RequestedRoleCode != "Admin")
         {
@@ -169,7 +169,7 @@ public class RoleRequestService : IRoleRequestService
     public async Task RejectAdminAsync(string uvaCode, string suProfileCode)
     {
         var request = await _roleRequestRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException($"Solicitud de rol {uvaCode} no encontrada");
+            ?? throw new KeyNotFoundException($"Solicitud de rol {uvaCode} no encontrada");
 
         if (request.RequestedRoleCode != "Admin")
         {

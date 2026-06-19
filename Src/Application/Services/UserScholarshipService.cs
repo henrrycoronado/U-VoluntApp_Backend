@@ -50,7 +50,7 @@ public class UserScholarshipService : IUserScholarshipService
         }
 
         var profile = await _profileRepository.GetByCodeAsync(dto.ProfileCode)
-            ?? throw new InvalidOperationException("Perfil no encontrado");
+            ?? throw new KeyNotFoundException("Perfil no encontrado");
 
         var scholarship = UserScholarship.CreateApproved(
             dto.ProfileCode,
@@ -71,7 +71,7 @@ public class UserScholarshipService : IUserScholarshipService
     public async Task<ScholarshipResponseDto> ReviewAsync(string uvaCode, ReviewScholarshipDto dto, string evaluatorCode)
     {
         var scholarship = await _scholarshipRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Beca no encontrada");
+            ?? throw new KeyNotFoundException("Beca no encontrada");
 
         if (dto.Approve)
         {
@@ -94,7 +94,7 @@ public class UserScholarshipService : IUserScholarshipService
     public async Task<ScholarshipResponseDto> CompleteAsync(string uvaCode, CompleteScholarshipDto dto, string evaluatorCode)
     {
         var scholarship = await _scholarshipRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Beca no encontrada");
+            ?? throw new KeyNotFoundException("Beca no encontrada");
 
         scholarship.Complete(dto.EndDate ?? DateTime.UtcNow, ContractState.Canceled.GetUvaCode(), DateTime.UtcNow); // Use a better state for completed if available
 
@@ -106,7 +106,7 @@ public class UserScholarshipService : IUserScholarshipService
     public async Task<ScholarshipResponseDto> GetByCodeAsync(string uvaCode)
     {
         var scholarship = await _scholarshipRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Beca no encontrada");
+            ?? throw new KeyNotFoundException("Beca no encontrada");
 
         return MapToResponse(scholarship, null);
     }
@@ -165,7 +165,7 @@ public class UserScholarshipService : IUserScholarshipService
         }
 
         var profile = await _profileRepository.GetByCodeAsync(profileCode)
-            ?? throw new InvalidOperationException("Perfil no encontrado");
+            ?? throw new KeyNotFoundException("Perfil no encontrado");
 
         var scholarship = UserScholarship.CreatePending(
             profileCode,

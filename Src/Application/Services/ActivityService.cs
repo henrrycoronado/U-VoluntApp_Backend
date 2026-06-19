@@ -40,11 +40,11 @@ public class ActivityService : IActivityService
     public async Task<ActivityResponseDto> CreateAsync(CreateActivityDto dto, string requesterId, string requesterRole)
     {
         var program = await _volProgramRepository.GetByCodeAsync(dto.ProgramCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes permiso para agregar actividades a este programa");
+            throw new UnauthorizedAccessException("No tienes permiso para agregar actividades a este programa");
         }
 
         if (program.StateCode == ProgramState.Deleted.GetUvaCode())
@@ -110,11 +110,11 @@ public class ActivityService : IActivityService
     public async Task<ActivityResponseDto> CreateSimpleAsync(CreateActivitySimpleDto dto, string requesterId, string requesterRole)
     {
         var program = await _volProgramRepository.GetByCodeAsync(dto.ProgramCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes permiso para agregar actividades a este programa");
+            throw new UnauthorizedAccessException("No tienes permiso para agregar actividades a este programa");
         }
 
         if (program.StateCode == ProgramState.Deleted.GetUvaCode())
@@ -144,14 +144,14 @@ public class ActivityService : IActivityService
     public async Task<ActivityResponseDto> GetByCodeAsync(string uvaCode, string requesterId, string requesterRole)
     {
         var activity = await _activityRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes acceso a esta actividad");
+            throw new UnauthorizedAccessException("No tienes acceso a esta actividad");
         }
 
         return await MapToResponseAsync(activity, program);
@@ -160,11 +160,11 @@ public class ActivityService : IActivityService
     public async Task<List<ActivityResponseDto>> GetByProgramAsync(string programCode, string requesterId, string requesterRole)
     {
         var program = await _volProgramRepository.GetByCodeAsync(programCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes acceso a las actividades de este programa");
+            throw new UnauthorizedAccessException("No tienes acceso a las actividades de este programa");
         }
 
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
@@ -182,14 +182,14 @@ public class ActivityService : IActivityService
     public async Task<ActivityResponseDto> UpdateAsync(string uvaCode, UpdateActivityDto dto, string requesterId, string requesterRole)
     {
         var activity = await _activityRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes permiso para modificar esta actividad");
+            throw new UnauthorizedAccessException("No tienes permiso para modificar esta actividad");
         }
 
         if (activity.StateCode == ActivityState.Canceled.GetUvaCode())
@@ -218,14 +218,14 @@ public class ActivityService : IActivityService
     public async Task ChangeStateAsync(string uvaCode, ChangeActivityStateDto dto, string requesterId, string requesterRole)
     {
         var activity = await _activityRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes permiso para cambiar el estado de esta actividad");
+            throw new UnauthorizedAccessException("No tienes permiso para cambiar el estado de esta actividad");
         }
 
         if (activity.StateCode == ActivityState.Deleted.GetUvaCode())
@@ -242,19 +242,19 @@ public class ActivityService : IActivityService
     public async Task DeleteAsync(string uvaCode, string requesterId, string requesterRole)
     {
         var activity = await _activityRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Actividad no encontrada");
+            ?? throw new KeyNotFoundException("Actividad no encontrada");
 
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes permiso para eliminar esta actividad");
+            throw new UnauthorizedAccessException("No tienes permiso para eliminar esta actividad");
         }
 
         if (activity.StateCode != ActivityState.Inactive.GetUvaCode())
         {
-            throw new InvalidOperationException("Solo se pueden eliminar actividades en estado Inactivo");
+            throw new UnauthorizedAccessException("Solo se pueden eliminar actividades en estado Inactivo");
         }
 
         activity.SoftDelete(ActivityState.Deleted.GetUvaCode(), DateTime.UtcNow);

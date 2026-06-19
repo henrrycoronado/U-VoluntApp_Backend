@@ -169,7 +169,7 @@ public class ActivityRecurrenceDetail
 
         if (dayParametersCount > 1)
         {
-            throw new InvalidOperationException("Solo se acepta un registro por detalle");
+            throw new UnauthorizedAccessException("Solo se acepta un registro por detalle");
         }
 
         if (dayOfWeek.HasValue && (dayOfWeek < 0 || dayOfWeek > 6))

@@ -3,6 +3,7 @@ namespace U_VoluntApp_Backend.Src.Presentation.Controllers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
@@ -20,21 +21,43 @@ public class RoleRequestController : ControllerBase
         _roleRequestService = roleRequestService;
     }
 
+    /// <summary>
+    /// Procesa la acción RequestCoordinator para una solicitud de rol.
+    /// </summary>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(typeof(RoleRequestResponseDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("coordinator")]
     [Consumes("application/json")]
     public async Task<ActionResult<RoleRequestResponseDto>> RequestCoordinator(
-        [FromBody] CreateRoleRequestDto dto)
+            [FromBody] CreateRoleRequestDto dto)
     {
         var requesterCode = ControllerHelper.GetProfileId(User);
         var result = await _roleRequestService.RequestCoordinatorAsync(dto, requesterCode);
         return Ok(result);
     }
 
+    /// <summary>
+    /// Procesa la acción RequestAdmin para una solicitud de rol.
+    /// </summary>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(typeof(RoleRequestResponseDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("admin")]
     [Consumes("application/json")]
     [Authorize(Roles = "Coordinator,Admin,SuperUser")]
     public async Task<ActionResult<RoleRequestResponseDto>> RequestAdmin(
-        [FromBody] CreateRoleRequestDto dto)
+            [FromBody] CreateRoleRequestDto dto)
     {
         var requesterCode = ControllerHelper.GetProfileId(User);
         var result = await _roleRequestService.RequestAdminAsync(dto, requesterCode);
@@ -57,6 +80,17 @@ public class RoleRequestController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Aprueba una solicitud de rol.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("{uvaCode}/coordinator/approve")]
     [Consumes("application/json")]
     [Authorize(Roles = "Admin,SuperUser")]
@@ -67,8 +101,19 @@ public class RoleRequestController : ControllerBase
         return Ok("Solicitud de Coordinador aprobada.");
     }
 
-    [Consumes("application/json")]
+    /// <summary>
+    /// Rechaza una solicitud de rol.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("{uvaCode}/coordinator/reject")]
+    [Consumes("application/json")]
     [Authorize(Roles = "Admin,SuperUser")]
     public async Task<ActionResult<string>> RejectCoordinator(string uvaCode)
     {
@@ -77,8 +122,19 @@ public class RoleRequestController : ControllerBase
         return Ok("Solicitud de Coordinador rechazada.");
     }
 
-    [Consumes("application/json")]
+    /// <summary>
+    /// Aprueba una solicitud de rol.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("{uvaCode}/admin/approve")]
+    [Consumes("application/json")]
     [Authorize(Roles = "SuperUser")]
     public async Task<ActionResult<string>> ApproveAdmin(string uvaCode)
     {
@@ -87,8 +143,19 @@ public class RoleRequestController : ControllerBase
         return Ok("Solicitud de Admin aprobada.");
     }
 
-    [Consumes("application/json")]
+    /// <summary>
+    /// Rechaza una solicitud de rol.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("{uvaCode}/admin/reject")]
+    [Consumes("application/json")]
     [Authorize(Roles = "SuperUser")]
     public async Task<ActionResult<string>> RejectAdmin(string uvaCode)
     {

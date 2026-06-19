@@ -1,6 +1,7 @@
 namespace U_VoluntApp_Backend.Src.Presentation.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
@@ -19,6 +20,17 @@ public class EnrollmentController : ControllerBase
         _enrollmentService = enrollmentService;
     }
 
+    /// <summary>
+    /// Procesa la acción Enroll para una inscripción.
+    /// </summary>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Enroll([FromBody] CreateEnrollmentDto dto)
     {
@@ -27,6 +39,17 @@ public class EnrollmentController : ControllerBase
         return CreatedAtAction(nameof(GetByCode), new { uvaCode = result.UvaCode }, result);
     }
 
+    /// <summary>
+    /// Obtiene los detalles de una inscripción específico.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{uvaCode}")]
     public async Task<IActionResult> GetByCode(string uvaCode)
     {
@@ -34,6 +57,17 @@ public class EnrollmentController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Procesa la acción GetByActivity para una inscripción.
+    /// </summary>
+    /// <param name="activityCode">El parametro activityCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("by-activity/{activityCode}")]
     public async Task<IActionResult> GetByActivity(string activityCode)
     {
@@ -42,6 +76,16 @@ public class EnrollmentController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Procesa la acción GetMyEnrollments para una inscripción.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("mine")]
     public async Task<IActionResult> GetMyEnrollments()
     {
@@ -50,6 +94,18 @@ public class EnrollmentController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Procesa la acción Review para una inscripción.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{uvaCode}/review")]
     public async Task<IActionResult> Review(string uvaCode, [FromBody] ReviewEnrollmentDto dto)
     {
@@ -59,6 +115,17 @@ public class EnrollmentController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Procesa la acción Cancel para una inscripción.
+    /// </summary>
+    /// <param name="uvaCode">El parametro uvaCode.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{uvaCode}/cancel")]
     public async Task<IActionResult> Cancel(string uvaCode)
     {

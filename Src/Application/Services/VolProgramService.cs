@@ -26,7 +26,7 @@ public class VolProgramService : IVolProgramService
     public async Task<VolProgramResponseDto> CreateAsync(CreateVolProgramDto dto, string managerId, string requesterRole = "Admin")
     {
         var manager = await _profileRepository.GetByCodeAsync(managerId)
-            ?? throw new InvalidOperationException("Perfil no encontrado");
+            ?? throw new KeyNotFoundException("Perfil no encontrado");
 
         string initialStateCode = requesterRole == RoleConstants.AdminRole
             ? ProgramState.Inactive.GetUvaCode()
@@ -41,15 +41,15 @@ public class VolProgramService : IVolProgramService
     public async Task<VolProgramResponseDto> GetByCodeAsync(string uvaCode, string requesterId, string requesterRole)
     {
         var program = await _volProgramRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes acceso a este programa");
+            throw new UnauthorizedAccessException("No tienes acceso a este programa");
         }
 
         var manager = await _profileRepository.GetByCodeAsync(program.ManagerProfileCode!)
-            ?? throw new InvalidOperationException("Manager no encontrado");
+            ?? throw new KeyNotFoundException("Manager no encontrado");
 
         return MapToResponse(program, manager);
     }
@@ -75,11 +75,11 @@ public class VolProgramService : IVolProgramService
     public async Task<VolProgramResponseDto> UpdateAsync(string uvaCode, UpdateVolProgramDto dto, string requesterId, string requesterRole)
     {
         var program = await _volProgramRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes permiso para modificar este programa");
+            throw new UnauthorizedAccessException("No tienes permiso para modificar este programa");
         }
 
         if (program.StateCode == ProgramState.Deleted.GetUvaCode())
@@ -92,7 +92,7 @@ public class VolProgramService : IVolProgramService
         await _volProgramRepository.UpdateAsync(program);
 
         var manager = await _profileRepository.GetByCodeAsync(program.ManagerProfileCode!)
-            ?? throw new InvalidOperationException("Manager no encontrado");
+            ?? throw new KeyNotFoundException("Manager no encontrado");
 
         return MapToResponse(program, manager);
     }
@@ -101,11 +101,11 @@ public class VolProgramService : IVolProgramService
     {
         if (requesterRole != RoleConstants.SuperUserRole)
         {
-            throw new InvalidOperationException("Solo SuperUser puede cambiar el estado de un programa");
+            throw new UnauthorizedAccessException("Solo SuperUser puede cambiar el estado de un programa");
         }
 
         var program = await _volProgramRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (program.StateCode == ProgramState.Deleted.GetUvaCode())
         {
@@ -120,16 +120,16 @@ public class VolProgramService : IVolProgramService
     public async Task DeleteAsync(string uvaCode, string requesterId, string requesterRole)
     {
         var program = await _volProgramRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes permiso para eliminar este programa");
+            throw new UnauthorizedAccessException("No tienes permiso para eliminar este programa");
         }
 
         if (program.StateCode != ProgramState.Active.GetUvaCode())
         {
-            throw new InvalidOperationException("Solo se pueden eliminar programas en estado activo");
+            throw new UnauthorizedAccessException("Solo se pueden eliminar programas en estado activo");
         }
 
         program.SoftDelete(DateTime.UtcNow, ProgramState.Deleted.GetUvaCode());

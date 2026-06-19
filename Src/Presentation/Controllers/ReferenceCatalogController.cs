@@ -1,6 +1,7 @@
 namespace U_VoluntApp_Backend.Src.Presentation.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using U_VoluntApp_Backend.Src.Application.DTOs;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
@@ -19,6 +20,17 @@ public class ReferenceCatalogController : ControllerBase
         _referenceCatalogService = referenceCatalogService;
     }
 
+    /// <summary>
+    /// Procesa la acción GetStates para un catálogo de referencia.
+    /// </summary>
+    /// <param name="stateGroup">El parametro stateGroup.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("states/{stateGroup}")]
     public async Task<IActionResult> GetStates(string stateGroup)
     {
@@ -27,6 +39,19 @@ public class ReferenceCatalogController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Procesa la acción UpdateStateName para un catálogo de referencia.
+    /// </summary>
+    /// <param name="stateGroup">El parametro stateGroup.</param>
+    /// <param name="stateCode">El parametro stateCode.</param>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("states/{stateGroup}/{stateCode}")]
     public async Task<IActionResult> UpdateStateName(string stateGroup, string stateCode, [FromBody] UpdateReferenceStateNameDto dto)
     {
@@ -35,6 +60,17 @@ public class ReferenceCatalogController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Procesa la acción GetTypes para un catálogo de referencia.
+    /// </summary>
+    /// <param name="typeGroup">El parametro typeGroup.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("types/{typeGroup}")]
     public async Task<IActionResult> GetTypes(string typeGroup)
     {
@@ -43,6 +79,18 @@ public class ReferenceCatalogController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Procesa la acción CreateType para un catálogo de referencia.
+    /// </summary>
+    /// <param name="typeGroup">El parametro typeGroup.</param>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("types/{typeGroup}")]
     public async Task<IActionResult> CreateType(string typeGroup, [FromBody] CreateReferenceTypeDto dto)
     {
@@ -51,6 +99,19 @@ public class ReferenceCatalogController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Procesa la acción UpdateType para un catálogo de referencia.
+    /// </summary>
+    /// <param name="typeGroup">El parametro typeGroup.</param>
+    /// <param name="typeCode">El parametro typeCode.</param>
+    /// <param name="dto">El parametro dto.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("types/{typeGroup}/{typeCode}")]
     public async Task<IActionResult> UpdateType(string typeGroup, string typeCode, [FromBody] UpdateReferenceTypeDto dto)
     {

@@ -32,10 +32,10 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         string requesterRole)
     {
         var program = await _programRepository.GetByCodeAsync(dto.ProgramCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         var profileToAdd = await _profileRepository.GetByCodeAsync(dto.ProfileCode)
-            ?? throw new InvalidOperationException("Perfil no encontrado");
+            ?? throw new KeyNotFoundException("Perfil no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole)
         {
@@ -45,7 +45,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
 
             if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractState.Active.GetUvaCode())
             {
-                throw new InvalidOperationException(
+                throw new UnauthorizedAccessException(
                     "Solo Admin o manager del programa pueden agregar colaboradores");
             }
         }
@@ -76,11 +76,11 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
     public async Task<ProgramCollaboratorListDto> GetByProgramIdAsync(string programCode, string requesterId, string requesterRole)
     {
         var program = await _programRepository.GetByCodeAsync(programCode)
-            ?? throw new InvalidOperationException("Programa no encontrado");
+            ?? throw new KeyNotFoundException("Programa no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
         {
-            throw new InvalidOperationException("No tienes acceso a los colaboradores de este programa");
+            throw new UnauthorizedAccessException("No tienes acceso a los colaboradores de este programa");
         }
 
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
@@ -137,7 +137,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         string requesterRole)
     {
         var collaborator = await _collaboratorRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Colaborador no encontrado");
+            ?? throw new KeyNotFoundException("Colaborador no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole)
         {
@@ -147,7 +147,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
 
             if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractState.Active.GetUvaCode())
             {
-                throw new InvalidOperationException(
+                throw new UnauthorizedAccessException(
                     "Solo Admin o manager del programa pueden actualizar colaboradores");
             }
         }
@@ -162,7 +162,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
     public async Task DeleteAsync(string uvaCode, string requesterId, string requesterRole)
     {
         var collaborator = await _collaboratorRepository.GetByCodeAsync(uvaCode)
-            ?? throw new InvalidOperationException("Colaborador no encontrado");
+            ?? throw new KeyNotFoundException("Colaborador no encontrado");
 
         if (requesterRole != RoleConstants.AdminRole)
         {
@@ -172,7 +172,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
 
             if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractState.Active.GetUvaCode())
             {
-                throw new InvalidOperationException(
+                throw new UnauthorizedAccessException(
                     "Solo Admin o manager del programa pueden eliminar colaboradores");
             }
         }
