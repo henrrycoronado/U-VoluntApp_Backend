@@ -70,8 +70,12 @@ jobs:
           kubectl create secret generic backend-secrets \
             --from-literal=DB_CONNECTION_STRING="${{ secrets.DB_CONNECTION_STRING }}" \
             --from-literal=JWT_SECRET="${{ secrets.JWT_SECRET }}" \
-            --from-literal=STORAGE_URL="${{ secrets.STORAGE_URL }}" \
-            --from-literal=STORAGE_SERVICE_ROLE_KEY="${{ secrets.STORAGE_SERVICE_ROLE_KEY }}" \
+            --from-literal=S3_ACCESS_KEY="${{ secrets.S3_ACCESS_KEY }}" \
+            --from-literal=S3_SECRET_KEY="${{ secrets.S3_SECRET_KEY }}" \
+            --from-literal=S3_ENDPOINT_URL="${{ secrets.S3_ENDPOINT_URL }}" \
+            --from-literal=STORAGE_PUBLIC_BASE_URL="${{ secrets.STORAGE_PUBLIC_BASE_URL }}" \
+            --from-literal=STORAGE_DEFAULTS_BUCKET="${{ secrets.STORAGE_DEFAULTS_BUCKET }}" \
+            --from-literal=STORAGE_UPLOAD_BUCKET="${{ secrets.STORAGE_UPLOAD_BUCKET }}" \
             --from-literal=SUPERUSER_EMAIL="${{ secrets.SUPERUSER_EMAIL }}" \
             --from-literal=SUPERUSER_PASSWORD="${{ secrets.SUPERUSER_PASSWORD }}" \
             --from-literal=SHOW_SWAGGER="${{ secrets.SHOW_SWAGGER }}" \
