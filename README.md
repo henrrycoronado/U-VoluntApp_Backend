@@ -157,72 +157,73 @@ dotnet ef database update --context AppDbContext
 
 ## 6. CORS – Arquitectura Multi-plataforma
 
-La API está configurada para servir 3 plataformas con CORS específico. La variable de entorno `CORS_ALLOWED_ORIGINS` controla qué dominios pueden acceder a la API.
+La API está configurada para servir múltiples plataformas web (local o producción) con CORS específico. La variable `CORS_ALLOWED_ORIGINS` controla qué dominios pueden acceder a la API.
 
 ---
 
-## 7. Arquitectura Defensiva
+## 7. Arquitectura Defensiva y Seguridad
 
 La API implementa validación en **3 capas**:
-1. **Entrada:** `RequestValidationMiddleware` valida formato y tamaño.
-2. **Dominio:** Validaciones de negocio en entidades y servicios.
-3. **Respuesta:** `ExceptionMiddleware` unifica el formato de error.
+1. **Entrada:** `RequestValidationMiddleware` valida formato y tamaño, además de contar con `FluentValidation` para los DTOs.
+2. **Dominio:** Validaciones de negocio robustas en los servicios de aplicación (Ej. Control de cupos en actividades).
+3. **Respuesta:** `ExceptionMiddleware` unifica el formato de error usando el estándar HTTP Problem Details.
+
+### Autorización Declarativa
+El sistema de permisos se maneja de forma declarativa mediante atributos `[Authorize(Roles = "...")]` en los Controladores.
+- **Roles base:** `SuperUser`, `Admin`, `Coordinator`, `Volunteer`.
+- **Swagger:** La documentación OpenAPI detecta automáticamente estos atributos y agrega el candado `🔒 Roles Requeridos:` a cada endpoint en la interfaz de Swagger.
 
 ---
 
 ## 8. Flujo de Storage
 
-- El backend usa bucket configurable para subidas (`STORAGE_UPLOAD_BUCKET`) y por seguridad bloquea configuraciones que apunten al bucket de defaults.
-- `Defaults` queda reservado para assets base (por ejemplo avatares/banner por defecto) y no debe usarse para carga de fotos nuevas.
-- Los defaults de dominio (foto de perfil, banner, etc.) ahora se construyen con `STORAGE_PUBLIC_BASE_URL` + `STORAGE_DEFAULTS_BUCKET`, evitando URLs hardcodeadas.
+- El backend usa un bucket configurable en Supabase para subidas (`STORAGE_UPLOAD_BUCKET`).
+- `Defaults` queda reservado para assets base institucionales (por ejemplo avatares por defecto).
+- Los defaults de dominio se construyen combinando `STORAGE_PUBLIC_BASE_URL` + `STORAGE_DEFAULTS_BUCKET`, evitando URLs hardcodeadas en la BD.
 
 ---
 
-## 9. Gestion de States y Types (solo SuperUser)
+## 9. Vistas Materializadas y Reportes en Vivo
 
-Se agrego un catalogo administrativo para referencias:
+U-VoluntApp utiliza una arquitectura híbrida para la generación de reportes y analíticas:
+- **Dashboards Globales (Vistas Materializadas):** Para vistas pesadas (historial completo, analítica de programas con miles de registros), PostgreSQL utiliza `MATERIALIZED VIEWS` para dar respuestas instantáneas a los administradores. Estas vistas se refrescan llamando al endpoint reservado `POST /api/v1/reports/refresh`.
+- **Historial Individual (Live Query):** Cuando un voluntario solicita su propio avance (`GET /api/v1/reports/volunteers/me`), el backend ejecuta un cálculo en tiempo real (`LINQ` + `Entity Framework`) sobre sus horas registradas. Esto asegura que el voluntario vea sus horas validadas al instante sin depender del proceso de refresco global.
 
-- `GET /api/v1/reference-catalog/states/{stateGroup}`
-- `PATCH /api/v1/reference-catalog/states/{stateGroup}/{stateCode}`
-- `GET /api/v1/reference-catalog/types/{typeGroup}`
-- `POST /api/v1/reference-catalog/types/{typeGroup}`
-- `PATCH /api/v1/reference-catalog/types/{typeGroup}/{typeCode}`
+---
 
-Restriccion:
+## 10. Gestión de Estados y Tipos (Solo SuperUser)
 
-- Todos estos endpoints requieren rol `SuperUser`.
+Catálogo administrativo centralizado para definir etapas (states) y categorías (types):
+- `GET / PATCH` en `/api/v1/reference-catalog/states/{stateGroup}`
+- `GET / POST / PATCH` en `/api/v1/reference-catalog/types/{typeGroup}`
 
-Grupos soportados:
-
+**Grupos soportados:**
 - `stateGroup`: `activity`, `program`, `profile`, `enrollment`, `tracking`, `contract`, `role-request`.
 - `typeGroup`: `activity`, `evidence`, `tracking`, `career`, `scholarship`.
 
 ---
 
-### 10. Protocolo de reinicio limpio
+## 11. Flujo de CI/CD (GitHub Actions)
 
-Usar cuando se quiera borrar todos los datos y empezar desde cero:
+El repositorio incluye pipelines preconfigurados:
+- **CI (Integración Continua):** Valida compilación, restore y formato de código (StyleCop) en PRs hacia `develop`.
+- **CD (Despliegue Continuo):** Construye la imagen Docker y la sube a GHCR.
+- **Secretos:** Revisa el archivo `.env.secrets.example` para saber qué secretos debes configurar en GitHub para que el Action corra correctamente (incluyendo opciones para BD remota o local).
+
+---
+
+## 12. Protocolo de reinicio limpio
+
+Usar cuando se quiera borrar todos los datos (incluyendo volumen de BD local) y empezar desde cero:
 ```bash
-cd docs
 docker compose down -v
 docker compose up -d --build
-cd ..
 ```
 
 ---
 
-## 11 Branching strategy
+## 13. Convenciones y Contribución
 
-GitFlow estricto: `main`, `develop`, `feature/[nombre]`.
-
----
-
-## 12 Convención de commits
-
-Este repositorio usa **Conventional Commits** (`tipo(módulo): descripción`).
-
----
-
-## 13. Git Hooks
-
-Se utilizan Git Hooks vía Husky.Net para validar formato, commits y build antes de subir al repositorio.
+- **GitFlow Estricto:** Ramas principales `main`, `develop`, y feature branches `feature/[nombre]`.
+- **Conventional Commits:** Este repositorio fuerza un formato (`tipo(módulo): descripción`).
+- **Husky & Git Hooks:** Antes de cada commit, se validan las reglas de `dotnet-format` y el mensaje de commit.
