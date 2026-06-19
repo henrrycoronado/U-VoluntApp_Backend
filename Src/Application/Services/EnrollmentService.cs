@@ -50,7 +50,11 @@ public class EnrollmentService : IEnrollmentService
 
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
         var existingEnrollments = await _enrollmentRepository.GetByProfileCodeAsync(profileCode, filter);
-        if (existingEnrollments.Any(e => e.ActivityCode == dto.ActivityCode))
+        var existingEnrollment = existingEnrollments.FirstOrDefault(e => e.ActivityCode == dto.ActivityCode);
+
+        if (existingEnrollment != null && 
+            existingEnrollment.StateCode != EnrollmentState.Canceled.GetUvaCode() &&
+            existingEnrollment.StateCode != EnrollmentState.Rejected.GetUvaCode())
         {
             throw new InvalidOperationException("Ya estás inscrito en esta actividad");
         }
@@ -90,12 +94,20 @@ public class EnrollmentService : IEnrollmentService
             ? EnrollmentState.Pending.GetUvaCode()
             : EnrollmentState.Active.GetUvaCode();
 
-        var enrollment = Enrollment.Create(dto.ActivityCode, profileCode, stateCode, DateTime.UtcNow);
-
-        await _enrollmentRepository.AddAsync(enrollment);
-
-        var profile = await _profileRepository.GetByCodeAsync(profileCode);
-        return MapToResponse(enrollment, activity, profile);
+        if (existingEnrollment != null)
+        {
+            existingEnrollment.ChangeState(stateCode, DateTime.UtcNow);
+            await _enrollmentRepository.UpdateAsync(existingEnrollment);
+            var profile = await _profileRepository.GetByCodeAsync(profileCode);
+            return MapToResponse(existingEnrollment, activity, profile);
+        }
+        else
+        {
+            var enrollment = Enrollment.Create(dto.ActivityCode, profileCode, stateCode, DateTime.UtcNow);
+            await _enrollmentRepository.AddAsync(enrollment);
+            var profile = await _profileRepository.GetByCodeAsync(profileCode);
+            return MapToResponse(enrollment, activity, profile);
+        }
     }
 
     public async Task<EnrollmentResponseDto> GetByCodeAsync(string uvaCode)
