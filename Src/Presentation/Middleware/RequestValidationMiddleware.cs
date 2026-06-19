@@ -41,7 +41,7 @@ public class RequestValidationMiddleware
                 return;
             }
 
-            if (request.ContentLength > 0)
+            if (request.ContentLength > 0 && request.HasJsonContentType())
             {
                 var bodyReader = new StreamReader(request.Body);
                 var body = await bodyReader.ReadToEndAsync();
