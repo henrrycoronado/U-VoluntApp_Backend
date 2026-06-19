@@ -3,8 +3,7 @@ namespace U_VoluntApp_Backend.Src.Domain.Utils.Constants;
 public static class StorageConstants
 {
     public static string PublicBaseUrl =>
-        Environment.GetEnvironmentVariable("STORAGE_PUBLIC_BASE_URL")
-        ?? $"{(Environment.GetEnvironmentVariable("SUPABASE_URL") ?? string.Empty).TrimEnd('/')}/storage/v1/object/public";
+        Environment.GetEnvironmentVariable("STORAGE_PUBLIC_BASE_URL") ?? string.Empty;
 
     public static string DefaultsBucket =>
         Environment.GetEnvironmentVariable("STORAGE_DEFAULTS_BUCKET") ?? "Defaults";

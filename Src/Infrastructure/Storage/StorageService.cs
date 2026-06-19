@@ -1,20 +1,25 @@
 namespace U_VoluntApp_Backend.Src.Infrastructure.Storage;
 
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Amazon.S3;
+using Amazon.S3.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Supabase;
+using U_VoluntApp_Backend.Src.Application.Interfaces;
 using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
 
 public class StorageService : IStorageService
 {
-    private readonly Client _supabase;
+    private readonly IAmazonS3 _s3Client;
     private readonly string _publicBaseUrl;
     private readonly string _uploadBucket;
     private readonly string _defaultsBucket;
 
-    public StorageService(Client supabase, IConfiguration configuration)
+    public StorageService(IAmazonS3 s3Client, IConfiguration configuration)
     {
-        _supabase = supabase;
+        _s3Client = s3Client;
 
         _publicBaseUrl = configuration["STORAGE_PUBLIC_BASE_URL"]
             ?? StorageConstants.PublicBaseUrl;
@@ -42,19 +47,23 @@ public class StorageService : IStorageService
             throw new InvalidOperationException("La carpeta de destino no es valida");
         }
 
-        using var stream = file.OpenReadStream();
-        var buffer = new byte[file.Length];
-        await stream.ReadExactlyAsync(buffer);
-
         var fileName = $"{normalizedFolder}/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
-        await _supabase.Storage
-            .From(_uploadBucket)
-            .Upload(buffer, fileName, new Supabase.Storage.FileOptions
-            {
-                ContentType = file.ContentType,
-                Upsert = false,
-            });
+        using var memoryStream = new MemoryStream();
+        await file.CopyToAsync(memoryStream);
+        memoryStream.Position = 0;
+
+        var putRequest = new PutObjectRequest
+        {
+            BucketName = _uploadBucket,
+            Key = fileName,
+            InputStream = memoryStream,
+            ContentType = file.ContentType,
+            DisablePayloadSigning = true,
+            DisableDefaultChecksumValidation = true
+        };
+
+        await _s3Client.PutObjectAsync(putRequest);
 
         return $"{_publicBaseUrl.TrimEnd('/')}/{_uploadBucket}/{fileName}";
     }
@@ -66,6 +75,12 @@ public class StorageService : IStorageService
             ? path[prefix.Length..]
             : path;
 
-        await _supabase.Storage.From(_uploadBucket).Remove([relativePath]);
+        var deleteRequest = new DeleteObjectRequest
+        {
+            BucketName = _uploadBucket,
+            Key = relativePath
+        };
+
+        await _s3Client.DeleteObjectAsync(deleteRequest);
     }
 }

@@ -1,8 +1,10 @@
 namespace U_VoluntApp_Backend.Src.Presentation.Extensions;
 
+using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Supabase;
 using U_VoluntApp_Backend.Src.Infrastructure.Persistence;
 
 public static class DatabaseConfigurationExtensions
@@ -11,17 +13,24 @@ public static class DatabaseConfigurationExtensions
     {
         var connectionString = configuration["DB_CONNECTION_STRING"]
             ?? throw new InvalidOperationException("Falta DB_CONNECTION_STRING");
-        var storageUrl = configuration["STORAGE_URL"]
-            ?? throw new InvalidOperationException("Falta STORAGE_URL");
-        var storageKey = configuration["STORAGE_SERVICE_ROLE_KEY"]
-            ?? throw new InvalidOperationException("Falta STORAGE_SERVICE_ROLE_KEY");
 
-        services.AddScoped<Supabase.Client>(_ =>
-            new Supabase.Client(storageUrl, storageKey, new SupabaseOptions
-            {
-                AutoRefreshToken = false,
-                AutoConnectRealtime = false,
-            }));
+        var s3AccessKey = configuration["S3_ACCESS_KEY"]
+            ?? throw new InvalidOperationException("Falta S3_ACCESS_KEY");
+        var s3SecretKey = configuration["S3_SECRET_KEY"]
+            ?? throw new InvalidOperationException("Falta S3_SECRET_KEY");
+        var s3EndpointUrl = configuration["S3_ENDPOINT_URL"]
+            ?? throw new InvalidOperationException("Falta S3_ENDPOINT_URL");
+
+        var s3Credentials = new BasicAWSCredentials(s3AccessKey, s3SecretKey);
+        var s3Config = new AmazonS3Config
+        {
+            ServiceURL = s3EndpointUrl,
+            ForcePathStyle = true,
+            AuthenticationRegion = "auto",
+            UseHttp = false
+        };
+
+        services.AddScoped<IAmazonS3>(_ => new AmazonS3Client(s3Credentials, s3Config));
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));

@@ -1,6 +1,5 @@
 namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Contract;
 
-using Supabase.Gotrue;
 using U_VoluntApp_Backend.Src.Domain.Entities.Contract;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
 
