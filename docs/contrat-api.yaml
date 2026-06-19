@@ -12,7 +12,9 @@
           "Activity"
         ],
         "summary": "Crea una actividad nuevo.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -144,7 +146,9 @@
           "Activity"
         ],
         "summary": "Crea una actividad de forma simplificada.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -276,10 +280,12 @@
           "Activity"
         ],
         "summary": "Obtiene los detalles de una actividad específico.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -397,10 +403,12 @@
           "Activity"
         ],
         "summary": "Actualiza los datos de una actividad existente.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Coordinator`, `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -408,6 +416,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -537,10 +546,12 @@
           "Activity"
         ],
         "summary": "Elimina una actividad del sistema.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -660,10 +671,12 @@
           "Activity"
         ],
         "summary": "Obtiene la lista de actividades asociados a un programa.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "programCode",
             "in": "path",
+            "description": "El parametro programCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -783,10 +796,12 @@
           "Activity"
         ],
         "summary": "Cambia el estado de una actividad.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Coordinator`, `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -794,6 +809,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -926,6 +942,7 @@
         ],
         "summary": "Registra un nuevo usuario en el sistema.",
         "requestBody": {
+          "description": "El parametro request.",
           "content": {
             "application/json": {
               "schema": {
@@ -1075,6 +1092,7 @@
         ],
         "summary": "Inicia sesión y genera un token JWT.",
         "requestBody": {
+          "description": "El parametro request.",
           "content": {
             "application/json": {
               "schema": {
@@ -1224,6 +1242,7 @@
         ],
         "summary": "Procesa la acción Refresh para autenticación.",
         "requestBody": {
+          "description": "El parametro request.",
           "content": {
             "application/json": {
               "schema": {
@@ -1371,7 +1390,10 @@
         "tags": [
           "Auth"
         ],
+        "summary": "Procesa la acción Logout para autenticación.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "requestBody": {
+          "description": "El parametro request.",
           "content": {
             "application/json": {
               "schema": {
@@ -1391,8 +1413,8 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Created"
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -1503,7 +1525,9 @@
           "Enrollment"
         ],
         "summary": "Procesa la acción Enroll para una inscripción.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -1635,10 +1659,12 @@
           "Enrollment"
         ],
         "summary": "Obtiene los detalles de una inscripción específico.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1758,10 +1784,12 @@
           "Enrollment"
         ],
         "summary": "Procesa la acción GetByActivity para una inscripción.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "activityCode",
             "in": "path",
+            "description": "El parametro activityCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1881,6 +1909,7 @@
           "Enrollment"
         ],
         "summary": "Procesa la acción GetMyEnrollments para una inscripción.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "responses": {
           "200": {
             "description": "OK"
@@ -1994,10 +2023,12 @@
           "Enrollment"
         ],
         "summary": "Procesa la acción Review para una inscripción.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Coordinator`, `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2005,6 +2036,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -2136,10 +2168,12 @@
           "Enrollment"
         ],
         "summary": "Procesa la acción Cancel para una inscripción.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2259,6 +2293,7 @@
           "Profile"
         ],
         "summary": "Procesa la acción GetMe para un perfil.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "responses": {
           "200": {
             "description": "OK"
@@ -2370,7 +2405,9 @@
           "Profile"
         ],
         "summary": "Actualiza los datos de un perfil existente.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -2500,6 +2537,7 @@
           "Profile"
         ],
         "summary": "Elimina un perfil del sistema.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "responses": {
           "204": {
             "description": "No Content"
@@ -2613,10 +2651,12 @@
           "Profile"
         ],
         "summary": "Obtiene los detalles de un perfil específico.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2736,6 +2776,7 @@
           "Profile"
         ],
         "summary": "Procesa la acción UpdatePhoto para un perfil.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -2744,6 +2785,7 @@
                 "properties": {
                   "photo": {
                     "type": "string",
+                    "description": "El parametro photo.",
                     "format": "binary"
                   }
                 }
@@ -2869,7 +2911,9 @@
           "ProgramCollaborator"
         ],
         "summary": "Procesa la acción Add para un colaborador.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Coordinator`, `Admin`, `SuperUser`",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -3001,11 +3045,21 @@
           "ProgramCollaborator"
         ],
         "summary": "Procesa la acción GetByProgramId para un colaborador.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Coordinator`, `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "programCode",
             "in": "path",
+            "description": "El parametro programCode.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stateCode",
+            "in": "query",
+            "description": "El parametro stateCode.",
             "schema": {
               "type": "string"
             }
@@ -3124,10 +3178,12 @@
           "ProgramCollaborator"
         ],
         "summary": "Obtiene los detalles de un colaborador específico.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3245,10 +3301,12 @@
           "ProgramCollaborator"
         ],
         "summary": "Actualiza los datos de un colaborador existente.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3256,6 +3314,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -3385,10 +3444,12 @@
           "ProgramCollaborator"
         ],
         "summary": "Elimina un colaborador del sistema.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Coordinator`, `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3508,10 +3569,12 @@
           "ReferenceCatalog"
         ],
         "summary": "Procesa la acción GetStates para un catálogo de referencia.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "stateGroup",
             "in": "path",
+            "description": "El parametro stateGroup.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3631,10 +3694,12 @@
           "ReferenceCatalog"
         ],
         "summary": "Procesa la acción UpdateStateName para un catálogo de referencia.",
+        "description": "\n\n**🔒 Roles Requeridos:** `SuperUser`",
         "parameters": [
           {
             "name": "stateGroup",
             "in": "path",
+            "description": "El parametro stateGroup.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3643,6 +3708,7 @@
           {
             "name": "stateCode",
             "in": "path",
+            "description": "El parametro stateCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3650,6 +3716,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -3781,10 +3848,12 @@
           "ReferenceCatalog"
         ],
         "summary": "Procesa la acción GetTypes para un catálogo de referencia.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "typeGroup",
             "in": "path",
+            "description": "El parametro typeGroup.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3902,10 +3971,12 @@
           "ReferenceCatalog"
         ],
         "summary": "Procesa la acción CreateType para un catálogo de referencia.",
+        "description": "\n\n**🔒 Roles Requeridos:** `SuperUser`",
         "parameters": [
           {
             "name": "typeGroup",
             "in": "path",
+            "description": "El parametro typeGroup.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3913,6 +3984,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -4044,10 +4116,12 @@
           "ReferenceCatalog"
         ],
         "summary": "Procesa la acción UpdateType para un catálogo de referencia.",
+        "description": "\n\n**🔒 Roles Requeridos:** `SuperUser`",
         "parameters": [
           {
             "name": "typeGroup",
             "in": "path",
+            "description": "El parametro typeGroup.",
             "required": true,
             "schema": {
               "type": "string"
@@ -4056,6 +4130,7 @@
           {
             "name": "typeCode",
             "in": "path",
+            "description": "El parametro typeCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -4063,6 +4138,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -4194,6 +4270,7 @@
           "Report"
         ],
         "summary": "Procesa la acción GetScholarshipPerformance para un reporte.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "responses": {
           "200": {
             "description": "OK"
@@ -4307,10 +4384,12 @@
           "Report"
         ],
         "summary": "Procesa la acción GetScholarshipPerformanceByType para un reporte.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "scholarshipType",
             "in": "path",
+            "description": "El parametro scholarshipType.",
             "required": true,
             "schema": {
               "type": "string"
@@ -4430,10 +4509,12 @@
           "Report"
         ],
         "summary": "Descarga o exporta un reporte.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "scholarshipType",
             "in": "query",
+            "description": "El parametro scholarshipType.",
             "schema": {
               "type": "string"
             }
@@ -4552,6 +4633,7 @@
           "Report"
         ],
         "summary": "Procesa la acción GetProgramAnalytics para un reporte.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "responses": {
           "200": {
             "description": "OK"
@@ -4665,10 +4747,12 @@
           "Report"
         ],
         "summary": "Procesa la acción GetProgramAnalyticsByCode para un reporte.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "programCode",
             "in": "path",
+            "description": "El parametro programCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -4788,6 +4872,7 @@
           "Report"
         ],
         "summary": "Procesa la acción GetActivityAnalytics para un reporte.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "responses": {
           "200": {
             "description": "OK"
@@ -4901,10 +4986,12 @@
           "Report"
         ],
         "summary": "Procesa la acción GetActivityAnalyticsByProgram para un reporte.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "programCode",
             "in": "path",
+            "description": "El parametro programCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5024,6 +5111,7 @@
           "Report"
         ],
         "summary": "Procesa la acción GetVolunteerHistory para un reporte.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "responses": {
           "200": {
             "description": "OK"
@@ -5137,10 +5225,12 @@
           "Report"
         ],
         "summary": "Procesa la acción GetVolunteerHistoryByProfileCode para un reporte.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "profileCode",
             "in": "path",
+            "description": "El parametro profileCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5254,12 +5344,127 @@
         }
       }
     },
+    "/api/v1/reports/volunteers/me": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "summary": "Procesa la acción GetVolunteerHistoryByProfileCode para un reporte.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/reports/refresh": {
       "post": {
         "tags": [
           "Report"
         ],
         "summary": "Procesa la acción RefreshAnalytics para un reporte.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "responses": {
           "201": {
             "description": "Created"
@@ -5373,7 +5578,9 @@
           "RoleRequest"
         ],
         "summary": "Procesa la acción RequestCoordinator para una solicitud de rol.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Volunteer`",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -5509,6 +5716,7 @@
         "tags": [
           "RoleRequest"
         ],
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "responses": {
           "200": {
             "description": "OK",
@@ -5548,7 +5756,9 @@
           "RoleRequest"
         ],
         "summary": "Procesa la acción RequestAdmin para una solicitud de rol.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Coordinator`",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -5684,6 +5894,7 @@
         "tags": [
           "RoleRequest"
         ],
+        "description": "\n\n**🔒 Roles Requeridos:** `SuperUser`",
         "responses": {
           "200": {
             "description": "OK",
@@ -5723,10 +5934,12 @@
           "RoleRequest"
         ],
         "summary": "Aprueba una solicitud de rol.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5862,10 +6075,13 @@
         "tags": [
           "RoleRequest"
         ],
+        "summary": "Rechaza una solicitud de rol.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6001,10 +6217,13 @@
         "tags": [
           "RoleRequest"
         ],
+        "summary": "Aprueba una solicitud de rol.",
+        "description": "\n\n**🔒 Roles Requeridos:** `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6140,10 +6359,13 @@
         "tags": [
           "RoleRequest"
         ],
+        "summary": "Rechaza una solicitud de rol.",
+        "description": "\n\n**🔒 Roles Requeridos:** `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6280,7 +6502,9 @@
           "Scholarship"
         ],
         "summary": "Crea una beca nuevo.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -6412,7 +6636,9 @@
           "Scholarship"
         ],
         "summary": "Procesa la acción Assign para una beca.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -6544,10 +6770,12 @@
           "Scholarship"
         ],
         "summary": "Obtiene los detalles de una beca específico.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6667,6 +6895,7 @@
           "Scholarship"
         ],
         "summary": "Procesa la acción GetMine para una beca.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "responses": {
           "200": {
             "description": "OK"
@@ -6780,10 +7009,12 @@
           "Scholarship"
         ],
         "summary": "Procesa la acción GetByProfile para una beca.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "profileCode",
             "in": "path",
+            "description": "El parametro profileCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6903,10 +7134,12 @@
           "Scholarship"
         ],
         "summary": "Procesa la acción Review para una beca.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6914,6 +7147,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -7045,10 +7279,12 @@
           "Scholarship"
         ],
         "summary": "Procesa la acción Complete para una beca.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -7056,6 +7292,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -7187,6 +7424,7 @@
           "Tracking"
         ],
         "summary": "Procesa la acción CheckIn para un registro de tracking.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -7340,6 +7578,7 @@
           "Tracking"
         ],
         "summary": "Procesa la acción CheckOut para un registro de tracking.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -7493,7 +7732,9 @@
           "Tracking"
         ],
         "summary": "Procesa la acción ManualCheckIn para un registro de tracking.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Coordinator`, `Admin`, `SuperUser`",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -7625,7 +7866,9 @@
           "Tracking"
         ],
         "summary": "Procesa la acción ManualCheckOut para un registro de tracking.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Coordinator`, `Admin`, `SuperUser`",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -7757,10 +8000,12 @@
           "Tracking"
         ],
         "summary": "Obtiene los detalles de un registro de tracking específico.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -7880,10 +8125,12 @@
           "Tracking"
         ],
         "summary": "Procesa la acción GetByEnrollment para un registro de tracking.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "enrollmentCode",
             "in": "path",
+            "description": "El parametro enrollmentCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -8003,7 +8250,9 @@
           "VolProgram"
         ],
         "summary": "Crea un programa nuevo.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -8133,6 +8382,7 @@
           "VolProgram"
         ],
         "summary": "Obtiene una lista paginada de programas.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "responses": {
           "200": {
             "description": "OK"
@@ -8246,10 +8496,12 @@
           "VolProgram"
         ],
         "summary": "Obtiene los detalles de un programa específico.",
+        "description": "\n\n**🔒 Requiere Autenticación (Cualquier rol)**",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -8367,10 +8619,12 @@
           "VolProgram"
         ],
         "summary": "Actualiza los datos de un programa existente.",
+        "description": "\n\n**🔒 Roles Requeridos:** `Admin`, `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -8378,6 +8632,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
@@ -8507,10 +8762,12 @@
           "VolProgram"
         ],
         "summary": "Elimina un programa del sistema.",
+        "description": "\n\n**🔒 Roles Requeridos:** `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -8630,10 +8887,12 @@
           "VolProgram"
         ],
         "summary": "Cambia el estado de un programa.",
+        "description": "\n\n**🔒 Roles Requeridos:** `SuperUser`",
         "parameters": [
           {
             "name": "uvaCode",
             "in": "path",
+            "description": "El parametro uvaCode.",
             "required": true,
             "schema": {
               "type": "string"
@@ -8641,6 +8900,7 @@
           }
         ],
         "requestBody": {
+          "description": "El parametro dto.",
           "content": {
             "application/json": {
               "schema": {
