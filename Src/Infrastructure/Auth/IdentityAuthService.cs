@@ -97,7 +97,7 @@ public class IdentityAuthService : IAuthService
                     request.FirstName,
                     request.LastName,
                     request.Phone,
-                    null,
+                    "Dirección no registrada",
                     request.CareerCode ?? CareerType.None.GetUvaCode(),
                     0.00m,
                     nowUtc);

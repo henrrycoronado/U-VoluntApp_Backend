@@ -10,7 +10,6 @@ using U_VoluntApp_Backend.Src.Presentation.Helpers;
 
 [ApiController]
 [Route("api/v1/reference-catalog")]
-[Authorize]
 public class ReferenceCatalogController : ControllerBase
 {
     private readonly IReferenceCatalogService _referenceCatalogService;
