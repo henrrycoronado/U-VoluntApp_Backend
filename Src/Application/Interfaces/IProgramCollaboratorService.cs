@@ -6,7 +6,7 @@ public interface IProgramCollaboratorService
 {
     Task<ProgramCollaboratorResponseDto> AddAsync(AddProgramCollaboratorDto dto, string requesterId, string requesterRole);
 
-    Task<ProgramCollaboratorListDto> GetByProgramIdAsync(string programCode, string requesterId, string requesterRole);
+    Task<ProgramCollaboratorListDto> GetByProgramIdAsync(string programCode, string requesterId, string requesterRole, string stateCode);
 
     Task<ProgramCollaboratorResponseDto?> GetByCodeAsync(string uvaCode);
 

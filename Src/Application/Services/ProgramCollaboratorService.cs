@@ -37,27 +37,35 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         var profileToAdd = await _profileRepository.GetByCodeAsync(dto.ProfileCode)
             ?? throw new KeyNotFoundException("Perfil no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole)
+        if (profileToAdd.StateCode != ContractState.Active.GetUvaCode())
         {
-            var filter = new RequestFilter { Page = 1, PageSize = 100 };
-            var collaborators = await _collaboratorRepository.GetByProgramCodeAsync(dto.ProgramCode, filter);
-            var requesterAsCollaborator = collaborators.FirstOrDefault(c => c.ProfileCode == requesterId);
-
-            if (requesterAsCollaborator == null || requesterAsCollaborator.StateCode != ContractState.Active.GetUvaCode())
-            {
-                throw new UnauthorizedAccessException(
-                    "Solo Admin o manager del programa pueden agregar colaboradores");
-            }
+            throw new InvalidOperationException("El perfil del usuario no está activo");
         }
 
         var existingFilter = new RequestFilter { Page = 1, PageSize = 100 };
         var existingCollabs = await _collaboratorRepository.GetByProgramCodeAsync(dto.ProgramCode, existingFilter);
-        if (existingCollabs.Any(c => c.ProfileCode == dto.ProfileCode))
+        if (existingCollabs.Any(c => c.ProfileCode == dto.ProfileCode && c.StateCode == ContractState.Active.GetUvaCode()))
         {
             throw new InvalidOperationException("Este perfil ya es colaborador del programa");
         }
 
-        string stateCode = requesterRole == RoleConstants.AdminRole
+        if (existingCollabs.Any(c => c.ProfileCode == dto.ProfileCode && c.StateCode == ContractState.Pending.GetUvaCode()))
+        {
+            throw new InvalidOperationException("Este perfil ya tiene una solicitud pendiente en el programa");
+        }
+
+        bool isRequesterCollaborator = existingCollabs.Any(c => c.ProfileCode == requesterId && c.StateCode == ContractState.Active.GetUvaCode());
+
+        bool canApproveDirectly = requesterRole == RoleConstants.SuperUserRole ||
+            (requesterRole == RoleConstants.AdminRole && isRequesterCollaborator) ||
+            program.ManagerProfileCode == requesterId;
+
+        if (dto.ProfileCode != requesterId && !canApproveDirectly)
+        {
+            throw new UnauthorizedAccessException("No tienes permisos suficientes para agregar a otros usuarios directamente al programa");
+        }
+
+        string stateCode = canApproveDirectly
             ? ContractState.Active.GetUvaCode()
             : ContractState.Pending.GetUvaCode();
 
@@ -73,7 +81,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         return await MapToResponseAsync(collaborator);
     }
 
-    public async Task<ProgramCollaboratorListDto> GetByProgramIdAsync(string programCode, string requesterId, string requesterRole)
+    public async Task<ProgramCollaboratorListDto> GetByProgramIdAsync(string programCode, string requesterId, string requesterRole, string stateCode)
     {
         var program = await _programRepository.GetByCodeAsync(programCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
@@ -89,6 +97,11 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         var dtos = new List<ProgramCollaboratorResponseDto>();
         foreach (var collab in collaborators)
         {
+            if (!string.IsNullOrEmpty(stateCode) && collab.StateCode != stateCode)
+            {
+                continue;
+            }
+
             dtos.Add(await MapToResponseAsync(collab));
         }
 
