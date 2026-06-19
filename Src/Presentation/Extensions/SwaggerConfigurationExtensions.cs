@@ -1,6 +1,7 @@
 namespace U_VoluntApp_Backend.Src.Presentation.Extensions;
 
 using Microsoft.OpenApi.Models;
+using U_VoluntApp_Backend.Src.Presentation.Filters;
 
 public static class SwaggerConfigurationExtensions
 {
@@ -41,6 +42,8 @@ public static class SwaggerConfigurationExtensions
 
             var xmlFilename = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+            options.OperationFilter<AuthorizeCheckOperationFilter>();
         });
     }
 }
