@@ -31,9 +31,9 @@ public class ReportController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("scholarships")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> GetScholarshipPerformance()
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetScholarshipPerformanceAsync();
         return Ok(result);
     }
@@ -50,9 +50,9 @@ public class ReportController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("scholarships/by-type/{scholarshipType}")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> GetScholarshipPerformanceByType(string scholarshipType)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetScholarshipPerformanceByTypeAsync(scholarshipType);
         return Ok(result);
     }
@@ -69,9 +69,9 @@ public class ReportController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("scholarships/pdf")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> DownloadScholarshipPdf([FromQuery] string? scholarshipType)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var pdf = await _reportService.GenerateScholarshipPdfAsync(scholarshipType);
 
         var fileName = string.IsNullOrWhiteSpace(scholarshipType)
@@ -94,7 +94,6 @@ public class ReportController : ControllerBase
     [HttpGet("programs")]
     public async Task<IActionResult> GetProgramAnalytics()
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetProgramAnalyticsAsync();
         return Ok(result);
     }
@@ -113,7 +112,6 @@ public class ReportController : ControllerBase
     [HttpGet("programs/{programCode}")]
     public async Task<IActionResult> GetProgramAnalyticsByCode(string programCode)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetProgramAnalyticsByCodeAsync(programCode);
         return Ok(result);
     }
@@ -131,7 +129,6 @@ public class ReportController : ControllerBase
     [HttpGet("activities")]
     public async Task<IActionResult> GetActivityAnalytics()
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetActivityAnalyticsAsync();
         return Ok(result);
     }
@@ -150,7 +147,6 @@ public class ReportController : ControllerBase
     [HttpGet("activities/by-program/{programCode}")]
     public async Task<IActionResult> GetActivityAnalyticsByProgram(string programCode)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetActivityAnalyticsByProgramAsync(programCode);
         return Ok(result);
     }
@@ -166,9 +162,9 @@ public class ReportController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("volunteers")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> GetVolunteerHistory()
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         var result = await _reportService.GetVolunteerHistoryAsync();
         return Ok(result);
     }
@@ -185,9 +181,27 @@ public class ReportController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("volunteers/{profileCode}")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> GetVolunteerHistoryByProfileCode(string profileCode)
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
+        var result = await _reportService.GetVolunteerHistoryByProfileCodeAsync(profileCode);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Procesa la acción GetVolunteerHistoryByProfileCode para un reporte.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [HttpGet("volunteers/me")]
+    public async Task<IActionResult> GetVolunteerHistoryMe()
+    {
+        var profileCode = ControllerHelper.GetProfileId(User);
         var result = await _reportService.GetVolunteerHistoryByProfileCodeAsync(profileCode);
         return Ok(result);
     }
@@ -203,9 +217,9 @@ public class ReportController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost("refresh")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> RefreshAnalytics()
     {
-        ControllerHelper.EnsureRole(User, RoleConstants.AdminRole, RoleConstants.SuperUserRole);
         await _reportService.RefreshAnalyticsAsync();
         return Ok("Vistas materializadas actualizadas correctamente");
     }

@@ -70,7 +70,7 @@ public class ReportService : IReportService
 
     public async Task<VolunteerHistoryDto> GetVolunteerHistoryByProfileCodeAsync(string profileCode)
     {
-        var record = await _reportRepository.GetVolunteerHistoryByProfileCodeAsync(profileCode)
+        var record = await _reportRepository.GetLiveVolunteerHistoryByProfileCodeAsync(profileCode)
             ?? throw new KeyNotFoundException("Historial de voluntario no encontrado");
 
         return MapToDto(record);

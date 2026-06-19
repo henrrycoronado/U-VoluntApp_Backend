@@ -78,6 +78,61 @@ public class ReportRepository : IReportRepository
         return record is null ? null : DomainPersistenceMapper.ToDomain(record);
     }
 
+    public async Task<VolunteerHistory?> GetLiveVolunteerHistoryByProfileCodeAsync(string profileCode)
+    {
+        var profile = await _context.Profiles
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.UvaCode == profileCode && p.DeletedAt == null);
+
+        if (profile == null)
+        {
+            return null;
+        }
+
+        var enrollments = await _context.Enrollments
+            .AsNoTracking()
+            .Where(e => e.EnrolledProfileCode == profileCode && e.StateCode == "stage-2" && e.DeletedAt == null)
+            .Select(e => e.UvaCode)
+            .ToListAsync();
+
+        var trackingLogs = await _context.TrackingLogs
+            .AsNoTracking()
+            .Where(t => enrollments.Contains(t.EnrollmentCode) && t.DeletedAt == null)
+            .ToListAsync();
+
+        int totalActivitiesParticipated = await _context.Enrollments
+            .AsNoTracking()
+            .Where(e => e.EnrolledProfileCode == profileCode && e.StateCode == "stage-2" && e.DeletedAt == null)
+            .Select(e => e.ActivityCode)
+            .Distinct()
+            .CountAsync();
+
+        decimal validatedHours = trackingLogs
+            .Where(t => t.StateCode == "stage-2")
+            .Sum(t => t.CalculatedHours);
+
+        decimal totalLoggedHours = trackingLogs
+            .Where(t => t.StateCode == "stage-2" || t.StateCode == "stage-1")
+            .Sum(t => t.CalculatedHours);
+
+        DateTime? lastActivityDate = trackingLogs.Any()
+            ? trackingLogs.Max(t => t.CreatedAt)
+            : null;
+
+        var volunteerHistory = VolunteerHistory.Rehydrate(
+            profileCode: profile.UvaCode,
+            firstName: profile.FirstName,
+            lastName: profile.LastName,
+            careerName: profile.CareerCode,
+            personalGoalHours: profile.PersonalGoalHours,
+            totalActivitiesParticipated: totalActivitiesParticipated,
+            validatedHours: validatedHours,
+            totalLoggedHours: totalLoggedHours,
+            lastActivityDate: lastActivityDate);
+
+        return volunteerHistory;
+    }
+
     public async Task RefreshMaterializedViewsAsync()
     {
         await _context.Database.ExecuteSqlRawAsync(
