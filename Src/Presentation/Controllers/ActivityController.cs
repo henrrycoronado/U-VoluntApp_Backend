@@ -93,7 +93,7 @@ public class ActivityController : ControllerBase
     [HttpGet("by-program/{programCode}")]
     public async Task<IActionResult> GetByProgram(string programCode)
     {
-        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
+        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.VolunteerRole);
         var result = await _activityService.GetByProgramAsync(programCode, requesterId, requesterRole);
         return Ok(result);
     }
