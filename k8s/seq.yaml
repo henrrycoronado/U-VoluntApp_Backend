@@ -69,6 +69,18 @@ spec:
   - name: ui
     port: 80
     targetPort: 80
-  - name: ingestion
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seq-service-ext
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: seq
+  ports:
+  - name: ext-ui
     port: 5341
     targetPort: 80
