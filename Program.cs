@@ -31,6 +31,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 EnvLoader.Load();
 
+Serilog.Debugging.SelfLog.Enable(Console.Error);
 builder.Host.ConfigureSerilog();
 
 builder.Services.AddControllers()
