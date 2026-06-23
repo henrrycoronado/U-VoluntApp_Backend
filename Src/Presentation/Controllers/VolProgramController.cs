@@ -72,7 +72,7 @@ public class VolProgramController : ControllerBase
     [HttpGet("{uvaCode}")]
     public async Task<IActionResult> GetByCode(string uvaCode)
     {
-        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.CoordinatorRole);
+        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.VolunteerRole);
         var result = await _volProgramService.GetByCodeAsync(uvaCode, requesterId, requesterRole);
         return Ok(result);
     }
