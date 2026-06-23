@@ -130,11 +130,6 @@ public class EnrollmentService : IEnrollmentService
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
-        {
-            throw new UnauthorizedAccessException("No tienes acceso a las inscripciones de esta actividad");
-        }
-
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
         var enrollments = await _enrollmentRepository.GetByActivityCodeAsync(activityCode, filter);
         var result = new List<EnrollmentResponseDto>();

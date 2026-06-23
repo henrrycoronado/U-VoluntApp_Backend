@@ -149,11 +149,6 @@ public class ActivityService : IActivityService
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
-        {
-            throw new UnauthorizedAccessException("No tienes acceso a esta actividad");
-        }
-
         return await MapToResponseAsync(activity, program);
     }
 
@@ -161,11 +156,6 @@ public class ActivityService : IActivityService
     {
         var program = await _volProgramRepository.GetByCodeAsync(programCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
-
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
-        {
-            throw new UnauthorizedAccessException("No tienes acceso a las actividades de este programa");
-        }
 
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
         var activities = await _activityRepository.GetByProgramCodeAsync(programCode, filter);
