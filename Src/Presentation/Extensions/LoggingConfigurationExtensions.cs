@@ -23,4 +23,20 @@ public static class LoggingConfigurationExtensions
 
         return hostBuilder;
     }
+
+    public static IApplicationBuilder UseCustomSerilogRequestLogging(this IApplicationBuilder app)
+    {
+        app.UseSerilogRequestLogging(options =>
+        {
+            options.MessageTemplate = "HTTP {RequestMethod} {RequestPath}{QueryString} responded {StatusCode} in {Elapsed:0.0000} ms";
+
+            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+            {
+                var queryString = httpContext.Request.QueryString;
+                diagnosticContext.Set("QueryString", queryString.HasValue ? queryString.Value : "");
+            };
+        });
+
+        return app;
+    }
 }

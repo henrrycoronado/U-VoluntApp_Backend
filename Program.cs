@@ -73,7 +73,7 @@ if (showSwagger || app.Environment.IsDevelopment())
     });
 }
 
-app.UseSerilogRequestLogging();
+app.UseCustomSerilogRequestLogging();
 app.UseMiddleware<RequestValidationMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
