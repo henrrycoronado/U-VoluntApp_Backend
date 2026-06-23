@@ -43,11 +43,6 @@ public class VolProgramService : IVolProgramService
         var program = await _volProgramRepository.GetByCodeAsync(uvaCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
-        {
-            throw new UnauthorizedAccessException("No tienes acceso a este programa");
-        }
-
         var manager = await _profileRepository.GetByCodeAsync(program.ManagerProfileCode!)
             ?? throw new KeyNotFoundException("Manager no encontrado");
 
