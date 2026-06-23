@@ -31,7 +31,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          dotnet test tests/tests.csproj --configuration Release --no-build --verbosity normal
+          dotnet test tests/tests.csproj --configuration Release --verbosity normal
 
       - name: Build Temporary Image for Scan
         run: |

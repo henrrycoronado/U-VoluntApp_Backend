@@ -52,7 +52,7 @@ public class EnrollmentService : IEnrollmentService
         var existingEnrollments = await _enrollmentRepository.GetByProfileCodeAsync(profileCode, filter);
         var existingEnrollment = existingEnrollments.FirstOrDefault(e => e.ActivityCode == dto.ActivityCode);
 
-        if (existingEnrollment != null && 
+        if (existingEnrollment != null &&
             existingEnrollment.StateCode != EnrollmentState.Canceled.GetUvaCode() &&
             existingEnrollment.StateCode != EnrollmentState.Rejected.GetUvaCode())
         {
