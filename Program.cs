@@ -1,4 +1,3 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QuestPDF.Infrastructure;
+using Serilog;
 using U_VoluntApp_Backend.Src.Application.Interfaces;
 using U_VoluntApp_Backend.Src.Application.Services;
 using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
@@ -72,8 +72,8 @@ if (showSwagger || app.Environment.IsDevelopment())
     });
 }
 
+app.UseSerilogRequestLogging();
 app.UseMiddleware<RequestValidationMiddleware>();
-app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
 var enableHttpsRedirection = builder.Configuration.GetValue("ENABLE_HTTPS_REDIRECTION", builder.Environment.IsDevelopment());
