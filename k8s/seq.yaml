@@ -36,6 +36,8 @@ spec:
         env:
         - name: ACCEPT_EULA
           value: "Y"
+        - name: SEQ_STORAGE_MINIMUMFREESPACEMB
+          value: "100"
         - name: SEQ_FIRSTRUN_ADMINPASSWORD
           valueFrom:
             secretKeyRef:
