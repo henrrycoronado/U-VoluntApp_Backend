@@ -69,6 +69,9 @@ spec:
   - name: ui
     port: 80
     targetPort: 80
+  - name: ingestion
+    port: 5341
+    targetPort: 5341
 
 ---
 apiVersion: v1
