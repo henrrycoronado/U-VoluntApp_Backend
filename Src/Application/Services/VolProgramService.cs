@@ -72,7 +72,7 @@ public class VolProgramService : IVolProgramService
         var program = await _volProgramRepository.GetByCodeAsync(uvaCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
+        if (requesterRole != RoleConstants.AdminRole && requesterRole != RoleConstants.SuperUserRole && program.ManagerProfileCode != requesterId)
         {
             throw new UnauthorizedAccessException("No tienes permiso para modificar este programa");
         }

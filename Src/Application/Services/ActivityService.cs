@@ -42,7 +42,7 @@ public class ActivityService : IActivityService
         var program = await _volProgramRepository.GetByCodeAsync(dto.ProgramCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
+        if (requesterRole != RoleConstants.AdminRole && requesterRole != RoleConstants.SuperUserRole && program.ManagerProfileCode != requesterId)
         {
             throw new UnauthorizedAccessException("No tienes permiso para agregar actividades a este programa");
         }
@@ -112,7 +112,7 @@ public class ActivityService : IActivityService
         var program = await _volProgramRepository.GetByCodeAsync(dto.ProgramCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
+        if (requesterRole != RoleConstants.AdminRole && requesterRole != RoleConstants.SuperUserRole && program.ManagerProfileCode != requesterId)
         {
             throw new UnauthorizedAccessException("No tienes permiso para agregar actividades a este programa");
         }
@@ -177,7 +177,7 @@ public class ActivityService : IActivityService
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
+        if (requesterRole != RoleConstants.AdminRole && requesterRole != RoleConstants.SuperUserRole && program.ManagerProfileCode != requesterId)
         {
             throw new UnauthorizedAccessException("No tienes permiso para modificar esta actividad");
         }
@@ -213,7 +213,7 @@ public class ActivityService : IActivityService
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
+        if (requesterRole != RoleConstants.AdminRole && requesterRole != RoleConstants.SuperUserRole && program.ManagerProfileCode != requesterId)
         {
             throw new UnauthorizedAccessException("No tienes permiso para cambiar el estado de esta actividad");
         }
@@ -237,7 +237,7 @@ public class ActivityService : IActivityService
         var program = await _volProgramRepository.GetByCodeAsync(activity.ProgramCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
 
-        if (requesterRole != RoleConstants.AdminRole && program.ManagerProfileCode != requesterId)
+        if (requesterRole != RoleConstants.AdminRole && requesterRole != RoleConstants.SuperUserRole && program.ManagerProfileCode != requesterId)
         {
             throw new UnauthorizedAccessException("No tienes permiso para eliminar esta actividad");
         }
