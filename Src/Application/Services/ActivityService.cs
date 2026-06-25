@@ -267,6 +267,8 @@ public class ActivityService : IActivityService
                 EnrollmentDeadline = rule.EnrollmentDeadline,
                 RequiresApproval = rule.RequiresApproval,
                 TotalCapacity = rule.TotalCapacity,
+                CostAmount = rule.CostAmount,
+                CountsVolunteerHours = rule.CountsVolunteerHours,
                 Groups = groups.Select(g => new ActivityGroupResponseDto
                 {
                     UvaCode = g.UvaCode,

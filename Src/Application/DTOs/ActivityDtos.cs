@@ -170,6 +170,12 @@ public class ActivityRuleResponseDto
 
     public int? TotalCapacity { get; set; }
 
+    public decimal? CostAmount { get; set; }
+
+    public string? CostCurrency { get; set; }
+
+    public bool CountsVolunteerHours { get; set; }
+
     public List<ActivityGroupResponseDto> Groups { get; set; } = [];
 }
 
