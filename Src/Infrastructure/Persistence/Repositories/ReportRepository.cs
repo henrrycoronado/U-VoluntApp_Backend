@@ -133,6 +133,55 @@ public class ReportRepository : IReportRepository
         return volunteerHistory;
     }
 
+    public async Task<HomeSummary?> GetLiveHomeSummaryByProfileCodeAsync(string profileCode, int year, int month)
+    {
+        var profile = await _context.Profiles
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.UvaCode == profileCode && p.DeletedAt == null);
+
+        if (profile == null)
+        {
+            return null;
+        }
+
+        var activeScholarship = await _context.UserScholarships
+            .AsNoTracking()
+            .OrderByDescending(s => s.CreatedAt)
+            .FirstOrDefaultAsync(s => s.AssignedProfileCode == profileCode && s.StateCode != "stage-4" && s.DeletedAt == null);
+
+        var enrollments = await _context.Enrollments
+            .AsNoTracking()
+            .Where(e => e.EnrolledProfileCode == profileCode && e.DeletedAt == null)
+            .Select(e => e.UvaCode)
+            .ToListAsync();
+
+        var trackingLogs = await _context.TrackingLogs
+            .AsNoTracking()
+            .Where(t => enrollments.Contains(t.EnrollmentCode) && t.DeletedAt == null && t.StateCode == "stage-2")
+            .ToListAsync();
+
+        decimal totalLoggedHours = trackingLogs.Sum(t => t.CalculatedHours);
+
+        var currentMonthLogs = trackingLogs
+            .Where(t => t.EntryTime.HasValue && t.EntryTime.Value.Year == year && t.EntryTime.Value.Month == month)
+            .ToList();
+
+        decimal monthLoggedHours = currentMonthLogs.Sum(t => t.CalculatedHours);
+
+        var dailyActivities = currentMonthLogs
+            .GroupBy(t => t.EntryTime!.Value.Day)
+            .Select(g => DailyActivity.Create(g.Key, g.Sum(t => t.CalculatedHours)))
+            .OrderBy(d => d.Day)
+            .ToList();
+
+        return HomeSummary.Create(
+            personalGoalHours: profile.PersonalGoalHours,
+            scholarshipGoalHours: activeScholarship?.RequiredHours ?? 0m,
+            monthLoggedHours: monthLoggedHours,
+            totalLoggedHours: totalLoggedHours,
+            currentMonthDailyActivities: dailyActivities);
+    }
+
     public async Task RefreshMaterializedViewsAsync()
     {
         await _context.Database.ExecuteSqlRawAsync(

@@ -76,6 +76,17 @@ public class ReportService : IReportService
         return MapToDto(record);
     }
 
+    public async Task<HomeSummaryDto> GetHomeSummaryAsync(string profileCode, int? year, int? month)
+    {
+        var targetYear = year ?? DateTime.UtcNow.Year;
+        var targetMonth = month ?? DateTime.UtcNow.Month;
+
+        var record = await _reportRepository.GetLiveHomeSummaryByProfileCodeAsync(profileCode, targetYear, targetMonth)
+            ?? throw new KeyNotFoundException("Resumen de inicio no encontrado para el voluntario");
+
+        return MapToDto(record);
+    }
+
     public async Task<byte[]> GenerateScholarshipPdfAsync(string? scholarshipType)
     {
         IEnumerable<ScholarshipPerformance> records;
@@ -155,6 +166,22 @@ public class ReportService : IReportService
             ValidatedHours = entity.ValidatedHours,
             TotalLoggedHours = entity.TotalLoggedHours,
             LastActivityDate = entity.LastActivityDate,
+        };
+    }
+
+    private static HomeSummaryDto MapToDto(HomeSummary entity)
+    {
+        return new HomeSummaryDto
+        {
+            PersonalGoalHours = entity.PersonalGoalHours,
+            ScholarshipGoalHours = entity.ScholarshipGoalHours,
+            MonthLoggedHours = entity.MonthLoggedHours,
+            TotalLoggedHours = entity.TotalLoggedHours,
+            CurrentMonthDailyActivities = entity.CurrentMonthDailyActivities.Select(d => new DailyActivityDto
+            {
+                Day = d.Day,
+                Hours = d.Hours
+            }).ToList()
         };
     }
 }

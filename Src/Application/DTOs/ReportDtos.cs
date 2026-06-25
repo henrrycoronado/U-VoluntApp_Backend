@@ -75,3 +75,23 @@ public class VolunteerHistoryDto
 
     public DateTime? LastActivityDate { get; set; }
 }
+
+public class DailyActivityDto
+{
+    public int Day { get; set; }
+
+    public decimal Hours { get; set; }
+}
+
+public class HomeSummaryDto
+{
+    public decimal PersonalGoalHours { get; set; }
+
+    public decimal ScholarshipGoalHours { get; set; }
+
+    public decimal MonthLoggedHours { get; set; }
+
+    public decimal TotalLoggedHours { get; set; }
+
+    public List<DailyActivityDto> CurrentMonthDailyActivities { get; set; } = new List<DailyActivityDto>();
+}

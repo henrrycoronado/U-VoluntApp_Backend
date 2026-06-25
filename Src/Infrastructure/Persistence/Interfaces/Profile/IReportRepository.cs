@@ -22,5 +22,7 @@ public interface IReportRepository
 
     Task<VolunteerHistory?> GetLiveVolunteerHistoryByProfileCodeAsync(string profileCode);
 
+    Task<HomeSummary?> GetLiveHomeSummaryByProfileCodeAsync(string profileCode, int year, int month);
+
     Task RefreshMaterializedViewsAsync();
 }

@@ -207,6 +207,26 @@ public class ReportController : ControllerBase
     }
 
     /// <summary>
+    /// Procesa la acción GetHomeSummaryMe para obtener un resumen del perfil actual.
+    /// </summary>
+    /// <param name="year">Año opcional (defecto año actual).</param>
+    /// <param name="month">Mes opcional (defecto mes actual).</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [HttpGet("volunteers/me/home-summary")]
+    public async Task<IActionResult> GetHomeSummaryMe([FromQuery] int? year, [FromQuery] int? month)
+    {
+        var profileCode = ControllerHelper.GetProfileId(User);
+        var result = await _reportService.GetHomeSummaryAsync(profileCode, year, month);
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Procesa la acción RefreshAnalytics para un reporte.
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>

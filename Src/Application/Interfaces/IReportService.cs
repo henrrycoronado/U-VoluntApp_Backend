@@ -20,6 +20,8 @@ public interface IReportService
 
     Task<VolunteerHistoryDto> GetVolunteerHistoryByProfileCodeAsync(string profileCode);
 
+    Task<HomeSummaryDto> GetHomeSummaryAsync(string profileCode, int? year, int? month);
+
     Task<byte[]> GenerateScholarshipPdfAsync(string? scholarshipType);
 
     Task RefreshAnalyticsAsync();
