@@ -25,6 +25,14 @@ public class UpdateVolProgramDto
     public string? ProfilePhotoUrl { get; set; }
 
     public string? CoverPhotoUrl { get; set; }
+
+    public string? MissionStatement { get; set; }
+
+    public string? ScheduleInfo { get; set; }
+
+    public string? ContactInfo { get; set; }
+
+    public string? LeadershipInfo { get; set; }
 }
 
 public class VolProgramResponseDto
@@ -42,6 +50,14 @@ public class VolProgramResponseDto
     public string? ProfilePhotoUrl { get; set; }
 
     public string? CoverPhotoUrl { get; set; }
+
+    public string? MissionStatement { get; set; }
+
+    public string? ScheduleInfo { get; set; }
+
+    public string? ContactInfo { get; set; }
+
+    public string? LeadershipInfo { get; set; }
 
     public string ManagerProfileId { get; set; } = null!;
 

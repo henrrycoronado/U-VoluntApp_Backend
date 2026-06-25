@@ -84,6 +84,43 @@ public class VolProgramService : IVolProgramService
 
         program.ApplyUpdate(dto.Name ?? program.Name, dto.Acronym, DateTime.UtcNow);
 
+        if (program.Content != null)
+        {
+            try
+            {
+                program.Content.ApplyUpdate(
+                    dto.Description,
+                    program.Content.ActivitiesDescription, // keep old
+                    dto.ScheduleInfo,
+                    dto.LeadershipInfo,
+                    dto.ContactInfo,
+                    dto.MissionStatement,
+                    dto.ProfilePhotoUrl,
+                    dto.CoverPhotoUrl,
+                    DateTime.UtcNow
+                );
+            }
+            catch (InvalidOperationException)
+            {
+                // Ignoring if no changes were made to the content
+            }
+        }
+        else
+        {
+            program.SetContent(U_VoluntApp_Backend.Src.Domain.Entities.VolProgram.ProgramContent.Create(
+                program.UvaCode,
+                dto.Description,
+                null,
+                dto.ScheduleInfo,
+                dto.LeadershipInfo,
+                dto.ContactInfo,
+                dto.MissionStatement,
+                dto.ProfilePhotoUrl,
+                dto.CoverPhotoUrl,
+                DateTime.UtcNow
+            ));
+        }
+
         await _volProgramRepository.UpdateAsync(program);
 
         var manager = await _profileRepository.GetByCodeAsync(program.ManagerProfileCode!)
@@ -138,6 +175,13 @@ public class VolProgramService : IVolProgramService
             UvaCode = program.UvaCode,
             Name = program.Name,
             Acronym = program.Acronym,
+            Description = program.Content?.Description,
+            ProfilePhotoUrl = program.Content?.ProfilePhotoUrl,
+            CoverPhotoUrl = program.Content?.CoverPhotoUrl,
+            MissionStatement = program.Content?.MissionStatement,
+            ScheduleInfo = program.Content?.ScheduleInfo,
+            ContactInfo = program.Content?.ContactInfo,
+            LeadershipInfo = program.Content?.LeadershipInfo,
             ManagerProfileId = program.ManagerProfileCode ?? string.Empty,
             ManagerName = manager is not null
                 ? $"{manager.FirstName} {manager.LastName}"

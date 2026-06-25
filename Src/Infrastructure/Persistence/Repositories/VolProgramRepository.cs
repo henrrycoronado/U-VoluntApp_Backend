@@ -19,6 +19,7 @@ public class VolProgramRepository : IVolProgramRepository
     {
         var program = await _context.VolPrograms
             .AsNoTracking()
+            .Include(p => p.ProgramContent)
             .FirstOrDefaultAsync(p => p.UvaCode == uvaCode);
 
         return program is null ? null : DomainPersistenceMapper.ToDomain(program);
@@ -26,7 +27,7 @@ public class VolProgramRepository : IVolProgramRepository
 
     public async Task<IEnumerable<VolProgram>> GetAllAsync(RequestFilter filter)
     {
-        var query = _context.VolPrograms.AsNoTracking();
+        var query = _context.VolPrograms.AsNoTracking().Include(p => p.ProgramContent).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filter.StateName))
         {
@@ -46,6 +47,8 @@ public class VolProgramRepository : IVolProgramRepository
     {
         var query = _context.VolPrograms
             .AsNoTracking()
+            .Include(p => p.ProgramContent)
+            .AsQueryable()
             .Where(p => p.ManagerProfileCode == profileCode);
 
         if (!string.IsNullOrWhiteSpace(filter.StateName))

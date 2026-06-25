@@ -131,7 +131,8 @@ public class VolProgram
         string stateCode,
         DateTime createdAt,
         DateTime? updatedAt,
-        DateTime? deletedAt)
+        DateTime? deletedAt,
+        ProgramContent? content)
     {
         return new VolProgram
         {
@@ -143,7 +144,13 @@ public class VolProgram
             CreatedAt = createdAt,
             UpdatedAt = updatedAt,
             DeletedAt = deletedAt,
+            Content = content,
         };
+    }
+
+    public void SetContent(ProgramContent content)
+    {
+        Content = content;
     }
 
     private static T? UpdateIfNotNull<T>(T? currentValue, T? newValue, ref bool updated)

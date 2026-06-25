@@ -7,6 +7,7 @@ public static partial class DomainPersistenceMapper
 {
     public static DomainEntities.VolProgram.VolProgram ToDomain(PersistenceModels.VolProgram.VolProgram model)
     {
+        var content = model.ProgramContent != null ? ToDomain(model.ProgramContent) : null;
         return DomainEntities.VolProgram.VolProgram.Rehydrate(
             model.UvaCode,
             model.Name,
@@ -15,7 +16,8 @@ public static partial class DomainPersistenceMapper
             model.StateCode,
             model.CreatedAt,
             model.UpdatedAt,
-            model.DeletedAt);
+            model.DeletedAt,
+            content);
     }
 
     public static DomainEntities.VolProgram.ProgramContent ToDomain(PersistenceModels.VolProgram.ProgramContent model)

@@ -72,6 +72,7 @@ public class ActivityController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{uvaCode}")]
+    [Authorize(Roles = $"{RoleConstants.VolunteerRole}, {RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> GetByCode(string uvaCode)
     {
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.VolunteerRole);
@@ -91,6 +92,7 @@ public class ActivityController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("by-program/{programCode}")]
+    [Authorize(Roles = $"{RoleConstants.VolunteerRole}, {RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> GetByProgram(string programCode)
     {
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.VolunteerRole);

@@ -53,10 +53,10 @@ public class ProgramCollaboratorController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("program/{programCode}")]
-    [Authorize(Roles = $"{RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
+    [Authorize(Roles = $"{RoleConstants.VolunteerRole}, {RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
     public async Task<IActionResult> GetByProgramId(string programCode, string stateCode)
     {
-        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.CoordinatorRole);
+        var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.VolunteerRole);
         var result = await _collaboratorService.GetByProgramIdAsync(programCode, requesterId, requesterRole, stateCode);
         return Ok(result);
     }
