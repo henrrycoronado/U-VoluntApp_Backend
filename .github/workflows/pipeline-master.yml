@@ -70,6 +70,7 @@ jobs:
           kubectl create secret generic backend-secrets \
             --from-literal=DB_CONNECTION_STRING="${{ secrets.DB_CONNECTION_STRING }}" \
             --from-literal=JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+            --from-literal=JWT_REFRESH_DAYS="${{ secrets.JWT_REFRESH_DAYS }}" \
             --from-literal=S3_ACCESS_KEY="${{ secrets.S3_ACCESS_KEY }}" \
             --from-literal=S3_SECRET_KEY="${{ secrets.S3_SECRET_KEY }}" \
             --from-literal=S3_ENDPOINT_URL="${{ secrets.S3_ENDPOINT_URL }}" \
@@ -80,6 +81,12 @@ jobs:
             --from-literal=SUPERUSER_PASSWORD="${{ secrets.SUPERUSER_PASSWORD }}" \
             --from-literal=SHOW_SWAGGER="${{ secrets.SHOW_SWAGGER }}" \
             --from-literal=SEQ_ADMIN_PASSWORD="${{ secrets.SEQ_ADMIN_PASSWORD }}" \
+            --from-literal=SMTP_HOST="${{ secrets.SMTP_HOST }}" \
+            --from-literal=SMTP_PORT="${{ secrets.SMTP_PORT }}" \
+            --from-literal=SMTP_USER="${{ secrets.SMTP_USER }}" \
+            --from-literal=SMTP_PASS="${{ secrets.SMTP_PASS }}" \
+            --from-literal=GOOGLE_CLIENT_IDS="${{ secrets.GOOGLE_CLIENT_IDS }}" \
+            --from-literal=GOOGLE_CLIENT_ID_DESKTOP="${{ secrets.GOOGLE_CLIENT_ID_DESKTOP }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
           # 2. Aplicar manifiestos

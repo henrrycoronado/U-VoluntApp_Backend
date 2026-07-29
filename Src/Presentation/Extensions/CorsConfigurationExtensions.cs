@@ -13,9 +13,10 @@ public static class CorsConfigurationExtensions
 
             options.AddPolicy("AllowSpecificOrigins", policy =>
             {
-                policy.AllowAnyOrigin()
+                policy.WithOrigins(allowedOrigins)
                       .AllowAnyMethod()
                       .AllowAnyHeader()
+                      .AllowCredentials()
                       .WithExposedHeaders("X-Response-Time-Ms");
             });
         });
