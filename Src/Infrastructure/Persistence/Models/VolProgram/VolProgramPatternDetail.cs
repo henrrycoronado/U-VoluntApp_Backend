@@ -1,12 +1,12 @@
 namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram;
 
-public partial class ActivityRecurrenceDetail
+public partial class VolProgramPatternDetail
 {
     public long Id { get; set; }
 
     public string UvaCode { get; set; } = null!;
 
-    public string ActivityRecurrencePatternCode { get; set; } = null!;
+    public string VolProgramPatternCode { get; set; } = null!;
 
     public short? DayOfWeek { get; set; }
 
@@ -26,5 +26,5 @@ public partial class ActivityRecurrenceDetail
 
     public DateTime? DeletedAt { get; set; }
 
-    public virtual ActivityRecurrencePattern ActivityRecurrencePattern { get; set; } = null!;
+    public virtual VolProgramPattern VolProgramPattern { get; set; } = null!;
 }

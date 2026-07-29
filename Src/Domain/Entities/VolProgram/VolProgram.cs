@@ -18,7 +18,7 @@ public class VolProgram
 
     public DateTime? DeletedAt { get; private set; }
 
-    public ProgramContent? Content { get; private set; }
+    public VolProgramContent? VolProgramContent { get; private set; }
 
     public static VolProgram Create(
         string name,
@@ -113,19 +113,19 @@ public class VolProgram
         DeletedAt = nowUtc;
     }
 
-    public void AddProgramContent(ProgramContent content)
+    public void AddVolProgramContent(VolProgramContent content)
     {
         if (DeletedAt.HasValue)
         {
             throw new InvalidOperationException("No se puede agregar contenido a un programa eliminado");
         }
 
-        Content = content;
+        VolProgramContent = content;
     }
 
-    public void SetContent(ProgramContent content)
+    public void SetVolProgramContent(VolProgramContent content)
     {
-        Content = content;
+        VolProgramContent = content;
     }
 
     internal static VolProgram Rehydrate(
@@ -137,7 +137,7 @@ public class VolProgram
         DateTime createdAt,
         DateTime? updatedAt,
         DateTime? deletedAt,
-        ProgramContent? content)
+        VolProgramContent? content)
     {
         return new VolProgram
         {
@@ -149,7 +149,7 @@ public class VolProgram
             CreatedAt = createdAt,
             UpdatedAt = updatedAt,
             DeletedAt = deletedAt,
-            Content = content,
+            VolProgramContent = content,
         };
     }
 

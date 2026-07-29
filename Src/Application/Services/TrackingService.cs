@@ -26,7 +26,7 @@ public class TrackingService : ITrackingService
     private readonly IProfileRepository _profileRepository;
     private readonly IEvidenceRepository _evidenceRepository;
     private readonly IStorageService _storageService;
-    private readonly IProgramCollaboratorService _programCollaboratorService;
+    private readonly IVolProgramCollaboratorService _programCollaboratorService;
 
     public TrackingService(
         ITrackingLogRepository trackingLogRepository,
@@ -37,7 +37,7 @@ public class TrackingService : ITrackingService
         IProfileRepository profileRepository,
         IEvidenceRepository evidenceRepository,
         IStorageService storageService,
-        IProgramCollaboratorService programCollaboratorService)
+        IVolProgramCollaboratorService programCollaboratorService)
     {
         _trackingLogRepository = trackingLogRepository;
         _enrollmentRepository = enrollmentRepository;

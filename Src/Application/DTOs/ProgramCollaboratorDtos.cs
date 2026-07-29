@@ -1,6 +1,6 @@
 namespace U_VoluntApp_Core.Src.Application.DTOs;
 
-public class AddProgramCollaboratorDto
+public class AddVolProgramCollaboratorDto
 {
     public string ProgramCode { get; set; } = null!;
 
@@ -9,12 +9,12 @@ public class AddProgramCollaboratorDto
     public string StateCode { get; set; } = null!;
 }
 
-public class UpdateProgramCollaboratorDto
+public class UpdateVolProgramCollaboratorDto
 {
     public string StateCode { get; set; } = null!;
 }
 
-public class ProgramCollaboratorResponseDto
+public class VolProgramCollaboratorResponseDto
 {
     public string UvaCode { get; set; } = null!;
 
@@ -37,9 +37,9 @@ public class ProgramCollaboratorResponseDto
     public DateTime UpdatedAt { get; set; }
 }
 
-public class ProgramCollaboratorListDto
+public class VolProgramCollaboratorListDto
 {
-    public IEnumerable<ProgramCollaboratorResponseDto> Collaborators { get; set; } = new List<ProgramCollaboratorResponseDto>();
+    public IEnumerable<VolProgramCollaboratorResponseDto> VolProgramCollaborators { get; set; } = new List<VolProgramCollaboratorResponseDto>();
 
     public int Total { get; set; }
 }

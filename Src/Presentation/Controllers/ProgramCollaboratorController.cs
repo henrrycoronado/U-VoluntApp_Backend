@@ -11,11 +11,11 @@ using U_VoluntApp_Core.Src.Presentation.Helpers;
 [ApiController]
 [Route("api/v1/collaborators")]
 [Authorize]
-public class ProgramCollaboratorController : ControllerBase
+public class VolProgramCollaboratorController : ControllerBase
 {
-    private readonly IProgramCollaboratorService _collaboratorService;
+    private readonly IVolProgramCollaboratorService _collaboratorService;
 
-    public ProgramCollaboratorController(IProgramCollaboratorService collaboratorService)
+    public VolProgramCollaboratorController(IVolProgramCollaboratorService collaboratorService)
     {
         _collaboratorService = collaboratorService;
     }
@@ -33,7 +33,7 @@ public class ProgramCollaboratorController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     [Authorize(Roles = $"{RoleConstants.CoordinatorRole}, {RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
-    public async Task<IActionResult> Add([FromBody] AddProgramCollaboratorDto dto)
+    public async Task<IActionResult> Add([FromBody] AddVolProgramCollaboratorDto dto)
     {
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.CoordinatorRole);
         var result = await _collaboratorService.AddAsync(dto, requesterId, requesterRole);
@@ -102,7 +102,7 @@ public class ProgramCollaboratorController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPut("{uvaCode}")]
     [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
-    public async Task<IActionResult> Update(string uvaCode, [FromBody] UpdateProgramCollaboratorDto dto)
+    public async Task<IActionResult> Update(string uvaCode, [FromBody] UpdateVolProgramCollaboratorDto dto)
     {
         var (requesterId, requesterRole) = ControllerHelper.GetRequesterInfo(User, RoleConstants.AdminRole);
         var result = await _collaboratorService.UpdateAsync(uvaCode, dto, requesterId, requesterRole);

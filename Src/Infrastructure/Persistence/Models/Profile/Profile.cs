@@ -45,9 +45,9 @@ public partial class Profile
 
     public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 
-    public virtual ICollection<ProgramCollaborator> ProgramCollaboratorAssignedByProfiles { get; set; } = new List<ProgramCollaborator>();
+    public virtual ICollection<VolProgramCollaborator> VolProgramCollaboratorAssignedByProfiles { get; set; } = new List<VolProgramCollaborator>();
 
-    public virtual ICollection<ProgramCollaborator> ProgramCollaboratorProfiles { get; set; } = new List<ProgramCollaborator>();
+    public virtual ICollection<VolProgramCollaborator> VolProgramCollaboratorProfiles { get; set; } = new List<VolProgramCollaborator>();
 
     public virtual ICollection<RoleRequest> RoleRequestRequesterProfiles { get; set; } = new List<RoleRequest>();
 

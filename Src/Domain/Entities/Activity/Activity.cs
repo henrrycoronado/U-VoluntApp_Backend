@@ -10,7 +10,7 @@ public class Activity
 
     public string ActivityTypeCode { get; private set; } = string.Empty;
 
-    public string? ActivityRecurrencePatternCode { get; private set; }
+    public string? VolProgramPatternCode { get; private set; }
 
     public string Name { get; private set; } = string.Empty;
 
@@ -40,7 +40,7 @@ public class Activity
         string programCode,
         string? responsibleProfileCode,
         string activityTypeCode,
-        string? activityRecurrencePatternCode,
+        string? volProgramPatternCode,
         string name,
         string? description,
         DateTime startDate,
@@ -66,7 +66,7 @@ public class Activity
             throw new InvalidOperationException("El formato del código de tipo de actividad es inválido");
         }
 
-        ValidateInputs(activityTypeCode, activityRecurrencePatternCode, name, startDate, endDate, registrationRadiusMeters, nowUtc);
+        ValidateInputs(activityTypeCode, volProgramPatternCode, name, startDate, endDate, registrationRadiusMeters, nowUtc);
 
         return new Activity
         {
@@ -74,7 +74,7 @@ public class Activity
             ProgramCode = programCode,
             ResponsibleProfileCode = responsibleProfileCode,
             ActivityTypeCode = activityTypeCode,
-            ActivityRecurrencePatternCode = activityRecurrencePatternCode,
+            VolProgramPatternCode = volProgramPatternCode,
             Name = name,
             Description = description,
             StartDate = startDate,
@@ -90,7 +90,7 @@ public class Activity
     public void ApplyUpdate(
         string? responsibleProfileCode,
         string activityTypeCode,
-        string? activityRecurrencePatternCode,
+        string? volProgramPatternCode,
         string name,
         string? description,
         DateTime startDate,
@@ -110,13 +110,13 @@ public class Activity
             throw new InvalidOperationException("El formato del código de tipo de actividad es inválido");
         }
 
-        ValidateInputs(activityTypeCode, activityRecurrencePatternCode, name, startDate, endDate, registrationRadiusMeters, nowUtc);
+        ValidateInputs(activityTypeCode, volProgramPatternCode, name, startDate, endDate, registrationRadiusMeters, nowUtc);
 
         bool updated = false;
 
         ResponsibleProfileCode = UpdateIfNotNull(ResponsibleProfileCode, responsibleProfileCode, ref updated);
         ActivityTypeCode = UpdateIfNotNull(ActivityTypeCode, activityTypeCode, ref updated) ?? ActivityTypeCode;
-        ActivityRecurrencePatternCode = UpdateIfNotNull(ActivityRecurrencePatternCode, activityRecurrencePatternCode, ref updated);
+        VolProgramPatternCode = UpdateIfNotNull(VolProgramPatternCode, volProgramPatternCode, ref updated);
         Name = UpdateIfNotNull(Name, name, ref updated) ?? Name;
         Description = UpdateIfNotNull(Description, description, ref updated);
         StartDate = UpdateIfNotNull(StartDate, startDate, ref updated);
@@ -181,7 +181,7 @@ public class Activity
         string programCode,
         string? responsibleProfileCode,
         string activityTypeCode,
-        string? activityRecurrencePatternCode,
+        string? volProgramPatternCode,
         string name,
         string? description,
         DateTime startDate,
@@ -200,7 +200,7 @@ public class Activity
             ProgramCode = programCode,
             ResponsibleProfileCode = responsibleProfileCode,
             ActivityTypeCode = activityTypeCode,
-            ActivityRecurrencePatternCode = activityRecurrencePatternCode,
+            VolProgramPatternCode = volProgramPatternCode,
             Name = name,
             Description = description,
             StartDate = startDate,
@@ -217,7 +217,7 @@ public class Activity
 
     private static void ValidateInputs(
         string activityTypeCode,
-        string? activityRecurrencePatternCode,
+        string? volProgramPatternCode,
         string name,
         DateTime startDate,
         DateTime endDate,
@@ -229,7 +229,7 @@ public class Activity
             throw new InvalidOperationException("Tipo de actividad inválido");
         }
 
-        if (activityRecurrencePatternCode != null && string.IsNullOrWhiteSpace(activityRecurrencePatternCode))
+        if (volProgramPatternCode != null && string.IsNullOrWhiteSpace(volProgramPatternCode))
         {
             throw new InvalidOperationException("Identificador de patrón de recurrencia inválido");
         }

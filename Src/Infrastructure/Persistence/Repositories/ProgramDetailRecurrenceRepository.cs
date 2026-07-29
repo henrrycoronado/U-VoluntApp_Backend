@@ -5,34 +5,34 @@ using U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
-public class ProgramDetailRecurrenceRepository : IProgramDetailRecurrenceRepository
+public class VolProgramPatternDetailRepository : IVolProgramPatternDetailRepository
 {
     private readonly AppDbContext _context;
 
-    public ProgramDetailRecurrenceRepository(AppDbContext context)
+    public VolProgramPatternDetailRepository(AppDbContext context)
     {
         _context = context;
     }
 
-    public async Task<ActivityRecurrenceDetail?> GetByCodeAsync(string uvaCode)
+    public async Task<VolProgramPatternDetail?> GetByCodeAsync(string uvaCode)
     {
-        var detail = await _context.ActivityRecurrenceDetails
+        var detail = await _context.VolProgramPatternDetails
             .AsNoTracking()
             .FirstOrDefaultAsync(d => d.UvaCode == uvaCode);
 
         return detail is null ? null : DomainPersistenceMapper.ToDomain(detail);
     }
 
-    public async Task AddAsync(ActivityRecurrenceDetail detail)
+    public async Task AddAsync(VolProgramPatternDetail detail)
     {
         var model = DomainPersistenceMapper.ToPersistence(detail);
-        await _context.ActivityRecurrenceDetails.AddAsync(model);
+        await _context.VolProgramPatternDetails.AddAsync(model);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(ActivityRecurrenceDetail detail)
+    public async Task UpdateAsync(VolProgramPatternDetail detail)
     {
-        var existing = await _context.ActivityRecurrenceDetails
+        var existing = await _context.VolProgramPatternDetails
             .FirstOrDefaultAsync(d => d.UvaCode == detail.UvaCode)
             ?? throw new InvalidOperationException("Detalle de recurrencia no encontrado para actualizar");
 

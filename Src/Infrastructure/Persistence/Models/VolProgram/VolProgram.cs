@@ -25,11 +25,11 @@ public partial class VolProgram
 
     public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
-    public virtual ICollection<ActivityRecurrencePattern> ActivityRecurrencePatterns { get; set; } = new List<ActivityRecurrencePattern>();
+    public virtual ICollection<VolProgramPattern> VolProgramPatterns { get; set; } = new List<VolProgramPattern>();
 
     public virtual Profile? ManagerProfile { get; set; }
 
-    public virtual ICollection<ProgramCollaborator> ProgramCollaborators { get; set; } = new List<ProgramCollaborator>();
+    public virtual ICollection<VolProgramCollaborator> VolProgramCollaborators { get; set; } = new List<VolProgramCollaborator>();
 
-    public virtual ProgramContent? ProgramContent { get; set; }
+    public virtual VolProgramContent? VolProgramContent { get; set; }
 }

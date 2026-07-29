@@ -2,11 +2,11 @@ namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 
 using U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
 
-public interface IProgramContentRepository
+public interface IVolProgramContentRepository
 {
-    Task<ProgramContent?> GetByProgramCodeAsync(string programCode);
+    Task<VolProgramContent?> GetByProgramCodeAsync(string programCode);
 
-    Task AddAsync(ProgramContent content);
+    Task AddAsync(VolProgramContent content);
 
-    Task UpdateAsync(ProgramContent content);
+    Task UpdateAsync(VolProgramContent content);
 }

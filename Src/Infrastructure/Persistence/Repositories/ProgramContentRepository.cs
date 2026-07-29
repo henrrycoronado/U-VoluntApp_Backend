@@ -5,34 +5,34 @@ using U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
-public class ProgramContentRepository : IProgramContentRepository
+public class VolProgramContentRepository : IVolProgramContentRepository
 {
     private readonly AppDbContext _context;
 
-    public ProgramContentRepository(AppDbContext context)
+    public VolProgramContentRepository(AppDbContext context)
     {
         _context = context;
     }
 
-    public async Task<ProgramContent?> GetByProgramCodeAsync(string programCode)
+    public async Task<VolProgramContent?> GetByProgramCodeAsync(string programCode)
     {
-        var content = await _context.ProgramContents
+        var content = await _context.VolProgramContents
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.ProgramCode == programCode);
 
         return content is null ? null : DomainPersistenceMapper.ToDomain(content);
     }
 
-    public async Task AddAsync(ProgramContent content)
+    public async Task AddAsync(VolProgramContent content)
     {
         var model = DomainPersistenceMapper.ToPersistence(content);
-        await _context.ProgramContents.AddAsync(model);
+        await _context.VolProgramContents.AddAsync(model);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(ProgramContent content)
+    public async Task UpdateAsync(VolProgramContent content)
     {
-        var existing = await _context.ProgramContents
+        var existing = await _context.VolProgramContents
             .FirstOrDefaultAsync(c => c.UvaCode == content.UvaCode)
             ?? throw new InvalidOperationException("Contenido de programa no encontrado para actualizar");
 

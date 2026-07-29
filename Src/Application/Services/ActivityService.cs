@@ -191,7 +191,7 @@ public class ActivityService : IActivityService
         activity.ApplyUpdate(
             activity.ResponsibleProfileCode,
             dto.ActivityTypeCode ?? activity.ActivityTypeCode,
-            activity.ActivityRecurrencePatternCode,
+            activity.VolProgramPatternCode,
             dto.Name ?? activity.Name,
             dto.Description ?? activity.Description,
             dto.StartDate ?? activity.StartDate,

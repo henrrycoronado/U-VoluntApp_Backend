@@ -16,7 +16,7 @@ public partial class Activity
 
     public string ActivityTypeCode { get; set; } = null!;
 
-    public string? ActivityRecurrencePatternCode { get; set; }
+    public string? VolProgramPatternCode { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -42,7 +42,7 @@ public partial class Activity
 
     public virtual ICollection<ActivityGroup> ActivityGroups { get; set; } = new List<ActivityGroup>();
 
-    public virtual ActivityRecurrencePattern? ActivityRecurrencePattern { get; set; }
+    public virtual VolProgramPattern? VolProgramPattern { get; set; }
 
     public virtual ActivityRule? ActivityRule { get; set; }
 

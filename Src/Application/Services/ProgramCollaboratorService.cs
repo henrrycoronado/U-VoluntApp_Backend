@@ -10,14 +10,14 @@ using U_VoluntApp_Core.Src.Domain.Utils.Enums;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 
-public class ProgramCollaboratorService : IProgramCollaboratorService
+public class VolProgramCollaboratorService : IVolProgramCollaboratorService
 {
-    private readonly IProgramCollaboratorRepository _collaboratorRepository;
+    private readonly IVolProgramCollaboratorRepository _collaboratorRepository;
     private readonly IVolProgramRepository _programRepository;
     private readonly IProfileRepository _profileRepository;
 
-    public ProgramCollaboratorService(
-        IProgramCollaboratorRepository collaboratorRepository,
+    public VolProgramCollaboratorService(
+        IVolProgramCollaboratorRepository collaboratorRepository,
         IVolProgramRepository programRepository,
         IProfileRepository profileRepository)
     {
@@ -26,8 +26,8 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         _profileRepository = profileRepository;
     }
 
-    public async Task<ProgramCollaboratorResponseDto> AddAsync(
-        AddProgramCollaboratorDto dto,
+    public async Task<VolProgramCollaboratorResponseDto> AddAsync(
+        AddVolProgramCollaboratorDto dto,
         string requesterId,
         string requesterRole)
     {
@@ -69,7 +69,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
             ? ContractState.Active.GetUvaCode()
             : ContractState.Pending.GetUvaCode();
 
-        var collaborator = ProgramCollaborator.Create(
+        var collaborator = VolProgramCollaborator.Create(
             dto.ProgramCode,
             dto.ProfileCode,
             requesterId,
@@ -81,7 +81,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         return await MapToResponseAsync(collaborator);
     }
 
-    public async Task<ProgramCollaboratorListDto> GetByProgramIdAsync(string programCode, string requesterId, string requesterRole, string stateCode)
+    public async Task<VolProgramCollaboratorListDto> GetByProgramIdAsync(string programCode, string requesterId, string requesterRole, string stateCode)
     {
         var program = await _programRepository.GetByCodeAsync(programCode)
             ?? throw new KeyNotFoundException("Programa no encontrado");
@@ -94,7 +94,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         var filter = new RequestFilter { Page = 1, PageSize = 100 };
         var collaborators = await _collaboratorRepository.GetByProgramCodeAsync(programCode, filter);
 
-        var dtos = new List<ProgramCollaboratorResponseDto>();
+        var dtos = new List<VolProgramCollaboratorResponseDto>();
         foreach (var collab in collaborators)
         {
             if (!string.IsNullOrEmpty(stateCode) && collab.StateCode != stateCode)
@@ -105,14 +105,14 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
             dtos.Add(await MapToResponseAsync(collab));
         }
 
-        return new ProgramCollaboratorListDto
+        return new VolProgramCollaboratorListDto
         {
-            Collaborators = dtos,
+            VolProgramCollaborators = dtos,
             Total = dtos.Count,
         };
     }
 
-    public async Task<ProgramCollaboratorResponseDto?> GetByCodeAsync(string uvaCode)
+    public async Task<VolProgramCollaboratorResponseDto?> GetByCodeAsync(string uvaCode)
     {
         var collaborator = await _collaboratorRepository.GetByCodeAsync(uvaCode);
         if (collaborator is null)
@@ -143,9 +143,9 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         return collaborator.StateCode == minStateCode;
     }
 
-    public async Task<ProgramCollaboratorResponseDto> UpdateAsync(
+    public async Task<VolProgramCollaboratorResponseDto> UpdateAsync(
         string uvaCode,
-        UpdateProgramCollaboratorDto dto,
+        UpdateVolProgramCollaboratorDto dto,
         string requesterId,
         string requesterRole)
     {
@@ -193,7 +193,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
         await _collaboratorRepository.DeleteAsync(uvaCode);
     }
 
-    private async Task<ProgramCollaboratorResponseDto> MapToResponseAsync(ProgramCollaborator collaborator)
+    private async Task<VolProgramCollaboratorResponseDto> MapToResponseAsync(VolProgramCollaborator collaborator)
     {
         var profile = await _profileRepository.GetByCodeAsync(collaborator.ProfileCode);
 
@@ -201,7 +201,7 @@ public class ProgramCollaboratorService : IProgramCollaboratorService
             ? await _profileRepository.GetByCodeAsync(collaborator.AssignedByProfileCode)
             : null;
 
-        return new ProgramCollaboratorResponseDto
+        return new VolProgramCollaboratorResponseDto
         {
             UvaCode = collaborator.UvaCode,
             ProgramCode = collaborator.ProgramCode,

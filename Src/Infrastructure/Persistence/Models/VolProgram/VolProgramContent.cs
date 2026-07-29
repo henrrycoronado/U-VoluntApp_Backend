@@ -1,6 +1,6 @@
 namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram;
 
-public partial class ProgramContent
+public partial class VolProgramContent
 {
     public long Id { get; set; }
 

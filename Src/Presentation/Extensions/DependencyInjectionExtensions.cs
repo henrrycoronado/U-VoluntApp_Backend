@@ -28,7 +28,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<ITrackingLogRepository, TrackingLogRepository>();
         services.AddScoped<IEvidenceRepository, EvidenceRepository>();
         services.AddScoped<IUserScholarshipRepository, UserScholarshipRepository>();
-        services.AddScoped<IProgramCollaboratorRepository, ProgramCollaboratorRepository>();
+        services.AddScoped<IVolProgramCollaboratorRepository, VolProgramCollaboratorRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
         services.AddScoped<IRoleRequestRepository, RoleRequestRepository>();
 
@@ -44,7 +44,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<ITrackingService, TrackingService>();
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IUserScholarshipService, UserScholarshipService>();
-        services.AddScoped<IProgramCollaboratorService, ProgramCollaboratorService>();
+        services.AddScoped<IVolProgramCollaboratorService, VolProgramCollaboratorService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IReferenceCatalogService, ReferenceCatalogService>();
         services.AddScoped<IPdfReportService, ScholarshipPdfService>();

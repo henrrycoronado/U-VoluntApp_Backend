@@ -6,27 +6,27 @@ using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
-public class ProgramRecurrenceRepository : IProgramRecurrenceRepository
+public class VolProgramPatternRepository : IVolProgramPatternRepository
 {
     private readonly AppDbContext _context;
 
-    public ProgramRecurrenceRepository(AppDbContext context)
+    public VolProgramPatternRepository(AppDbContext context)
     {
         _context = context;
     }
 
-    public async Task<ActivityRecurrencePattern?> GetByCodeAsync(string uvaCode)
+    public async Task<VolProgramPattern?> GetByCodeAsync(string uvaCode)
     {
-        var pattern = await _context.ActivityRecurrencePatterns
+        var pattern = await _context.VolProgramPatterns
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.UvaCode == uvaCode);
 
         return pattern is null ? null : DomainPersistenceMapper.ToDomain(pattern);
     }
 
-    public async Task<IEnumerable<ActivityRecurrencePattern>> GetByProgramCodeAsync(string programCode, RequestFilter filter)
+    public async Task<IEnumerable<VolProgramPattern>> GetByProgramCodeAsync(string programCode, RequestFilter filter)
     {
-        var query = _context.ActivityRecurrencePatterns
+        var query = _context.VolProgramPatterns
             .AsNoTracking()
             .Where(p => p.ProgramCode == programCode);
 
@@ -44,16 +44,16 @@ public class ProgramRecurrenceRepository : IProgramRecurrenceRepository
         return patterns.Select(DomainPersistenceMapper.ToDomain).ToList();
     }
 
-    public async Task AddAsync(ActivityRecurrencePattern pattern)
+    public async Task AddAsync(VolProgramPattern pattern)
     {
         var model = DomainPersistenceMapper.ToPersistence(pattern);
-        await _context.ActivityRecurrencePatterns.AddAsync(model);
+        await _context.VolProgramPatterns.AddAsync(model);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(ActivityRecurrencePattern pattern)
+    public async Task UpdateAsync(VolProgramPattern pattern)
     {
-        var existing = await _context.ActivityRecurrencePatterns
+        var existing = await _context.VolProgramPatterns
             .FirstOrDefaultAsync(p => p.UvaCode == pattern.UvaCode)
             ?? throw new InvalidOperationException("Patrón de recurrencia no encontrado para actualizar");
 
@@ -67,10 +67,10 @@ public class ProgramRecurrenceRepository : IProgramRecurrenceRepository
 
     public async Task DeleteAsync(string uvaCode)
     {
-        var pattern = await _context.ActivityRecurrencePatterns.FirstOrDefaultAsync(p => p.UvaCode == uvaCode);
+        var pattern = await _context.VolProgramPatterns.FirstOrDefaultAsync(p => p.UvaCode == uvaCode);
         if (pattern != null)
         {
-            _context.ActivityRecurrencePatterns.Remove(pattern);
+            _context.VolProgramPatterns.Remove(pattern);
             await _context.SaveChangesAsync();
         }
     }
