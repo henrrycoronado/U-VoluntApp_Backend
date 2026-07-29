@@ -43,7 +43,8 @@ public static class DatabaseConfigurationExtensions
             options.Password.RequireUppercase = false;
         })
         .AddRoles<IdentityRole>()
-        .AddEntityFrameworkStores<AppDbContext>();
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddDefaultTokenProviders();
 
         return services;
     }

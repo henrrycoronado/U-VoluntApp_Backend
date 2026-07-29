@@ -11,4 +11,6 @@ public interface IAuthService
     Task<AuthResponseDto> RefreshTokenAsync(RefreshTokenRequestDto request);
 
     Task LogoutAsync(string profileCode, LogoutRequestDto request);
+
+    Task<AuthResponseDto> GoogleLoginAsync(GoogleLoginRequestDto request);
 }
