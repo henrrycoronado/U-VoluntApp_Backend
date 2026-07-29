@@ -30,6 +30,8 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
 
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
+    public virtual DbSet<UserSecurityAudit> UserSecurityAudits { get; set; }
+
     public virtual DbSet<Enrollment> Enrollments { get; set; }
 
     public virtual DbSet<Evidence> Evidences { get; set; }

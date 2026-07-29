@@ -44,5 +44,33 @@ public partial class AppDbContext
                 .HasMaxLength(200)
                 .HasColumnName("reason_revoked");
         });
+
+        modelBuilder.Entity<UserSecurityAudit>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("user_security_audits_pkey");
+
+            entity.ToTable("user_security_audits");
+
+            entity.HasIndex(e => e.UvaCode).IsUnique();
+            entity.HasIndex(e => e.ProfileCode);
+            entity.HasIndex(e => new { e.ProfileCode, e.DeviceFingerprint }).IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.UvaCode).HasColumnName("uva_code");
+            entity.Property(e => e.ProfileCode).HasColumnName("profile_code");
+            entity.Property(e => e.LastIpAddress).HasMaxLength(100).HasColumnName("last_ip_address");
+            entity.Property(e => e.DeviceFingerprint).HasMaxLength(512).HasColumnName("device_fingerprint");
+            entity.Property(e => e.LastCodeSentAt).HasColumnName("last_code_sent_at");
+            entity.Property(e => e.IsTrusted).HasDefaultValue(false).HasColumnName("is_trusted");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()").HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+
+            entity.HasOne(d => d.Profile)
+                .WithMany()
+                .HasForeignKey(d => d.ProfileCode)
+                .HasPrincipalKey(p => p.UvaCode)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("user_security_audits_profile_id_fkey");
+        });
     }
 }
