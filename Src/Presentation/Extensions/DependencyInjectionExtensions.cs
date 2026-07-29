@@ -4,7 +4,9 @@ using U_VoluntApp_Core.Src.Application.Interfaces;
 using U_VoluntApp_Core.Src.Application.Services;
 using U_VoluntApp_Core.Src.Domain.Utils.Factories;
 using U_VoluntApp_Core.Src.Infrastructure.Auth;
+using U_VoluntApp_Core.Src.Infrastructure.Email;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Activity;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Auth;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Contract;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Enrollment;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
@@ -31,10 +33,14 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IVolProgramCollaboratorRepository, VolProgramCollaboratorRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
         services.AddScoped<IRoleRequestRepository, RoleRequestRepository>();
+        services.AddScoped<IUserSecurityAuditRepository, UserSecurityAuditRepository>();
 
         // Infrastructure Services
         services.AddScoped<IAuthService, IdentityAuthService>();
+        services.AddScoped<IDeviceService, DeviceService>();
+        services.AddScoped<IVerificationService, VerificationService>();
         services.AddScoped<IStorageService, StorageService>();
+        services.AddScoped<IEmailService, SmtpEmailService>();
 
         // Application Services
         services.AddScoped<IVolProgramService, VolProgramService>();
