@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Storage;
+namespace U_VoluntApp_Core.Src.Infrastructure.Storage;
 
 using System;
 using System.IO;
@@ -7,8 +7,8 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Core.Src.Application.Interfaces;
+using U_VoluntApp_Core.Src.Domain.Utils.Constants;
 
 public class StorageService : IStorageService
 {

@@ -1,8 +1,8 @@
-namespace U_VoluntApp_Backend.Src.Application.Services;
+namespace U_VoluntApp_Core.Src.Application.Services;
 
-using U_VoluntApp_Backend.Src.Application.DTOs;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
+using U_VoluntApp_Core.Src.Application.DTOs;
+using U_VoluntApp_Core.Src.Application.Interfaces;
+using U_VoluntApp_Core.Src.Domain.Utils.Enums;
 
 public class ReferenceCatalogService : IReferenceCatalogService
 {

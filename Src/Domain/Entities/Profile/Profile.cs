@@ -1,6 +1,6 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.Profile;
+namespace U_VoluntApp_Core.Src.Domain.Entities.Profile;
 
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Core.Src.Domain.Utils.Constants;
 
 public class Profile
 {

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: backend-api
-        image: ghcr.io/henrrycoronado/u-voluntapp-backend:latest
+        image: ghcr.io/henrrycoronado/u-voluntapp_core:latest
         ports:
         - containerPort: 8080
         resources:

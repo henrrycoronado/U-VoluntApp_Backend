@@ -1,9 +1,9 @@
-namespace U_VoluntApp_Backend.Src.Domain.Utils.Factories;
+namespace U_VoluntApp_Core.Src.Domain.Utils.Factories;
 
 using System;
-using U_VoluntApp_Backend.Src.Application.DTOs;
-using U_VoluntApp_Backend.Src.Domain.Entities.Activity;
-using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
+using U_VoluntApp_Core.Src.Application.DTOs;
+using U_VoluntApp_Core.Src.Domain.Entities.Activity;
+using U_VoluntApp_Core.Src.Domain.Utils.Enums;
 
 public class ActivityFactory : IActivityFactory
 {

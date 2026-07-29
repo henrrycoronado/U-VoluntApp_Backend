@@ -1,7 +1,7 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment;
 
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking;
 
 public partial class GroupEnrollment
 {

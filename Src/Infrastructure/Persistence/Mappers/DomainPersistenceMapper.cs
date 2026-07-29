@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Mappers;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
 public static partial class DomainPersistenceMapper
 {

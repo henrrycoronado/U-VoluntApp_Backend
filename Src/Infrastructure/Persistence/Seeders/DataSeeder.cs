@@ -1,13 +1,13 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Seeders;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Seeders;
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
+using U_VoluntApp_Core.Src.Domain.Utils.Enums;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram;
 
 public static class DataSeeder
 {

@@ -1,11 +1,11 @@
-namespace U_VoluntApp_Backend.Src.Presentation.Controllers;
+namespace U_VoluntApp_Core.Src.Presentation.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using U_VoluntApp_Backend.Src.Application.DTOs;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Presentation.Helpers;
+using U_VoluntApp_Core.Src.Application.DTOs;
+using U_VoluntApp_Core.Src.Application.Interfaces;
+using U_VoluntApp_Core.Src.Presentation.Helpers;
 
 [ApiController]
 [Route("api/v1/profiles")]

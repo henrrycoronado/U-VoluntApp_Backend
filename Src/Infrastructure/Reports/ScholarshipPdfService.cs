@@ -1,10 +1,10 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Reports;
+namespace U_VoluntApp_Core.Src.Infrastructure.Reports;
 
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
+using U_VoluntApp_Core.Src.Application.Interfaces;
+using U_VoluntApp_Core.Src.Domain.Entities.Profile;
 
 public class ScholarshipPdfService : IPdfReportService
 {

@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.Tracking;
+namespace U_VoluntApp_Core.Src.Domain.Entities.Tracking;
 
 public class Evidence
 {

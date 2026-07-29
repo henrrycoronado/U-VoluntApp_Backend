@@ -1,11 +1,11 @@
-namespace U_VoluntApp_Backend.Src.Presentation.Extensions;
+namespace U_VoluntApp_Core.Src.Presentation.Extensions;
 
 using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence;
 
 public static class DatabaseConfigurationExtensions
 {

@@ -1,29 +1,12 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using QuestPDF.Infrastructure;
-using Serilog;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Application.Services;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Utils.Factories;
-using U_VoluntApp_Backend.Src.Infrastructure.Auth;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Contract;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Enrollment;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Tracking;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Repositories;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Seeders;
-using U_VoluntApp_Backend.Src.Infrastructure.Reports;
-using U_VoluntApp_Backend.Src.Infrastructure.Storage;
-using U_VoluntApp_Backend.Src.Presentation.Extensions;
-using U_VoluntApp_Backend.Src.Presentation.Middleware;
+using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Seeders;
+using U_VoluntApp_Core.Src.Presentation.Extensions;
+using U_VoluntApp_Core.Src.Presentation.Middleware;
 
 QuestPDF.Settings.License = LicenseType.Community;
 

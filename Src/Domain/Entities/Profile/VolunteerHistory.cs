@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.Profile;
+namespace U_VoluntApp_Core.Src.Domain.Entities.Profile;
 
 public class VolunteerHistory
 {

@@ -1,10 +1,10 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Repositories;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Repositories;
 
 using Microsoft.EntityFrameworkCore;
-using U_VoluntApp_Backend.Src.Domain.Entities.Contract;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Contract;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Mappers;
+using U_VoluntApp_Core.Src.Domain.Entities.Contract;
+using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Contract;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
 public class RoleRequestRepository : IRoleRequestRepository
 {

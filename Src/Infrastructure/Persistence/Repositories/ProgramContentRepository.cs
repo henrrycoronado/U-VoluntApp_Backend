@@ -1,9 +1,9 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Repositories;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Repositories;
 
 using Microsoft.EntityFrameworkCore;
-using U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Mappers;
+using U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
 public class ProgramContentRepository : IProgramContentRepository
 {

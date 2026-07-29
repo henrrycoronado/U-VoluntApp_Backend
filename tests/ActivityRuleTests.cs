@@ -1,8 +1,8 @@
 using System;
-using U_VoluntApp_Backend.Src.Domain.Entities.Activity;
+using U_VoluntApp_Core.Src.Domain.Entities.Activity;
 using Xunit;
 
-namespace U_VoluntApp_Backend.Tests;
+namespace U_VoluntApp_Core.Tests;
 
 public class ActivityRuleTests
 {

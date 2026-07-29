@@ -1,8 +1,8 @@
-namespace U_VoluntApp_Backend.Src.Application.Interfaces;
+namespace U_VoluntApp_Core.Src.Application.Interfaces;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using U_VoluntApp_Backend.Src.Application.DTOs;
+using U_VoluntApp_Core.Src.Application.DTOs;
 
 public interface IRoleRequestService
 {

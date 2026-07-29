@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace U_VoluntApp_Backend.Src.Presentation.Filters;
+namespace U_VoluntApp_Core.Src.Presentation.Filters;
 
 public class AuthorizeCheckOperationFilter : IOperationFilter
 {

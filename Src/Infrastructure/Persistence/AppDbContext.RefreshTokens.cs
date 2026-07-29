@@ -1,7 +1,7 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence;
 
 using Microsoft.EntityFrameworkCore;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Auth;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Auth;
 
 public partial class AppDbContext
 {

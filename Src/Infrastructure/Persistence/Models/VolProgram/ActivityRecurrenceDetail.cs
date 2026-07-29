@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram;
 
 public partial class ActivityRecurrenceDetail
 {

@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
+namespace U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
 
 public class VolProgram
 {
@@ -123,6 +123,11 @@ public class VolProgram
         Content = content;
     }
 
+    public void SetContent(ProgramContent content)
+    {
+        Content = content;
+    }
+
     internal static VolProgram Rehydrate(
         string uvaCode,
         string name,
@@ -146,11 +151,6 @@ public class VolProgram
             DeletedAt = deletedAt,
             Content = content,
         };
-    }
-
-    public void SetContent(ProgramContent content)
-    {
-        Content = content;
     }
 
     private static T? UpdateIfNotNull<T>(T? currentValue, T? newValue, ref bool updated)

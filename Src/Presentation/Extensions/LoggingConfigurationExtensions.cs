@@ -1,7 +1,7 @@
 using Serilog;
 using Serilog.Events;
 
-namespace U_VoluntApp_Backend.Src.Presentation.Extensions;
+namespace U_VoluntApp_Core.Src.Presentation.Extensions;
 
 public static class LoggingConfigurationExtensions
 {
@@ -33,7 +33,7 @@ public static class LoggingConfigurationExtensions
             options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
             {
                 var queryString = httpContext.Request.QueryString;
-                diagnosticContext.Set("QueryString", queryString.HasValue ? queryString.Value : "");
+                diagnosticContext.Set("QueryString", queryString.HasValue ? queryString.Value : string.Empty);
             };
         });
 

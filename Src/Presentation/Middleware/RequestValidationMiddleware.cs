@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Presentation.Middleware;
+namespace U_VoluntApp_Core.Src.Presentation.Middleware;
 
 using System.Net;
 using System.Text;

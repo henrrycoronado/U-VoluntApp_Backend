@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Storage;
+namespace U_VoluntApp_Core.Src.Infrastructure.Storage;
 
 using Microsoft.AspNetCore.Http;
 

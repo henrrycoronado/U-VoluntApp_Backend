@@ -1,6 +1,6 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Auth;
+namespace U_VoluntApp_Core.Src.Infrastructure.Auth;
 
-using U_VoluntApp_Backend.Src.Application.DTOs;
+using U_VoluntApp_Core.Src.Application.DTOs;
 
 public interface IAuthService
 {

@@ -1,18 +1,18 @@
-namespace U_VoluntApp_Backend.Src.Presentation.Extensions;
+namespace U_VoluntApp_Core.Src.Presentation.Extensions;
 
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Application.Services;
-using U_VoluntApp_Backend.Src.Domain.Utils.Factories;
-using U_VoluntApp_Backend.Src.Infrastructure.Auth;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Contract;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Enrollment;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Tracking;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Repositories;
-using U_VoluntApp_Backend.Src.Infrastructure.Reports;
-using U_VoluntApp_Backend.Src.Infrastructure.Storage;
+using U_VoluntApp_Core.Src.Application.Interfaces;
+using U_VoluntApp_Core.Src.Application.Services;
+using U_VoluntApp_Core.Src.Domain.Utils.Factories;
+using U_VoluntApp_Core.Src.Infrastructure.Auth;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Activity;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Contract;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Enrollment;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Tracking;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Repositories;
+using U_VoluntApp_Core.Src.Infrastructure.Reports;
+using U_VoluntApp_Core.Src.Infrastructure.Storage;
 
 public static class DependencyInjectionExtensions
 {

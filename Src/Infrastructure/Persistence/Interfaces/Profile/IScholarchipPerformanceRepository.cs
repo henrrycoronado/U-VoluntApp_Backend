@@ -1,7 +1,7 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
 
-using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
+using U_VoluntApp_Core.Src.Domain.Entities.Profile;
+using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
 
 public interface IScholarshipPerformanceRepository
 {

@@ -1,12 +1,12 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Seeders;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Seeders;
 
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
-using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Core.Src.Domain.Entities.Profile;
+using U_VoluntApp_Core.Src.Domain.Utils.Enums;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
 
 public static class AuthSeeder
 {

@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity;
 
 public partial class ActivityRule
 {

@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Application.DTOs;
+namespace U_VoluntApp_Core.Src.Application.DTOs;
 
 public class CreateActivitySimpleDto
 {
