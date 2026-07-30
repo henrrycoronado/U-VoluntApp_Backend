@@ -31,6 +31,30 @@ public class StorageService : IStorageService
 
     public async Task<string> UploadAsync(IFormFile file, string folder)
     {
+        if (file == null || file.Length == 0)
+        {
+            throw new ArgumentException("El archivo es obligatorio y no puede estar vacío");
+        }
+
+        const long maxSizeBytes = 5 * 1024 * 1024; // 5 MB
+        if (file.Length > maxSizeBytes)
+        {
+            throw new InvalidOperationException("El archivo supera el tamaño máximo permitido de 5 MB");
+        }
+
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+        if (!allowedExtensions.Contains(extension))
+        {
+            throw new InvalidOperationException("El formato del archivo no está permitido. Solo se permiten imágenes (.jpg, .jpeg, .png, .webp, .gif)");
+        }
+
+        var allowedMimeTypes = new[] { "image/jpeg", "image/png", "image/webp", "image/gif" };
+        if (!allowedMimeTypes.Contains(file.ContentType.ToLowerInvariant()))
+        {
+            throw new InvalidOperationException("El tipo de contenido del archivo no está permitido. Solo se permiten imágenes");
+        }
+
         if (string.Equals(_uploadBucket, _defaultsBucket, StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException("La configuracion de STORAGE_UPLOAD_BUCKET no puede apuntar al bucket de defaults");

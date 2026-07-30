@@ -53,7 +53,7 @@ public class ActivityRule
             RequiresEnrollment = requiresEnrollment,
             RequiresApproval = requiresApproval,
             CountsVolunteerHours = countsVolunteerHours,
-            PhotoUrl = photoUrl ?? ProfilePathConstants.ProfileActivityPath,
+            PhotoUrl = string.IsNullOrWhiteSpace(photoUrl) ? "default" : photoUrl,
             EnrollmentDeadline = enrollmentDeadline,
             TotalCapacity = totalCapacity,
             CostAmount = costAmount,

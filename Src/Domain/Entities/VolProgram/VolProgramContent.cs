@@ -55,8 +55,8 @@ public class VolProgramContent
             LeadershipInfo = leadershipInfo ?? "Información sobre nuestros lideres proximamente",
             ContactInfo = contactInfo ?? "Información de contacto por definirse :3",
             MissionStatement = missionStatement ?? "Nuestra misión es ser llamados a servir :)",
-            ProfilePhotoUrl = profilePhotoUrl ?? ProfilePathConstants.ProfileProgramPath,
-            CoverPhotoUrl = coverPhotoUrl ?? BannerPathConstants.BannerWithTextDarkPath,
+            ProfilePhotoUrl = string.IsNullOrWhiteSpace(profilePhotoUrl) ? "default" : profilePhotoUrl,
+            CoverPhotoUrl = string.IsNullOrWhiteSpace(coverPhotoUrl) ? "default" : coverPhotoUrl,
             CreatedAt = nowUtc
         };
     }

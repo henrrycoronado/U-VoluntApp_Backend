@@ -72,7 +72,7 @@ public class Profile
             Email = email,
             FirstName = firstName,
             LastName = lastName,
-            PhotoUrl = ProfilePathConstants.ProfileLogoPath,
+            PhotoUrl = "default",
             CareerCode = "type-1",
             StateCode = stateCode,
             CreatedAt = nowUtc
