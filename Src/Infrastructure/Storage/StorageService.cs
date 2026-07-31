@@ -15,7 +15,6 @@ public class StorageService : IStorageService
     private readonly IAmazonS3 _s3Client;
     private readonly string _publicBaseUrl;
     private readonly string _uploadBucket;
-    private readonly string _defaultsBucket;
 
     public StorageService(IAmazonS3 s3Client, IConfiguration configuration)
     {
@@ -25,8 +24,6 @@ public class StorageService : IStorageService
             ?? StorageConstants.PublicBaseUrl;
         _uploadBucket = configuration["STORAGE_UPLOAD_BUCKET"]
             ?? StorageConstants.UploadBucket;
-        _defaultsBucket = configuration["STORAGE_DEFAULTS_BUCKET"]
-            ?? StorageConstants.DefaultsBucket;
     }
 
     public async Task<string> UploadAsync(IFormFile file, string folder)
@@ -53,11 +50,6 @@ public class StorageService : IStorageService
         if (!allowedMimeTypes.Contains(file.ContentType.ToLowerInvariant()))
         {
             throw new InvalidOperationException("El tipo de contenido del archivo no está permitido. Solo se permiten imágenes");
-        }
-
-        if (string.Equals(_uploadBucket, _defaultsBucket, StringComparison.OrdinalIgnoreCase))
-        {
-            throw new InvalidOperationException("La configuracion de STORAGE_UPLOAD_BUCKET no puede apuntar al bucket de defaults");
         }
 
         if (string.IsNullOrWhiteSpace(folder))
