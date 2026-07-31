@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using U_VoluntApp_Core.Src.Application.DTOs;
 using U_VoluntApp_Core.Src.Domain.Entities.Auth;
 using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Auth;
@@ -13,16 +14,16 @@ public class DeviceService : IDeviceService
 {
     private readonly IUserSecurityAuditRepository _securityAuditRepository;
     private readonly IProfileRepository _profileRepository;
-    private readonly IVerificationService _verificationService;
+    private readonly UserManager<IdentityUser> _userManager;
 
     public DeviceService(
         IUserSecurityAuditRepository securityAuditRepository,
         IProfileRepository profileRepository,
-        IVerificationService verificationService)
+        UserManager<IdentityUser> userManager)
     {
         _securityAuditRepository = securityAuditRepository;
         _profileRepository = profileRepository;
-        _verificationService = verificationService;
+        _userManager = userManager;
     }
 
     public async Task<List<DeviceDto>> GetTrustedDevicesAsync(string profileCode)
@@ -73,7 +74,10 @@ public class DeviceService : IDeviceService
         var profile = await _profileRepository.GetByCodeAsync(profileCode)
             ?? throw new InvalidOperationException("Perfil no encontrado");
 
-        var isValid = await _verificationService.VerifyOtpAsync(profile.Email, "DeviceRevocation", otpCode);
+        var user = await _userManager.FindByEmailAsync(profile.Email)
+            ?? throw new InvalidOperationException("Usuario no encontrado");
+
+        var isValid = await _userManager.VerifyUserTokenAsync(user, "Email", "DeviceRevocation", otpCode);
         if (!isValid)
         {
             throw new InvalidOperationException("Código de verificación de revocación inválido o expirado");
