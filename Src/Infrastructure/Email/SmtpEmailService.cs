@@ -24,9 +24,9 @@ public class SmtpEmailService : IEmailService
         {
             var host = _configuration["SMTP_HOST"] ?? "localhost";
             var portString = _configuration["SMTP_PORT"] ?? "587";
-            var username = _configuration["SMTP_USERNAME"];
-            var password = _configuration["SMTP_PASSWORD"];
-            var fromEmail = _configuration["SMTP_FROM_EMAIL"] ?? "no-reply@ucb.edu.bo";
+            var username = _configuration["SMTP_USERNAME"] ?? _configuration["SMTP_USER"];
+            var password = _configuration["SMTP_PASSWORD"] ?? _configuration["SMTP_PASS"];
+            var fromEmail = _configuration["SMTP_FROM_EMAIL"] ?? "no-reply@u-voluntapp.hc-server.xyz";
             var fromName = _configuration["SMTP_FROM_NAME"] ?? "U-VoluntApp";
             var enableSslString = _configuration["SMTP_ENABLE_SSL"] ?? "true";
 
