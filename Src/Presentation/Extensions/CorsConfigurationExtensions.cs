@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Presentation.Extensions;
+namespace U_VoluntApp_Core.Src.Presentation.Extensions;
 
 public static class CorsConfigurationExtensions
 {
@@ -13,9 +13,10 @@ public static class CorsConfigurationExtensions
 
             options.AddPolicy("AllowSpecificOrigins", policy =>
             {
-                policy.AllowAnyOrigin()
+                policy.WithOrigins(allowedOrigins)
                       .AllowAnyMethod()
                       .AllowAnyHeader()
+                      .AllowCredentials()
                       .WithExposedHeaders("X-Response-Time-Ms");
             });
         });

@@ -1,10 +1,10 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
+namespace U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
 
-public class ActivityRecurrenceDetail
+public class VolProgramPatternDetail
 {
     public string UvaCode { get; private set; } = string.Empty;
 
-    public string ActivityRecurrencePatternCode { get; private set; } = string.Empty;
+    public string VolProgramPatternCode { get; private set; } = string.Empty;
 
     public short? DayOfWeek { get; private set; }
 
@@ -24,7 +24,7 @@ public class ActivityRecurrenceDetail
 
     public DateTime? DeletedAt { get; private set; }
 
-    public static ActivityRecurrenceDetail Create(
+    public static VolProgramPatternDetail Create(
         string patternCode,
         short? dayOfWeek,
         short? dayOfMonth,
@@ -46,10 +46,10 @@ public class ActivityRecurrenceDetail
 
         ValidateInputs(dayOfWeek, dayOfMonth, weekOfMonth, startHour, endHour);
 
-        return new ActivityRecurrenceDetail
+        return new VolProgramPatternDetail
         {
             UvaCode = Guid.NewGuid().ToString(),
-            ActivityRecurrencePatternCode = patternCode,
+            VolProgramPatternCode = patternCode,
             DayOfWeek = dayOfWeek,
             DayOfMonth = dayOfMonth,
             WeekOfMonth = weekOfMonth,
@@ -124,7 +124,7 @@ public class ActivityRecurrenceDetail
         DeletedAt = nowUtc;
     }
 
-    internal static ActivityRecurrenceDetail Rehydrate(
+    internal static VolProgramPatternDetail Rehydrate(
         string uvaCode,
         string patternCode,
         short? dayOfWeek,
@@ -137,10 +137,10 @@ public class ActivityRecurrenceDetail
         DateTime? updatedAt,
         DateTime? deletedAt)
     {
-        return new ActivityRecurrenceDetail
+        return new VolProgramPatternDetail
         {
             UvaCode = uvaCode,
-            ActivityRecurrencePatternCode = patternCode,
+            VolProgramPatternCode = patternCode,
             DayOfWeek = dayOfWeek,
             DayOfMonth = dayOfMonth,
             WeekOfMonth = weekOfMonth,

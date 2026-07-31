@@ -1,6 +1,6 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Contract;
 
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile;
 
 public partial class UserScholarship
 {

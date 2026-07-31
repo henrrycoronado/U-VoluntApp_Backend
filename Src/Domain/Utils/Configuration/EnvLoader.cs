@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
+namespace U_VoluntApp_Core.Src.Domain.Utils.Configuration;
 
 internal static class EnvLoader
 {

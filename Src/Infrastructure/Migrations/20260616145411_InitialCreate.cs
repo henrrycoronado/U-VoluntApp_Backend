@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
+namespace U_VoluntApp_Core.Src.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -314,7 +314,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "activity_recurrence_patterns",
+                name: "vol_program_patterns",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -330,17 +330,17 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("activity_recurrence_patterns_pkey", x => x.id);
-                    table.UniqueConstraint("AK_activity_recurrence_patterns_uva_code", x => x.uva_code);
+                    table.PrimaryKey("vol_program_patterns_pkey", x => x.id);
+                    table.UniqueConstraint("AK_vol_program_patterns_uva_code", x => x.uva_code);
                     table.ForeignKey(
-                        name: "activity_recurrence_patterns_program_id_fkey",
+                        name: "vol_program_patterns_program_id_fkey",
                         column: x => x.program_code,
                         principalTable: "vol_programs",
                         principalColumn: "uva_code");
                 });
 
             migrationBuilder.CreateTable(
-                name: "program_collaborators",
+                name: "vol_program_collaborators",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -356,26 +356,26 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("program_collaborators_pkey", x => x.id);
+                    table.PrimaryKey("vol_program_collaborators_pkey", x => x.id);
                     table.ForeignKey(
-                        name: "program_collaborators_assigned_by_profile_id_fkey",
+                        name: "vol_program_collaborators_assigned_by_profile_id_fkey",
                         column: x => x.assigned_by_profile_code,
                         principalTable: "profiles",
                         principalColumn: "uva_code");
                     table.ForeignKey(
-                        name: "program_collaborators_profile_id_fkey",
+                        name: "vol_program_collaborators_profile_id_fkey",
                         column: x => x.profile_code,
                         principalTable: "profiles",
                         principalColumn: "uva_code");
                     table.ForeignKey(
-                        name: "program_collaborators_program_id_fkey",
+                        name: "vol_program_collaborators_program_id_fkey",
                         column: x => x.program_code,
                         principalTable: "vol_programs",
                         principalColumn: "uva_code");
                 });
 
             migrationBuilder.CreateTable(
-                name: "program_content",
+                name: "vol_program_contents",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -395,9 +395,9 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("program_content_pkey", x => x.id);
+                    table.PrimaryKey("vol_program_contents_pkey", x => x.id);
                     table.ForeignKey(
-                        name: "program_content_program_id_fkey",
+                        name: "vol_program_contents_program_id_fkey",
                         column: x => x.program_code,
                         principalTable: "vol_programs",
                         principalColumn: "uva_code");
@@ -413,7 +413,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     program_code = table.Column<string>(type: "text", nullable: false),
                     responsible_profile_code = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
                     activity_type_code = table.Column<string>(type: "text", nullable: false),
-                    activity_recurrence_pattern_code = table.Column<string>(type: "text", nullable: true),
+                    vol_program_pattern_code = table.Column<string>(type: "text", nullable: true),
                     name = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
                     start_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -431,9 +431,9 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     table.PrimaryKey("activities_pkey", x => x.id);
                     table.UniqueConstraint("AK_activities_uva_code", x => x.uva_code);
                     table.ForeignKey(
-                        name: "activities_activity_recurrence_pattern_id_fkey",
-                        column: x => x.activity_recurrence_pattern_code,
-                        principalTable: "activity_recurrence_patterns",
+                        name: "activities_vol_program_pattern_id_fkey",
+                        column: x => x.vol_program_pattern_code,
+                        principalTable: "vol_program_patterns",
                         principalColumn: "uva_code");
                     table.ForeignKey(
                         name: "activities_program_id_fkey",
@@ -448,13 +448,13 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "activity_recurrence_detail",
+                name: "vol_program_pattern_details",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     uva_code = table.Column<string>(type: "text", nullable: false),
-                    activity_recurrence_pattern_code = table.Column<string>(type: "text", nullable: false),
+                    vol_program_pattern_code = table.Column<string>(type: "text", nullable: false),
                     day_of_week = table.Column<short>(type: "smallint", nullable: true),
                     day_of_month = table.Column<short>(type: "smallint", nullable: true),
                     week_of_month = table.Column<short>(type: "smallint", nullable: true),
@@ -467,11 +467,11 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("activity_recurrence_detail_pkey", x => x.id);
+                    table.PrimaryKey("vol_program_pattern_details_pkey", x => x.id);
                     table.ForeignKey(
-                        name: "activity_recurrence_detail_activity_recurrence_pattern_id_fkey",
-                        column: x => x.activity_recurrence_pattern_code,
-                        principalTable: "activity_recurrence_patterns",
+                        name: "vol_program_pattern_details_vol_program_pattern_id_fkey",
+                        column: x => x.vol_program_pattern_code,
+                        principalTable: "vol_program_patterns",
                         principalColumn: "uva_code");
                 });
 
@@ -666,9 +666,9 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_activities_activity_recurrence_pattern_code",
+                name: "IX_activities_vol_program_pattern_code",
                 table: "activities",
-                column: "activity_recurrence_pattern_code");
+                column: "vol_program_pattern_code");
 
             migrationBuilder.CreateIndex(
                 name: "IX_activities_program_code",
@@ -698,24 +698,24 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_activity_recurrence_detail_activity_recurrence_pattern_code",
-                table: "activity_recurrence_detail",
-                column: "activity_recurrence_pattern_code");
+                name: "IX_vol_program_pattern_details_vol_program_pattern_code",
+                table: "vol_program_pattern_details",
+                column: "vol_program_pattern_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_activity_recurrence_detail_uva_code",
-                table: "activity_recurrence_detail",
+                name: "IX_vol_program_pattern_details_uva_code",
+                table: "vol_program_pattern_details",
                 column: "uva_code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_activity_recurrence_patterns_program_code",
-                table: "activity_recurrence_patterns",
+                name: "IX_vol_program_patterns_program_code",
+                table: "vol_program_patterns",
                 column: "program_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_activity_recurrence_patterns_uva_code",
-                table: "activity_recurrence_patterns",
+                name: "IX_vol_program_patterns_uva_code",
+                table: "vol_program_patterns",
                 column: "uva_code",
                 unique: true);
 
@@ -830,35 +830,35 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_program_collaborators_assigned_by_profile_code",
-                table: "program_collaborators",
+                name: "IX_vol_program_collaborators_assigned_by_profile_code",
+                table: "vol_program_collaborators",
                 column: "assigned_by_profile_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_program_collaborators_profile_code",
-                table: "program_collaborators",
+                name: "IX_vol_program_collaborators_profile_code",
+                table: "vol_program_collaborators",
                 column: "profile_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_program_collaborators_program_code",
-                table: "program_collaborators",
+                name: "IX_vol_program_collaborators_program_code",
+                table: "vol_program_collaborators",
                 column: "program_code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_program_collaborators_uva_code",
-                table: "program_collaborators",
+                name: "IX_vol_program_collaborators_uva_code",
+                table: "vol_program_collaborators",
                 column: "uva_code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_program_content_uva_code",
-                table: "program_content",
+                name: "IX_vol_program_contents_uva_code",
+                table: "vol_program_contents",
                 column: "uva_code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "program_content_program_id_key",
-                table: "program_content",
+                name: "vol_program_contents_program_id_key",
+                table: "vol_program_contents",
                 column: "program_code",
                 unique: true);
 
@@ -963,7 +963,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "activity_recurrence_detail");
+                name: "vol_program_pattern_details");
 
             migrationBuilder.DropTable(
                 name: "activity_rules");
@@ -987,10 +987,10 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 name: "evidences");
 
             migrationBuilder.DropTable(
-                name: "program_collaborators");
+                name: "vol_program_collaborators");
 
             migrationBuilder.DropTable(
-                name: "program_content");
+                name: "vol_program_contents");
 
             migrationBuilder.DropTable(
                 name: "refresh_tokens");
@@ -1020,7 +1020,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                 name: "activities");
 
             migrationBuilder.DropTable(
-                name: "activity_recurrence_patterns");
+                name: "vol_program_patterns");
 
             migrationBuilder.DropTable(
                 name: "vol_programs");

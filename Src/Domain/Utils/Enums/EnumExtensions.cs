@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Domain.Utils.Enums;
+namespace U_VoluntApp_Core.Src.Domain.Utils.Enums;
 
 using System.Reflection;
 

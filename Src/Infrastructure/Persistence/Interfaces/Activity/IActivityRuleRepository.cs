@@ -1,6 +1,6 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Activity;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Activity;
 
-using U_VoluntApp_Backend.Src.Domain.Entities.Activity;
+using U_VoluntApp_Core.Src.Domain.Entities.Activity;
 
 public interface IActivityRuleRepository
 {

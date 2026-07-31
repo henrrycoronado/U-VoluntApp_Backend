@@ -1,11 +1,11 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile;
 
 using Microsoft.AspNetCore.Identity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Contract;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram;
 
 public partial class Profile
 {
@@ -45,9 +45,9 @@ public partial class Profile
 
     public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 
-    public virtual ICollection<ProgramCollaborator> ProgramCollaboratorAssignedByProfiles { get; set; } = new List<ProgramCollaborator>();
+    public virtual ICollection<VolProgramCollaborator> VolProgramCollaboratorAssignedByProfiles { get; set; } = new List<VolProgramCollaborator>();
 
-    public virtual ICollection<ProgramCollaborator> ProgramCollaboratorProfiles { get; set; } = new List<ProgramCollaborator>();
+    public virtual ICollection<VolProgramCollaborator> VolProgramCollaboratorProfiles { get; set; } = new List<VolProgramCollaborator>();
 
     public virtual ICollection<RoleRequest> RoleRequestRequesterProfiles { get; set; } = new List<RoleRequest>();
 

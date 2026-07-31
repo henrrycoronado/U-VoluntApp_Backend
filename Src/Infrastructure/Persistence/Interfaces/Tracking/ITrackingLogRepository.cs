@@ -1,7 +1,7 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Tracking;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Tracking;
 
-using U_VoluntApp_Backend.Src.Domain.Entities.Tracking;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
+using U_VoluntApp_Core.Src.Domain.Entities.Tracking;
+using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
 
 public interface ITrackingLogRepository
 {

@@ -5,9 +5,8 @@ metadata:
   namespace: default
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
-  JWT_ISSUER: "U_VoluntApp_Backend.Src"
+  JWT_ISSUER: "U_VoluntApp_Core.Src"
   JWT_AUDIENCE: "UVoluntapp.Client"
   JWT_EXPIRY_MINUTES: "60"
   ENABLE_HTTPS_REDIRECTION: "false"
-  CORS_ALLOWED_ORIGINS: "*"
   SEQ_URL: "http://seq-service:80"

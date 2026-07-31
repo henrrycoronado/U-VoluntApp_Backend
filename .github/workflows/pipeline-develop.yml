@@ -26,8 +26,8 @@ jobs:
 
       - name: Restore and Build
         run: |
-          dotnet restore U-VoluntApp_Backend.csproj
-          dotnet build U-VoluntApp_Backend.csproj --configuration Release --no-restore
+          dotnet restore U-VoluntApp_Core.csproj
+          dotnet build U-VoluntApp_Core.csproj --configuration Release --no-restore
 
       - name: Run Unit Tests
         run: |
@@ -35,12 +35,12 @@ jobs:
 
       - name: Build Temporary Image for Scan
         run: |
-          docker build -t uvoluntapp-backend:scan -f Dockerfile .
+          docker build -t u-voluntapp_core:scan -f Dockerfile .
 
       - name: Security Scan (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'uvoluntapp-backend:scan'
+          image-ref: 'u-voluntapp_core:scan'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true

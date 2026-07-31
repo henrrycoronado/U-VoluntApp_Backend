@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
+namespace U_VoluntApp_Core.Src.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.16")
+                .HasAnnotation("ProductVersion", "9.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -218,7 +218,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.Activity", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.Activity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -226,10 +226,6 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("ActivityRecurrencePatternCode")
-                        .HasColumnType("text")
-                        .HasColumnName("activity_recurrence_pattern_code");
 
                     b.Property<string>("ActivityTypeCode")
                         .IsRequired()
@@ -303,10 +299,12 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("uva_code");
 
+                    b.Property<string>("VolProgramPatternCode")
+                        .HasColumnType("text")
+                        .HasColumnName("vol_program_pattern_code");
+
                     b.HasKey("Id")
                         .HasName("activities_pkey");
-
-                    b.HasIndex("ActivityRecurrencePatternCode");
 
                     b.HasIndex("ProgramCode");
 
@@ -315,10 +313,12 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
+                    b.HasIndex("VolProgramPatternCode");
+
                     b.ToTable("activities", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.ActivityGroup", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.ActivityGroup", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -392,7 +392,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("activity_group", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.ActivityRule", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.ActivityRule", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -470,7 +470,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("activity_rules", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Auth.RefreshToken", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Auth.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -556,7 +556,72 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("refresh_tokens", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract.RoleRequest", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Auth.UserSecurityAudit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("DeviceFingerprint")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)")
+                        .HasColumnName("device_fingerprint");
+
+                    b.Property<bool>("IsTrusted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_trusted");
+
+                    b.Property<DateTime?>("LastCodeSentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_code_sent_at");
+
+                    b.Property<string>("LastIpAddress")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("last_ip_address");
+
+                    b.Property<string>("ProfileCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("profile_code");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UvaCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("uva_code");
+
+                    b.HasKey("Id")
+                        .HasName("user_security_audits_pkey");
+
+                    b.HasIndex("ProfileCode");
+
+                    b.HasIndex("UvaCode")
+                        .IsUnique();
+
+                    b.HasIndex("ProfileCode", "DeviceFingerprint")
+                        .IsUnique();
+
+                    b.ToTable("user_security_audits", (string)null);
+                });
+
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Contract.RoleRequest", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -636,7 +701,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("role_requests", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract.UserScholarship", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Contract.UserScholarship", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -722,7 +787,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("user_scholarships", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -781,7 +846,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("enrollments", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.GroupEnrollment", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment.GroupEnrollment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -839,7 +904,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("group_enrollment", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.MvActivityAnalytic", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.MvActivityAnalytic", b =>
                 {
                     b.Property<string>("ActivityCode")
                         .HasColumnType("text")
@@ -886,7 +951,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToView("mv_activity_analytics", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.MvProgramAnalytic", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.MvProgramAnalytic", b =>
                 {
                     b.Property<string>("ProgramCode")
                         .HasColumnType("text")
@@ -913,7 +978,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToView("mv_program_analytics", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.MvScholarshipPerformance", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.MvScholarshipPerformance", b =>
                 {
                     b.Property<decimal?>("CompletedHours")
                         .HasColumnType("numeric")
@@ -967,7 +1032,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToView("mv_scholarship_performance", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.MvVolunteerHistory", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.MvVolunteerHistory", b =>
                 {
                     b.Property<string>("CareerName")
                         .HasMaxLength(50)
@@ -1012,7 +1077,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToView("mv_volunteer_history", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1107,7 +1172,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("profiles", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.Evidence", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking.Evidence", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1178,7 +1243,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("evidences", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1264,7 +1329,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.ToTable("tracking_logs", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrenceDetail", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1273,76 +1338,9 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("ActivityRecurrencePatternCode")
-                        .IsRequired()
+                    b.Property<string>("Acronym")
                         .HasColumnType("text")
-                        .HasColumnName("activity_recurrence_pattern_code");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("now()");
-
-                    b.Property<short?>("DayOfMonth")
-                        .HasColumnType("smallint")
-                        .HasColumnName("day_of_month");
-
-                    b.Property<short?>("DayOfWeek")
-                        .HasColumnType("smallint")
-                        .HasColumnName("day_of_week");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<TimeOnly?>("EndHour")
-                        .HasColumnType("time without time zone")
-                        .HasColumnName("end_hour");
-
-                    b.Property<TimeOnly?>("StartHour")
-                        .HasColumnType("time without time zone")
-                        .HasColumnName("start_hour");
-
-                    b.Property<string>("StateCode")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("stage-1")
-                        .HasColumnName("state_code");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<string>("UvaCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("uva_code");
-
-                    b.Property<short?>("WeekOfMonth")
-                        .HasColumnType("smallint")
-                        .HasColumnName("week_of_month");
-
-                    b.HasKey("Id")
-                        .HasName("activity_recurrence_detail_pkey");
-
-                    b.HasIndex("ActivityRecurrencePatternCode");
-
-                    b.HasIndex("UvaCode")
-                        .IsUnique();
-
-                    b.ToTable("activity_recurrence_detail", (string)null);
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrencePattern", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                        .HasColumnName("acronym");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -1353,23 +1351,17 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
+
+                    b.Property<string>("ManagerProfileCode")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("manager_profile_code");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<string>("ProgramCode")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("program_code");
-
-                    b.Property<string>("RecurrenceType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("recurrence_type");
-
                     b.Property<string>("StateCode")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -1387,17 +1379,17 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .HasColumnName("uva_code");
 
                     b.HasKey("Id")
-                        .HasName("activity_recurrence_patterns_pkey");
+                        .HasName("vol_programs_pkey");
 
-                    b.HasIndex("ProgramCode");
+                    b.HasIndex("ManagerProfileCode");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
-                    b.ToTable("activity_recurrence_patterns", (string)null);
+                    b.ToTable("vol_programs", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ProgramCollaborator", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramCollaborator", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1449,7 +1441,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .HasColumnName("uva_code");
 
                     b.HasKey("Id")
-                        .HasName("program_collaborators_pkey");
+                        .HasName("vol_program_collaborators_pkey");
 
                     b.HasIndex("AssignedByProfileCode");
 
@@ -1460,10 +1452,10 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
-                    b.ToTable("program_collaborators", (string)null);
+                    b.ToTable("vol_program_collaborators", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ProgramContent", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramContent", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1525,7 +1517,7 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .HasColumnName("uva_code");
 
                     b.HasKey("Id")
-                        .HasName("program_content_pkey");
+                        .HasName("vol_program_contents_pkey");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
@@ -1533,10 +1525,10 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.HasIndex(new[] { "ProgramCode" }, "program_content_program_id_key")
                         .IsUnique();
 
-                    b.ToTable("program_content", (string)null);
+                    b.ToTable("vol_program_contents", (string)null);
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramPattern", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1544,10 +1536,6 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Acronym")
-                        .HasColumnType("text")
-                        .HasColumnName("acronym");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -1559,15 +1547,21 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
-                    b.Property<string>("ManagerProfileCode")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("manager_profile_code");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
+
+                    b.Property<string>("ProgramCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("program_code");
+
+                    b.Property<string>("RecurrenceType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("recurrence_type");
 
                     b.Property<string>("StateCode")
                         .IsRequired()
@@ -1586,14 +1580,85 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .HasColumnName("uva_code");
 
                     b.HasKey("Id")
-                        .HasName("vol_programs_pkey");
+                        .HasName("vol_program_patterns_pkey");
 
-                    b.HasIndex("ManagerProfileCode");
+                    b.HasIndex("ProgramCode");
 
                     b.HasIndex("UvaCode")
                         .IsUnique();
 
-                    b.ToTable("vol_programs", (string)null);
+                    b.ToTable("vol_program_patterns", (string)null);
+                });
+
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramPatternDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<short?>("DayOfMonth")
+                        .HasColumnType("smallint")
+                        .HasColumnName("day_of_month");
+
+                    b.Property<short?>("DayOfWeek")
+                        .HasColumnType("smallint")
+                        .HasColumnName("day_of_week");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<TimeOnly?>("EndHour")
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("end_hour");
+
+                    b.Property<TimeOnly?>("StartHour")
+                        .HasColumnType("time without time zone")
+                        .HasColumnName("start_hour");
+
+                    b.Property<string>("StateCode")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("stage-1")
+                        .HasColumnName("state_code");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UvaCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("uva_code");
+
+                    b.Property<string>("VolProgramPatternCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("vol_program_pattern_code");
+
+                    b.Property<short?>("WeekOfMonth")
+                        .HasColumnType("smallint")
+                        .HasColumnName("week_of_month");
+
+                    b.HasKey("Id")
+                        .HasName("vol_program_pattern_details_pkey");
+
+                    b.HasIndex("UvaCode")
+                        .IsUnique();
+
+                    b.HasIndex("VolProgramPatternCode");
+
+                    b.ToTable("vol_program_pattern_details", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1647,37 +1712,37 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.Activity", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.Activity", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrencePattern", "ActivityRecurrencePattern")
-                        .WithMany("Activities")
-                        .HasForeignKey("ActivityRecurrencePatternCode")
-                        .HasPrincipalKey("UvaCode")
-                        .HasConstraintName("activities_activity_recurrence_pattern_id_fkey");
-
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "Program")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "Program")
                         .WithMany("Activities")
                         .HasForeignKey("ProgramCode")
                         .HasPrincipalKey("UvaCode")
                         .IsRequired()
                         .HasConstraintName("activities_program_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "ResponsibleProfile")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "ResponsibleProfile")
                         .WithMany("Activities")
                         .HasForeignKey("ResponsibleProfileCode")
                         .HasPrincipalKey("UvaCode")
                         .HasConstraintName("activities_responsible_profile_id_fkey");
 
-                    b.Navigation("ActivityRecurrencePattern");
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramPattern", "VolProgramPattern")
+                        .WithMany("Activities")
+                        .HasForeignKey("VolProgramPatternCode")
+                        .HasPrincipalKey("UvaCode")
+                        .HasConstraintName("activities_vol_program_pattern_id_fkey");
 
                     b.Navigation("Program");
 
                     b.Navigation("ResponsibleProfile");
+
+                    b.Navigation("VolProgramPattern");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.ActivityGroup", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.ActivityGroup", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.Activity", "Activity")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.Activity", "Activity")
                         .WithMany("ActivityGroups")
                         .HasForeignKey("ActivityCode")
                         .HasPrincipalKey("UvaCode")
@@ -1687,19 +1752,32 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("Activity");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.ActivityRule", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.ActivityRule", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.Activity", "Activity")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.Activity", "Activity")
                         .WithOne("ActivityRule")
-                        .HasForeignKey("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.ActivityRule", "ActivityCode")
-                        .HasPrincipalKey("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.Activity", "UvaCode")
+                        .HasForeignKey("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.ActivityRule", "ActivityCode")
+                        .HasPrincipalKey("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.Activity", "UvaCode")
                         .IsRequired()
                         .HasConstraintName("activity_rules_activity_id_fkey");
 
                     b.Navigation("Activity");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract.RoleRequest", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Auth.UserSecurityAudit", b =>
+                {
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileCode")
+                        .HasPrincipalKey("UvaCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("user_security_audits_profile_id_fkey");
+
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Contract.RoleRequest", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "RequestedRole")
                         .WithMany()
@@ -1708,14 +1786,14 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("role_requests_requested_role_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "RequesterProfile")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "RequesterProfile")
                         .WithMany("RoleRequestRequesterProfiles")
                         .HasForeignKey("RequesterProfileCode")
                         .HasPrincipalKey("UvaCode")
                         .IsRequired()
                         .HasConstraintName("role_requests_requester_profile_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "ResolvedByProfile")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "ResolvedByProfile")
                         .WithMany("RoleRequestResolvedByProfiles")
                         .HasForeignKey("ResolvedByProfileCode")
                         .HasPrincipalKey("UvaCode")
@@ -1728,16 +1806,16 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("ResolvedByProfile");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract.UserScholarship", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Contract.UserScholarship", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "AssignedProfile")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "AssignedProfile")
                         .WithMany("UserScholarshipAssignedProfiles")
                         .HasForeignKey("AssignedProfileCode")
                         .HasPrincipalKey("UvaCode")
                         .IsRequired()
                         .HasConstraintName("user_scholarships_assigned_profile_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "EvaluatorProfile")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "EvaluatorProfile")
                         .WithMany("UserScholarshipEvaluatorProfiles")
                         .HasForeignKey("EvaluatorProfileCode")
                         .HasPrincipalKey("UvaCode")
@@ -1748,16 +1826,16 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("EvaluatorProfile");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.Activity", "Activity")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.Activity", "Activity")
                         .WithMany("Enrollments")
                         .HasForeignKey("ActivityCode")
                         .HasPrincipalKey("UvaCode")
                         .IsRequired()
                         .HasConstraintName("enrollments_activity_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "EnrolledProfile")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "EnrolledProfile")
                         .WithMany("Enrollments")
                         .HasForeignKey("EnrolledProfileCode")
                         .HasPrincipalKey("UvaCode")
@@ -1769,16 +1847,16 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("EnrolledProfile");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.GroupEnrollment", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment.GroupEnrollment", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.ActivityGroup", "ActivityGroup")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.ActivityGroup", "ActivityGroup")
                         .WithMany("GroupEnrollments")
                         .HasForeignKey("ActivityGroupCode")
                         .HasPrincipalKey("UvaCode")
                         .IsRequired()
                         .HasConstraintName("group_enrollment_activity_group_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", "Enrollment")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", "Enrollment")
                         .WithMany("GroupEnrollments")
                         .HasForeignKey("EnrollmentCode")
                         .HasPrincipalKey("UvaCode")
@@ -1790,11 +1868,11 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("Enrollment");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithOne()
-                        .HasForeignKey("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "IdentityUserId")
+                        .HasForeignKey("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "IdentityUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("profiles_identity_user_id_fkey");
@@ -1802,9 +1880,9 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("IdentityUser");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.Evidence", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking.Evidence", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", "TrackingLog")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", "TrackingLog")
                         .WithMany("Evidences")
                         .HasForeignKey("TrackingLogCode")
                         .HasPrincipalKey("UvaCode")
@@ -1814,28 +1892,28 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("TrackingLog");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "CheckInRegisteredBy")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "CheckInRegisteredBy")
                         .WithMany("TrackingLogCheckInRegisteredBies")
                         .HasForeignKey("CheckInRegisteredByCode")
                         .HasPrincipalKey("UvaCode")
                         .HasConstraintName("tracking_logs_check_in_registered_by_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "CheckOutRegisteredBy")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "CheckOutRegisteredBy")
                         .WithMany("TrackingLogCheckOutRegisteredBies")
                         .HasForeignKey("CheckOutRegisteredByCode")
                         .HasPrincipalKey("UvaCode")
                         .HasConstraintName("tracking_logs_check_out_registered_by_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", "Enrollment")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", "Enrollment")
                         .WithMany("TrackingLogs")
                         .HasForeignKey("EnrollmentCode")
                         .HasPrincipalKey("UvaCode")
                         .IsRequired()
                         .HasConstraintName("tracking_logs_enrollment_id_fkey");
 
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.GroupEnrollment", "GroupEnrollment")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment.GroupEnrollment", "GroupEnrollment")
                         .WithMany("TrackingLogs")
                         .HasForeignKey("GroupEnrollmentCode")
                         .HasPrincipalKey("UvaCode")
@@ -1850,74 +1928,9 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("GroupEnrollment");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrenceDetail", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", b =>
                 {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrencePattern", "ActivityRecurrencePattern")
-                        .WithMany("ActivityRecurrenceDetails")
-                        .HasForeignKey("ActivityRecurrencePatternCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("activity_recurrence_detail_activity_recurrence_pattern_id_fkey");
-
-                    b.Navigation("ActivityRecurrencePattern");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrencePattern", b =>
-                {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "Program")
-                        .WithMany("ActivityRecurrencePatterns")
-                        .HasForeignKey("ProgramCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("activity_recurrence_patterns_program_id_fkey");
-
-                    b.Navigation("Program");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ProgramCollaborator", b =>
-                {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "AssignedByProfile")
-                        .WithMany("ProgramCollaboratorAssignedByProfiles")
-                        .HasForeignKey("AssignedByProfileCode")
-                        .HasPrincipalKey("UvaCode")
-                        .HasConstraintName("program_collaborators_assigned_by_profile_id_fkey");
-
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "Profile")
-                        .WithMany("ProgramCollaboratorProfiles")
-                        .HasForeignKey("ProfileCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("program_collaborators_profile_id_fkey");
-
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "Program")
-                        .WithMany("ProgramCollaborators")
-                        .HasForeignKey("ProgramCode")
-                        .HasPrincipalKey("UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("program_collaborators_program_id_fkey");
-
-                    b.Navigation("AssignedByProfile");
-
-                    b.Navigation("Profile");
-
-                    b.Navigation("Program");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ProgramContent", b =>
-                {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "Program")
-                        .WithOne("ProgramContent")
-                        .HasForeignKey("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ProgramContent", "ProgramCode")
-                        .HasPrincipalKey("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "UvaCode")
-                        .IsRequired()
-                        .HasConstraintName("program_content_program_id_fkey");
-
-                    b.Navigation("Program");
-                });
-
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", b =>
-                {
-                    b.HasOne("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", "ManagerProfile")
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "ManagerProfile")
                         .WithMany("VolPrograms")
                         .HasForeignKey("ManagerProfileCode")
                         .HasPrincipalKey("UvaCode")
@@ -1926,7 +1939,72 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("ManagerProfile");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.Activity", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramCollaborator", b =>
+                {
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "AssignedByProfile")
+                        .WithMany("VolProgramCollaboratorAssignedByProfiles")
+                        .HasForeignKey("AssignedByProfileCode")
+                        .HasPrincipalKey("UvaCode")
+                        .HasConstraintName("vol_program_collaborators_assigned_by_profile_id_fkey");
+
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", "Profile")
+                        .WithMany("VolProgramCollaboratorProfiles")
+                        .HasForeignKey("ProfileCode")
+                        .HasPrincipalKey("UvaCode")
+                        .IsRequired()
+                        .HasConstraintName("vol_program_collaborators_profile_id_fkey");
+
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "Program")
+                        .WithMany("VolProgramCollaborators")
+                        .HasForeignKey("ProgramCode")
+                        .HasPrincipalKey("UvaCode")
+                        .IsRequired()
+                        .HasConstraintName("vol_program_collaborators_program_id_fkey");
+
+                    b.Navigation("AssignedByProfile");
+
+                    b.Navigation("Profile");
+
+                    b.Navigation("Program");
+                });
+
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramContent", b =>
+                {
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "Program")
+                        .WithOne("VolProgramContent")
+                        .HasForeignKey("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramContent", "ProgramCode")
+                        .HasPrincipalKey("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "UvaCode")
+                        .IsRequired()
+                        .HasConstraintName("vol_program_contents_program_id_fkey");
+
+                    b.Navigation("Program");
+                });
+
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramPattern", b =>
+                {
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", "Program")
+                        .WithMany("VolProgramPatterns")
+                        .HasForeignKey("ProgramCode")
+                        .HasPrincipalKey("UvaCode")
+                        .IsRequired()
+                        .HasConstraintName("vol_program_patterns_program_id_fkey");
+
+                    b.Navigation("Program");
+                });
+
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramPatternDetail", b =>
+                {
+                    b.HasOne("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramPattern", "VolProgramPattern")
+                        .WithMany("VolProgramPatternDetails")
+                        .HasForeignKey("VolProgramPatternCode")
+                        .HasPrincipalKey("UvaCode")
+                        .IsRequired()
+                        .HasConstraintName("vol_program_pattern_details_vol_program_pattern_id_fkey");
+
+                    b.Navigation("VolProgramPattern");
+                });
+
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.Activity", b =>
                 {
                     b.Navigation("ActivityGroups");
 
@@ -1935,32 +2013,28 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
                     b.Navigation("Enrollments");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity.ActivityGroup", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity.ActivityGroup", b =>
                 {
                     b.Navigation("GroupEnrollments");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment.Enrollment", b =>
                 {
                     b.Navigation("GroupEnrollments");
 
                     b.Navigation("TrackingLogs");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment.GroupEnrollment", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment.GroupEnrollment", b =>
                 {
                     b.Navigation("TrackingLogs");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile.Profile", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile.Profile", b =>
                 {
                     b.Navigation("Activities");
 
                     b.Navigation("Enrollments");
-
-                    b.Navigation("ProgramCollaboratorAssignedByProfiles");
-
-                    b.Navigation("ProgramCollaboratorProfiles");
 
                     b.Navigation("RoleRequestRequesterProfiles");
 
@@ -1974,30 +2048,34 @@ namespace U_VoluntApp_Backend.Src.Infrastructure.Migrations
 
                     b.Navigation("UserScholarshipEvaluatorProfiles");
 
+                    b.Navigation("VolProgramCollaboratorAssignedByProfiles");
+
+                    b.Navigation("VolProgramCollaboratorProfiles");
+
                     b.Navigation("VolPrograms");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking.TrackingLog", b =>
                 {
                     b.Navigation("Evidences");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.ActivityRecurrencePattern", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", b =>
                 {
                     b.Navigation("Activities");
 
-                    b.Navigation("ActivityRecurrenceDetails");
+                    b.Navigation("VolProgramCollaborators");
+
+                    b.Navigation("VolProgramContent");
+
+                    b.Navigation("VolProgramPatterns");
                 });
 
-            modelBuilder.Entity("U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram.VolProgram", b =>
+            modelBuilder.Entity("U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram.VolProgramPattern", b =>
                 {
                     b.Navigation("Activities");
 
-                    b.Navigation("ActivityRecurrencePatterns");
-
-                    b.Navigation("ProgramCollaborators");
-
-                    b.Navigation("ProgramContent");
+                    b.Navigation("VolProgramPatternDetails");
                 });
 #pragma warning restore 612, 618
         }

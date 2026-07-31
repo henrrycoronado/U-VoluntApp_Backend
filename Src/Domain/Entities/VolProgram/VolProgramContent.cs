@@ -1,8 +1,8 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
+namespace U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
 
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Core.Src.Domain.Utils.Constants;
 
-public class ProgramContent
+public class VolProgramContent
 {
     public string UvaCode { get; private set; } = string.Empty;
 
@@ -28,7 +28,7 @@ public class ProgramContent
 
     public DateTime? UpdatedAt { get; private set; }
 
-    public static ProgramContent Create(
+    public static VolProgramContent Create(
         string programCode,
         string? description,
         string? activitiesDescription,
@@ -45,7 +45,7 @@ public class ProgramContent
             throw new InvalidOperationException("El ID del programa es invalido");
         }
 
-        return new ProgramContent
+        return new VolProgramContent
         {
             UvaCode = Guid.NewGuid().ToString(),
             ProgramCode = programCode,
@@ -55,8 +55,8 @@ public class ProgramContent
             LeadershipInfo = leadershipInfo ?? "Información sobre nuestros lideres proximamente",
             ContactInfo = contactInfo ?? "Información de contacto por definirse :3",
             MissionStatement = missionStatement ?? "Nuestra misión es ser llamados a servir :)",
-            ProfilePhotoUrl = profilePhotoUrl ?? ProfilePathConstants.ProfileProgramPath,
-            CoverPhotoUrl = coverPhotoUrl ?? BannerPathConstants.BannerWithTextDarkPath,
+            ProfilePhotoUrl = string.IsNullOrWhiteSpace(profilePhotoUrl) ? "default" : profilePhotoUrl,
+            CoverPhotoUrl = string.IsNullOrWhiteSpace(coverPhotoUrl) ? "default" : coverPhotoUrl,
             CreatedAt = nowUtc
         };
     }
@@ -91,7 +91,7 @@ public class ProgramContent
         UpdatedAt = nowUtc;
     }
 
-    internal static ProgramContent Rehydrate(
+    internal static VolProgramContent Rehydrate(
         string uvaCode,
         string programCode,
         string? description,
@@ -105,7 +105,7 @@ public class ProgramContent
         DateTime createdAt,
         DateTime? updatedAt)
     {
-        return new ProgramContent
+        return new VolProgramContent
         {
             UvaCode = uvaCode,
             ProgramCode = programCode,

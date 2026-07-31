@@ -1,20 +1,20 @@
-namespace U_VoluntApp_Backend.Src.Application.Services;
+namespace U_VoluntApp_Core.Src.Application.Services;
 
-using U_VoluntApp_Backend.Src.Application.DTOs;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Domain.Entities.Activity;
-using U_VoluntApp_Backend.Src.Domain.Entities.Enrollment;
-using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
-using U_VoluntApp_Backend.Src.Domain.Entities.Tracking;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
-using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Enrollment;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Tracking;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
-using U_VoluntApp_Backend.Src.Infrastructure.Storage;
+using U_VoluntApp_Core.Src.Application.DTOs;
+using U_VoluntApp_Core.Src.Application.Interfaces;
+using U_VoluntApp_Core.Src.Domain.Entities.Activity;
+using U_VoluntApp_Core.Src.Domain.Entities.Enrollment;
+using U_VoluntApp_Core.Src.Domain.Entities.Profile;
+using U_VoluntApp_Core.Src.Domain.Entities.Tracking;
+using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
+using U_VoluntApp_Core.Src.Domain.Utils.Constants;
+using U_VoluntApp_Core.Src.Domain.Utils.Enums;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Activity;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Enrollment;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Tracking;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
+using U_VoluntApp_Core.Src.Infrastructure.Storage;
 
 public class TrackingService : ITrackingService
 {
@@ -26,7 +26,7 @@ public class TrackingService : ITrackingService
     private readonly IProfileRepository _profileRepository;
     private readonly IEvidenceRepository _evidenceRepository;
     private readonly IStorageService _storageService;
-    private readonly IProgramCollaboratorService _programCollaboratorService;
+    private readonly IVolProgramCollaboratorService _programCollaboratorService;
 
     public TrackingService(
         ITrackingLogRepository trackingLogRepository,
@@ -37,7 +37,7 @@ public class TrackingService : ITrackingService
         IProfileRepository profileRepository,
         IEvidenceRepository evidenceRepository,
         IStorageService storageService,
-        IProgramCollaboratorService programCollaboratorService)
+        IVolProgramCollaboratorService programCollaboratorService)
     {
         _trackingLogRepository = trackingLogRepository;
         _enrollmentRepository = enrollmentRepository;

@@ -1,12 +1,12 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 
-using U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
+using U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
 
-public interface IProgramDetailRecurrenceRepository
+public interface IVolProgramPatternDetailRepository
 {
-    Task<ActivityRecurrenceDetail?> GetByCodeAsync(string uvaCode);
+    Task<VolProgramPatternDetail?> GetByCodeAsync(string uvaCode);
 
-    Task AddAsync(ActivityRecurrenceDetail detail);
+    Task AddAsync(VolProgramPatternDetail detail);
 
-    Task UpdateAsync(ActivityRecurrenceDetail detail);
+    Task UpdateAsync(VolProgramPatternDetail detail);
 }

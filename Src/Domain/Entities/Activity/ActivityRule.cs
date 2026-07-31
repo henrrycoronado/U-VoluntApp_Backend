@@ -1,7 +1,7 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.Activity;
+namespace U_VoluntApp_Core.Src.Domain.Entities.Activity;
 
 using Microsoft.OpenApi.Any;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Core.Src.Domain.Utils.Constants;
 
 public class ActivityRule
 {
@@ -53,7 +53,7 @@ public class ActivityRule
             RequiresEnrollment = requiresEnrollment,
             RequiresApproval = requiresApproval,
             CountsVolunteerHours = countsVolunteerHours,
-            PhotoUrl = photoUrl ?? ProfilePathConstants.ProfileActivityPath,
+            PhotoUrl = string.IsNullOrWhiteSpace(photoUrl) ? "default" : photoUrl,
             EnrollmentDeadline = enrollmentDeadline,
             TotalCapacity = totalCapacity,
             CostAmount = costAmount,

@@ -1,6 +1,6 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
+namespace U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
 
-public class ActivityRecurrencePattern
+public class VolProgramPattern
 {
     public string UvaCode { get; private set; } = string.Empty;
 
@@ -18,7 +18,7 @@ public class ActivityRecurrencePattern
 
     public DateTime? DeletedAt { get; private set; }
 
-    public static ActivityRecurrencePattern Create(string programCode, string name, string recurrenceType, string stateCode, DateTime nowUtc)
+    public static VolProgramPattern Create(string programCode, string name, string recurrenceType, string stateCode, DateTime nowUtc)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -40,7 +40,7 @@ public class ActivityRecurrencePattern
             throw new InvalidOperationException("El formato del código de estado es inválido");
         }
 
-        return new ActivityRecurrencePattern
+        return new VolProgramPattern
         {
             UvaCode = Guid.NewGuid().ToString(),
             ProgramCode = programCode,
@@ -113,7 +113,7 @@ public class ActivityRecurrencePattern
         DeletedAt = nowUtc;
     }
 
-    internal static ActivityRecurrencePattern Rehydrate(
+    internal static VolProgramPattern Rehydrate(
         string uvaCode,
         string programCode,
         string name,
@@ -123,7 +123,7 @@ public class ActivityRecurrencePattern
         DateTime? updatedAt,
         DateTime? deletedAt)
     {
-        return new ActivityRecurrencePattern
+        return new VolProgramPattern
         {
             UvaCode = uvaCode,
             ProgramCode = programCode,

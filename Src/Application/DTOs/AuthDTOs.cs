@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Application.DTOs;
+namespace U_VoluntApp_Core.Src.Application.DTOs;
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -39,21 +39,23 @@ public class LoginRequestDto
 
 public class AuthResponseDto
 {
-    public string Token { get; set; } = null!;
+    public string? Token { get; set; }
 
-    public DateTime AccessTokenExpiresAtUtc { get; set; }
+    public DateTime? AccessTokenExpiresAtUtc { get; set; }
 
-    public string RefreshToken { get; set; } = null!;
+    public string? RefreshToken { get; set; }
 
-    public string UvaCode { get; set; } = null!;
+    public string? UvaCode { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; }
 
-    public string FirstName { get; set; } = null!;
+    public string? FirstName { get; set; }
 
-    public string LastName { get; set; } = null!;
+    public string? LastName { get; set; }
 
     public List<string> Roles { get; set; } = new();
+
+    public bool RequiresVerification { get; set; }
 }
 
 public class RefreshTokenRequestDto
@@ -66,4 +68,69 @@ public class LogoutRequestDto
 {
     [Required(ErrorMessage = "El refresh token es requerido")]
     public string RefreshToken { get; set; } = null!;
+}
+
+public class VerifyEmailRequestDto
+{
+    [Required(ErrorMessage = "El email es requerido")]
+    [EmailAddress(ErrorMessage = "El formato del email es inválido")]
+    public string Email { get; set; } = null!;
+
+    [Required(ErrorMessage = "El código es requerido")]
+    [StringLength(6, MinimumLength = 6, ErrorMessage = "El código debe tener 6 dígitos")]
+    public string Code { get; set; } = null!;
+}
+
+public class VerifyDeviceRequestDto
+{
+    [Required(ErrorMessage = "El email es requerido")]
+    [EmailAddress(ErrorMessage = "El formato del email es inválido")]
+    public string Email { get; set; } = null!;
+
+    [Required(ErrorMessage = "El código es requerido")]
+    [StringLength(6, MinimumLength = 6, ErrorMessage = "El código debe tener 6 dígitos")]
+    public string Code { get; set; } = null!;
+
+    [Required(ErrorMessage = "El fingerprint es requerido")]
+    public string DeviceFingerprint { get; set; } = null!;
+}
+
+public class GoogleLoginRequestDto
+{
+    [Required(ErrorMessage = "El token de Google es requerido")]
+    public string IdToken { get; set; } = null!;
+
+    public string? Password { get; set; }
+}
+
+public class DeviceDto
+{
+    public string UvaCode { get; set; } = null!;
+
+    public string LastIpAddress { get; set; } = null!;
+
+    public string DeviceFingerprint { get; set; } = null!;
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? LastCodeSentAt { get; set; }
+
+    public bool IsTrusted { get; set; }
+}
+
+public class RevokeDeviceRequestDto
+{
+    [Required(ErrorMessage = "El código es requerido")]
+    [StringLength(6, MinimumLength = 6, ErrorMessage = "El código de verificación debe tener 6 dígitos")]
+    public string Code { get; set; } = null!;
+}
+
+public class SendOtpRequestDto
+{
+    [Required(ErrorMessage = "El email es requerido")]
+    [EmailAddress(ErrorMessage = "El formato del email es inválido")]
+    public string Email { get; set; } = null!;
+
+    [Required(ErrorMessage = "El propósito es requerido")]
+    public string Purpose { get; set; } = null!;
 }

@@ -1,8 +1,8 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram;
 
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile;
 
-public partial class ProgramCollaborator
+public partial class VolProgramCollaborator
 {
     public long Id { get; set; }
 

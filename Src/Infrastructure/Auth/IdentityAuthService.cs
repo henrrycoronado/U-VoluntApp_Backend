@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Auth;
+namespace U_VoluntApp_Core.Src.Infrastructure.Auth;
 
 using System;
 using System.Collections.Generic;
@@ -7,22 +7,22 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using U_VoluntApp_Backend.Src.Application.DTOs;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
-using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Contract;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Auth;
+using U_VoluntApp_Core.Src.Application.DTOs;
+using U_VoluntApp_Core.Src.Domain.Entities.Profile;
+using U_VoluntApp_Core.Src.Domain.Utils.Constants;
+using U_VoluntApp_Core.Src.Domain.Utils.Enums;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Contract;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Auth;
 
 public class IdentityAuthService : IAuthService
 {
@@ -32,6 +32,8 @@ public class IdentityAuthService : IAuthService
     private readonly IRoleRequestRepository _roleRequestRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly AppDbContext _context;
+    private readonly IDeviceService _deviceService;
+    private readonly IVerificationService _verificationService;
 
     public IdentityAuthService(
         UserManager<IdentityUser> userManager,
@@ -39,7 +41,9 @@ public class IdentityAuthService : IAuthService
         IConfiguration configuration,
         IRoleRequestRepository roleRequestRepository,
         IHttpContextAccessor httpContextAccessor,
-        AppDbContext context)
+        AppDbContext context,
+        IDeviceService deviceService,
+        IVerificationService verificationService)
     {
         _userManager = userManager;
         _profileRepository = profileRepository;
@@ -47,6 +51,8 @@ public class IdentityAuthService : IAuthService
         _roleRequestRepository = roleRequestRepository;
         _httpContextAccessor = httpContextAccessor;
         _context = context;
+        _deviceService = deviceService;
+        _verificationService = verificationService;
     }
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
@@ -60,6 +66,7 @@ public class IdentityAuthService : IAuthService
             Id = userId,
             UserName = request.Email,
             Email = request.Email,
+            EmailConfirmed = false,
             NormalizedUserName = request.Email.ToUpperInvariant(),
             NormalizedEmail = request.Email.ToUpperInvariant(),
         };
@@ -90,7 +97,7 @@ public class IdentityAuthService : IAuthService
                     request.Email,
                     request.FirstName,
                     request.LastName,
-                    ProfileState.Active.GetUvaCode(),
+                    ProfileState.Inactive.GetUvaCode(),
                     nowUtc);
 
                 profile.ApplyUpdate(
@@ -105,7 +112,14 @@ public class IdentityAuthService : IAuthService
                 await _profileRepository.AddAsync(profile);
 
                 await transaction.CommitAsync();
-                return await GenerateAuthResponseAsync(profile, identityUser);
+
+                await _verificationService.SendOtpAsync(request.Email, "EmailConfirmation");
+
+                return new AuthResponseDto
+                {
+                    Email = request.Email,
+                    RequiresVerification = true
+                };
             }
             catch
             {
@@ -125,6 +139,12 @@ public class IdentityAuthService : IAuthService
             throw new InvalidOperationException("Credenciales inválidas");
         }
 
+        if (!identityUser.EmailConfirmed)
+        {
+            await _verificationService.SendOtpAsync(identityUser.Email!, "EmailConfirmation");
+            throw new InvalidOperationException("El correo no ha sido verificado. Se ha enviado un nuevo código de activación.");
+        }
+
         var profile = await _profileRepository.GetByEmailAsync(request.Email);
 
         if (profile is null)
@@ -140,76 +160,222 @@ public class IdentityAuthService : IAuthService
             await _profileRepository.AddAsync(profile);
         }
 
+        var fingerprint = _httpContextAccessor.HttpContext?.Request.Headers["X-Device-Fingerprint"].ToString();
+        if (string.IsNullOrEmpty(fingerprint))
+        {
+            fingerprint = "web-browser";
+        }
+
+        var ip = GetRequestIp();
+
+        var isTrusted = await _deviceService.IsDeviceTrustedAsync(profile.UvaCode, fingerprint);
+
+        if (!isTrusted)
+        {
+            await _deviceService.RegisterDeviceAsync(profile.UvaCode, ip, fingerprint, false);
+            await _verificationService.SendOtpAsync(identityUser.Email!, "DeviceVerification");
+
+            return new AuthResponseDto
+            {
+                Email = request.Email,
+                RequiresVerification = true
+            };
+        }
+
+        await _deviceService.RegisterDeviceAsync(profile.UvaCode, ip, fingerprint, true);
+
         return await GenerateAuthResponseAsync(profile, identityUser);
     }
 
     public async Task<AuthResponseDto> RefreshTokenAsync(RefreshTokenRequestDto request)
     {
-        var refreshTokenHash = ComputeSha256Hex(request.RefreshToken);
-        var refreshToken = await _context.RefreshTokens
-            .FirstOrDefaultAsync(t => t.TokenHash == refreshTokenHash);
+        var hash = ComputeSha256Hex(request.RefreshToken);
+        var tokenModel = await _context.RefreshTokens
+            .FirstOrDefaultAsync(t => t.TokenHash == hash);
 
-        if (refreshToken is null)
+        if (tokenModel is null || tokenModel.ExpiresAt <= DateTime.UtcNow)
         {
-            throw new InvalidOperationException("Refresh token inválido");
+            throw new InvalidOperationException("Refresh token inválido o expirado");
         }
 
-        if (refreshToken.RevokedAt.HasValue)
-        {
-            throw new InvalidOperationException("Refresh token revocado");
-        }
-
-        if (refreshToken.ExpiresAt <= DateTime.UtcNow)
-        {
-            throw new InvalidOperationException("Refresh token expirado");
-        }
-
-        var identityUser = await _userManager.FindByIdAsync(refreshToken.IdentityUserId)
+        var identityUser = await _userManager.FindByIdAsync(tokenModel.IdentityUserId)
             ?? throw new InvalidOperationException("Usuario no encontrado");
 
-        var profile = await _profileRepository.GetByIdentityUserIdAsync(identityUser.Id)
+        var profile = await _profileRepository.GetByCodeAsync(tokenModel.ProfileCode)
             ?? throw new InvalidOperationException("Perfil no encontrado");
 
-        var rotatedToken = await CreateRefreshTokenAsync(identityUser.Id, profile.UvaCode);
+        _context.RefreshTokens.Remove(tokenModel);
 
-        refreshToken.RevokedAt = DateTime.UtcNow;
-        refreshToken.RevokedByIp = GetRequestIp();
-        refreshToken.ReasonRevoked = "Rotated";
-        refreshToken.ReplacedByTokenHash = rotatedToken.TokenHash;
-
-        _context.RefreshTokens.Update(refreshToken);
-        await _context.RefreshTokens.AddAsync(rotatedToken);
+        var newRefreshToken = await CreateRefreshTokenAsync(identityUser.Id, profile.UvaCode);
+        await _context.RefreshTokens.AddAsync(newRefreshToken);
         await _context.SaveChangesAsync();
 
-        return await BuildAuthResponseAsync(profile, identityUser, rotatedToken);
+        return await BuildAuthResponseAsync(profile, identityUser, newRefreshToken);
     }
 
     public async Task LogoutAsync(string profileCode, LogoutRequestDto request)
     {
-        var refreshTokenHash = ComputeSha256Hex(request.RefreshToken);
-        var refreshToken = await _context.RefreshTokens
-            .FirstOrDefaultAsync(t => t.TokenHash == refreshTokenHash && t.ProfileCode == profileCode);
+        var hash = ComputeSha256Hex(request.RefreshToken);
+        var tokenModel = await _context.RefreshTokens
+            .FirstOrDefaultAsync(t => t.ProfileCode == profileCode && t.TokenHash == hash);
 
-        if (refreshToken is null)
+        if (tokenModel != null)
         {
-            return;
-        }
-
-        if (!refreshToken.RevokedAt.HasValue)
-        {
-            refreshToken.RevokedAt = DateTime.UtcNow;
-            refreshToken.RevokedByIp = GetRequestIp();
-            refreshToken.ReasonRevoked = "User logout";
-
-            _context.RefreshTokens.Update(refreshToken);
+            _context.RefreshTokens.Remove(tokenModel);
             await _context.SaveChangesAsync();
         }
     }
 
-    private static string ComputeSha256Hex(string input)
+    public async Task<AuthResponseDto> GoogleLoginAsync(GoogleLoginRequestDto request)
     {
-        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(input));
-        return Convert.ToHexString(bytes).ToLowerInvariant();
+        GoogleJsonWebSignature.Payload payload;
+        try
+        {
+            var allowedClientIds = _configuration["GOOGLE_CLIENT_IDS"]?.Split(',') ?? Array.Empty<string>();
+            var settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = allowedClientIds
+            };
+            payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("Token de Google inválido o expirado", ex);
+        }
+
+        var email = payload.Email;
+        ValidateInstitutionalEmail(email);
+
+        var desktopClientId = _configuration["GOOGLE_CLIENT_ID_DESKTOP"];
+        var isDesktop = (payload.Audience as string) == desktopClientId;
+
+        if (isDesktop && string.IsNullOrWhiteSpace(request.Password))
+        {
+            throw new InvalidOperationException("La contraseña es requerida para la verificación en la aplicación de escritorio.");
+        }
+
+        var identityUser = await _userManager.FindByEmailAsync(email);
+        var nowUtc = DateTime.UtcNow;
+
+        if (identityUser is null)
+        {
+            var userId = Guid.NewGuid().ToString();
+            identityUser = new IdentityUser
+            {
+                Id = userId,
+                UserName = email,
+                Email = email,
+                EmailConfirmed = true,
+                NormalizedUserName = email.ToUpperInvariant(),
+                NormalizedEmail = email.ToUpperInvariant(),
+            };
+
+            IdentityResult identityResult;
+            if (isDesktop)
+            {
+                identityResult = await _userManager.CreateAsync(identityUser, request.Password!);
+            }
+            else
+            {
+                identityResult = await _userManager.CreateAsync(identityUser);
+            }
+
+            if (!identityResult.Succeeded)
+            {
+                throw new InvalidOperationException(string.Join(", ", identityResult.Errors.Select(e => e.Description)));
+            }
+
+            var addRoleResult = await _userManager.AddToRoleAsync(identityUser, RoleConstants.VolunteerRole);
+            if (!addRoleResult.Succeeded)
+            {
+                await _userManager.DeleteAsync(identityUser);
+                throw new InvalidOperationException(string.Join(", ", addRoleResult.Errors.Select(e => e.Description)));
+            }
+
+            var profile = Profile.Create(
+                userId,
+                email,
+                payload.GivenName ?? "Usuario",
+                payload.FamilyName ?? "Google",
+                ProfileState.Active.GetUvaCode(),
+                nowUtc);
+
+            await _profileRepository.AddAsync(profile);
+
+            var fingerprint = _httpContextAccessor.HttpContext?.Request.Headers["X-Device-Fingerprint"].ToString() ?? "google-oauth-device";
+            var ip = GetRequestIp();
+
+            await _deviceService.RegisterDeviceAsync(profile.UvaCode, ip, fingerprint, true);
+
+            return await GenerateAuthResponseAsync(profile, identityUser);
+        }
+        else
+        {
+            if (isDesktop)
+            {
+                if (!await _userManager.CheckPasswordAsync(identityUser, request.Password!))
+                {
+                    throw new InvalidOperationException("Credenciales locales inválidas");
+                }
+            }
+
+            var logins = await _userManager.GetLoginsAsync(identityUser);
+            if (logins.All(l => l.LoginProvider != "Google"))
+            {
+                var addLoginResult = await _userManager.AddLoginAsync(identityUser, new UserLoginInfo("Google", payload.Subject, "Google"));
+                if (!addLoginResult.Succeeded)
+                {
+                    throw new InvalidOperationException("No se pudo vincular la cuenta de Google");
+                }
+            }
+
+            var profile = await _profileRepository.GetByEmailAsync(email);
+            if (profile is null)
+            {
+                profile = Profile.Create(
+                    identityUser.Id,
+                    email,
+                    payload.GivenName ?? "Usuario",
+                    payload.FamilyName ?? "Google",
+                    ProfileState.Active.GetUvaCode(),
+                    nowUtc);
+                await _profileRepository.AddAsync(profile);
+            }
+            else if (profile.StateCode == ProfileState.Inactive.GetUvaCode())
+            {
+                profile.ChangeState(ProfileState.Active.GetUvaCode(), nowUtc);
+                await _profileRepository.UpdateAsync(profile);
+                identityUser.EmailConfirmed = true;
+                await _userManager.UpdateAsync(identityUser);
+            }
+
+            var fingerprint = _httpContextAccessor.HttpContext?.Request.Headers["X-Device-Fingerprint"].ToString() ?? "google-oauth-device";
+            var ip = GetRequestIp();
+
+            await _deviceService.RegisterDeviceAsync(profile.UvaCode, ip, fingerprint, true);
+
+            return await GenerateAuthResponseAsync(profile, identityUser);
+        }
+    }
+
+    private void ValidateInstitutionalEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new InvalidOperationException("El correo es obligatorio.");
+        }
+
+        var match = Regex.Match(email, @"@([\w\.\-]+)$");
+        if (!match.Success)
+        {
+            throw new InvalidOperationException("El correo ingresado no es válido.");
+        }
+
+        var domain = match.Groups[1].Value.ToLowerInvariant();
+        if (domain != "autonoma.cl" && domain != "uautonoma.cl")
+        {
+            throw new InvalidOperationException("Solo se permiten correos institucionales de la Universidad Autónoma.");
+        }
     }
 
     private async Task<AuthResponseDto> GenerateAuthResponseAsync(Profile profile, IdentityUser identityUser)
@@ -242,7 +408,6 @@ public class IdentityAuthService : IAuthService
     private async Task<RefreshToken> CreateRefreshTokenAsync(string identityUserId, string profileCode)
     {
         var plainToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-
         var refreshDays = int.Parse(_configuration["JWT_REFRESH_DAYS"] ?? "15");
 
         return await Task.FromResult(new RefreshToken
@@ -300,6 +465,12 @@ public class IdentityAuthService : IAuthService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    private string ComputeSha256Hex(string input)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(input));
+        return Convert.ToHexString(bytes).ToLowerInvariant();
+    }
+
     private string GetRequestIp()
     {
         return _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "unknown";
@@ -308,23 +479,5 @@ public class IdentityAuthService : IAuthService
     private string? GetUserAgent()
     {
         return _httpContextAccessor.HttpContext?.Request.Headers.UserAgent.ToString();
-    }
-
-    private void ValidateInstitutionalEmail(string email)
-    {
-        const string allowedDomain = "ucb.edu.bo";
-        var atPosition = email.IndexOf('@');
-        if (atPosition < 0 || atPosition == email.Length - 1)
-        {
-            throw new InvalidOperationException("Formato de correo inválido");
-        }
-
-        var emailDomain = email[(atPosition + 1)..].ToLowerInvariant();
-
-        if (!emailDomain.Equals(allowedDomain, StringComparison.OrdinalIgnoreCase))
-        {
-            throw new InvalidOperationException(
-                $"Solo se permiten correos del dominio @{allowedDomain}. Correo proporcionado: {email}");
-        }
     }
 }

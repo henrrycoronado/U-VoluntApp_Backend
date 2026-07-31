@@ -1,32 +1,32 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Repositories;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Repositories;
 
 using Microsoft.EntityFrameworkCore;
-using U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Mappers;
+using U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
+using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
-public class ProgramCollaboratorRepository : IProgramCollaboratorRepository
+public class VolProgramCollaboratorRepository : IVolProgramCollaboratorRepository
 {
     private readonly AppDbContext _context;
 
-    public ProgramCollaboratorRepository(AppDbContext context)
+    public VolProgramCollaboratorRepository(AppDbContext context)
     {
         _context = context;
     }
 
-    public async Task<ProgramCollaborator?> GetByCodeAsync(string uvaCode)
+    public async Task<VolProgramCollaborator?> GetByCodeAsync(string uvaCode)
     {
-        var collaborator = await _context.ProgramCollaborators
+        var collaborator = await _context.VolProgramCollaborators
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.UvaCode == uvaCode);
 
         return collaborator is null ? null : DomainPersistenceMapper.ToDomain(collaborator);
     }
 
-    public async Task<IEnumerable<ProgramCollaborator>> GetByProgramCodeAsync(string programCode, RequestFilter filter)
+    public async Task<IEnumerable<VolProgramCollaborator>> GetByProgramCodeAsync(string programCode, RequestFilter filter)
     {
-        var collaborators = await _context.ProgramCollaborators
+        var collaborators = await _context.VolProgramCollaborators
             .AsNoTracking()
             .Where(c => c.ProgramCode == programCode)
             .OrderByDescending(c => c.CreatedAt)
@@ -37,9 +37,9 @@ public class ProgramCollaboratorRepository : IProgramCollaboratorRepository
         return collaborators.Select(DomainPersistenceMapper.ToDomain).ToList();
     }
 
-    public async Task<IEnumerable<ProgramCollaborator>> GetByProfileCodeAsync(string profileCode, RequestFilter filter)
+    public async Task<IEnumerable<VolProgramCollaborator>> GetByProfileCodeAsync(string profileCode, RequestFilter filter)
     {
-        var collaborators = await _context.ProgramCollaborators
+        var collaborators = await _context.VolProgramCollaborators
             .AsNoTracking()
             .Where(c => c.ProfileCode == profileCode)
             .OrderByDescending(c => c.CreatedAt)
@@ -50,16 +50,16 @@ public class ProgramCollaboratorRepository : IProgramCollaboratorRepository
         return collaborators.Select(DomainPersistenceMapper.ToDomain).ToList();
     }
 
-    public async Task AddAsync(ProgramCollaborator collaborator)
+    public async Task AddAsync(VolProgramCollaborator collaborator)
     {
         var model = DomainPersistenceMapper.ToPersistence(collaborator);
-        await _context.ProgramCollaborators.AddAsync(model);
+        await _context.VolProgramCollaborators.AddAsync(model);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(ProgramCollaborator collaborator)
+    public async Task UpdateAsync(VolProgramCollaborator collaborator)
     {
-        var existing = await _context.ProgramCollaborators
+        var existing = await _context.VolProgramCollaborators
             .FirstOrDefaultAsync(c => c.UvaCode == collaborator.UvaCode)
             ?? throw new InvalidOperationException("Colaborador no encontrado para actualizar");
 
@@ -72,10 +72,10 @@ public class ProgramCollaboratorRepository : IProgramCollaboratorRepository
 
     public async Task DeleteAsync(string uvaCode)
     {
-        var collaborator = await _context.ProgramCollaborators.FirstOrDefaultAsync(c => c.UvaCode == uvaCode);
+        var collaborator = await _context.VolProgramCollaborators.FirstOrDefaultAsync(c => c.UvaCode == uvaCode);
         if (collaborator != null)
         {
-            _context.ProgramCollaborators.Remove(collaborator);
+            _context.VolProgramCollaborators.Remove(collaborator);
             await _context.SaveChangesAsync();
         }
     }

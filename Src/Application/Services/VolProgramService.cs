@@ -1,14 +1,14 @@
-namespace U_VoluntApp_Backend.Src.Application.Services;
+namespace U_VoluntApp_Core.Src.Application.Services;
 
-using U_VoluntApp_Backend.Src.Application.DTOs;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
-using U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
-using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
+using U_VoluntApp_Core.Src.Application.DTOs;
+using U_VoluntApp_Core.Src.Application.Interfaces;
+using U_VoluntApp_Core.Src.Domain.Entities.Profile;
+using U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
+using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
+using U_VoluntApp_Core.Src.Domain.Utils.Constants;
+using U_VoluntApp_Core.Src.Domain.Utils.Enums;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 
 public class VolProgramService : IVolProgramService
 {
@@ -84,21 +84,20 @@ public class VolProgramService : IVolProgramService
 
         program.ApplyUpdate(dto.Name ?? program.Name, dto.Acronym, DateTime.UtcNow);
 
-        if (program.Content != null)
+        if (program.VolProgramContent != null)
         {
             try
             {
-                program.Content.ApplyUpdate(
+                program.VolProgramContent.ApplyUpdate(
                     dto.Description,
-                    program.Content.ActivitiesDescription, // keep old
+                    program.VolProgramContent.ActivitiesDescription, // keep old
                     dto.ScheduleInfo,
                     dto.LeadershipInfo,
                     dto.ContactInfo,
                     dto.MissionStatement,
                     dto.ProfilePhotoUrl,
                     dto.CoverPhotoUrl,
-                    DateTime.UtcNow
-                );
+                    DateTime.UtcNow);
             }
             catch (InvalidOperationException)
             {
@@ -107,7 +106,7 @@ public class VolProgramService : IVolProgramService
         }
         else
         {
-            program.SetContent(U_VoluntApp_Backend.Src.Domain.Entities.VolProgram.ProgramContent.Create(
+            program.SetVolProgramContent(U_VoluntApp_Core.Src.Domain.Entities.VolProgram.VolProgramContent.Create(
                 program.UvaCode,
                 dto.Description,
                 null,
@@ -117,8 +116,7 @@ public class VolProgramService : IVolProgramService
                 dto.MissionStatement,
                 dto.ProfilePhotoUrl,
                 dto.CoverPhotoUrl,
-                DateTime.UtcNow
-            ));
+                DateTime.UtcNow));
         }
 
         await _volProgramRepository.UpdateAsync(program);
@@ -175,13 +173,13 @@ public class VolProgramService : IVolProgramService
             UvaCode = program.UvaCode,
             Name = program.Name,
             Acronym = program.Acronym,
-            Description = program.Content?.Description,
-            ProfilePhotoUrl = program.Content?.ProfilePhotoUrl,
-            CoverPhotoUrl = program.Content?.CoverPhotoUrl,
-            MissionStatement = program.Content?.MissionStatement,
-            ScheduleInfo = program.Content?.ScheduleInfo,
-            ContactInfo = program.Content?.ContactInfo,
-            LeadershipInfo = program.Content?.LeadershipInfo,
+            Description = program.VolProgramContent?.Description,
+            ProfilePhotoUrl = program.VolProgramContent?.ProfilePhotoUrl,
+            CoverPhotoUrl = program.VolProgramContent?.CoverPhotoUrl,
+            MissionStatement = program.VolProgramContent?.MissionStatement,
+            ScheduleInfo = program.VolProgramContent?.ScheduleInfo,
+            ContactInfo = program.VolProgramContent?.ContactInfo,
+            LeadershipInfo = program.VolProgramContent?.LeadershipInfo,
             ManagerProfileId = program.ManagerProfileCode ?? string.Empty,
             ManagerName = manager is not null
                 ? $"{manager.FirstName} {manager.LastName}"

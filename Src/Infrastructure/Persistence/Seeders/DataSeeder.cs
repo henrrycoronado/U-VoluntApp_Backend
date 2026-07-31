@@ -1,13 +1,13 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Seeders;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Seeders;
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
+using U_VoluntApp_Core.Src.Domain.Utils.Enums;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram;
 
 public static class DataSeeder
 {
@@ -64,7 +64,7 @@ public static class DataSeeder
                 // Add content for the first two as examples
                 if (p.UvaCode == "6ca9df57-19d2-430b-9c4c-3ba868114f24")
                 {
-                    context.ProgramContents.Add(new ProgramContent
+                    context.VolProgramContents.Add(new VolProgramContent
                     {
                         UvaCode = "pc-monaguillos",
                         ProgramCode = p.UvaCode,
@@ -76,7 +76,7 @@ public static class DataSeeder
                 }
                 else if (p.UvaCode == "711e5a59-9f79-43a9-a9a3-5c3b94b05a61")
                 {
-                    context.ProgramContents.Add(new ProgramContent
+                    context.VolProgramContents.Add(new VolProgramContent
                     {
                         UvaCode = "pc-musica",
                         ProgramCode = p.UvaCode,

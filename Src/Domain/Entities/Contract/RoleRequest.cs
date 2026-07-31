@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.Contract;
+namespace U_VoluntApp_Core.Src.Domain.Entities.Contract;
 
 public class RoleRequest
 {

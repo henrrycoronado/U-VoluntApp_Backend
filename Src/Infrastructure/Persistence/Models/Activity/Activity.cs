@@ -1,8 +1,8 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity;
 
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram;
 
 public partial class Activity
 {
@@ -16,7 +16,7 @@ public partial class Activity
 
     public string ActivityTypeCode { get; set; } = null!;
 
-    public string? ActivityRecurrencePatternCode { get; set; }
+    public string? VolProgramPatternCode { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -42,7 +42,7 @@ public partial class Activity
 
     public virtual ICollection<ActivityGroup> ActivityGroups { get; set; } = new List<ActivityGroup>();
 
-    public virtual ActivityRecurrencePattern? ActivityRecurrencePattern { get; set; }
+    public virtual VolProgramPattern? VolProgramPattern { get; set; }
 
     public virtual ActivityRule? ActivityRule { get; set; }
 

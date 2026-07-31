@@ -1,7 +1,7 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Mappers;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
-using DomainEntities = U_VoluntApp_Backend.Src.Domain.Entities;
-using PersistenceModels = U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models;
+using DomainEntities = U_VoluntApp_Core.Src.Domain.Entities;
+using PersistenceModels = U_VoluntApp_Core.Src.Infrastructure.Persistence.Models;
 
 public static partial class DomainPersistenceMapper
 {
@@ -12,7 +12,7 @@ public static partial class DomainPersistenceMapper
             model.ProgramCode,
             model.ResponsibleProfileCode,
             model.ActivityTypeCode,
-            model.ActivityRecurrencePatternCode,
+            model.VolProgramPatternCode,
             model.Name,
             model.Description,
             model.StartDate,
@@ -58,9 +58,9 @@ public static partial class DomainPersistenceMapper
             model.DeletedAt);
     }
 
-    public static DomainEntities.VolProgram.ActivityRecurrencePattern ToDomain(PersistenceModels.VolProgram.ActivityRecurrencePattern model)
+    public static DomainEntities.VolProgram.VolProgramPattern ToDomain(PersistenceModels.VolProgram.VolProgramPattern model)
     {
-        return DomainEntities.VolProgram.ActivityRecurrencePattern.Rehydrate(
+        return DomainEntities.VolProgram.VolProgramPattern.Rehydrate(
             model.UvaCode,
             model.ProgramCode,
             model.Name,
@@ -71,11 +71,11 @@ public static partial class DomainPersistenceMapper
             model.DeletedAt);
     }
 
-    public static DomainEntities.VolProgram.ActivityRecurrenceDetail ToDomain(PersistenceModels.VolProgram.ActivityRecurrenceDetail model)
+    public static DomainEntities.VolProgram.VolProgramPatternDetail ToDomain(PersistenceModels.VolProgram.VolProgramPatternDetail model)
     {
-        return DomainEntities.VolProgram.ActivityRecurrenceDetail.Rehydrate(
+        return DomainEntities.VolProgram.VolProgramPatternDetail.Rehydrate(
             model.UvaCode,
-            model.ActivityRecurrencePatternCode,
+            model.VolProgramPatternCode,
             model.DayOfWeek,
             model.DayOfMonth,
             model.WeekOfMonth,
@@ -95,7 +95,7 @@ public static partial class DomainPersistenceMapper
             ProgramCode = entity.ProgramCode,
             ResponsibleProfileCode = entity.ResponsibleProfileCode,
             ActivityTypeCode = entity.ActivityTypeCode,
-            ActivityRecurrencePatternCode = entity.ActivityRecurrencePatternCode,
+            VolProgramPatternCode = entity.VolProgramPatternCode,
             Name = entity.Name,
             Description = entity.Description,
             StartDate = entity.StartDate,
@@ -146,9 +146,9 @@ public static partial class DomainPersistenceMapper
         };
     }
 
-    public static PersistenceModels.VolProgram.ActivityRecurrencePattern ToPersistence(DomainEntities.VolProgram.ActivityRecurrencePattern entity)
+    public static PersistenceModels.VolProgram.VolProgramPattern ToPersistence(DomainEntities.VolProgram.VolProgramPattern entity)
     {
-        return new PersistenceModels.VolProgram.ActivityRecurrencePattern
+        return new PersistenceModels.VolProgram.VolProgramPattern
         {
             UvaCode = entity.UvaCode,
             ProgramCode = entity.ProgramCode,
@@ -161,12 +161,12 @@ public static partial class DomainPersistenceMapper
         };
     }
 
-    public static PersistenceModels.VolProgram.ActivityRecurrenceDetail ToPersistence(DomainEntities.VolProgram.ActivityRecurrenceDetail entity)
+    public static PersistenceModels.VolProgram.VolProgramPatternDetail ToPersistence(DomainEntities.VolProgram.VolProgramPatternDetail entity)
     {
-        return new PersistenceModels.VolProgram.ActivityRecurrenceDetail
+        return new PersistenceModels.VolProgram.VolProgramPatternDetail
         {
             UvaCode = entity.UvaCode,
-            ActivityRecurrencePatternCode = entity.ActivityRecurrencePatternCode,
+            VolProgramPatternCode = entity.VolProgramPatternCode,
             DayOfWeek = entity.DayOfWeek,
             DayOfMonth = entity.DayOfMonth,
             WeekOfMonth = entity.WeekOfMonth,

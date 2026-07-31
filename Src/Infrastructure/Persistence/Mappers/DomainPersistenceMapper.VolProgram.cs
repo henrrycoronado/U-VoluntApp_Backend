@@ -1,13 +1,13 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Mappers;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
-using DomainEntities = U_VoluntApp_Backend.Src.Domain.Entities;
-using PersistenceModels = U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models;
+using DomainEntities = U_VoluntApp_Core.Src.Domain.Entities;
+using PersistenceModels = U_VoluntApp_Core.Src.Infrastructure.Persistence.Models;
 
 public static partial class DomainPersistenceMapper
 {
     public static DomainEntities.VolProgram.VolProgram ToDomain(PersistenceModels.VolProgram.VolProgram model)
     {
-        var content = model.ProgramContent != null ? ToDomain(model.ProgramContent) : null;
+        var content = model.VolProgramContent != null ? ToDomain(model.VolProgramContent) : null;
         return DomainEntities.VolProgram.VolProgram.Rehydrate(
             model.UvaCode,
             model.Name,
@@ -20,9 +20,9 @@ public static partial class DomainPersistenceMapper
             content);
     }
 
-    public static DomainEntities.VolProgram.ProgramContent ToDomain(PersistenceModels.VolProgram.ProgramContent model)
+    public static DomainEntities.VolProgram.VolProgramContent ToDomain(PersistenceModels.VolProgram.VolProgramContent model)
     {
-        return DomainEntities.VolProgram.ProgramContent.Rehydrate(
+        return DomainEntities.VolProgram.VolProgramContent.Rehydrate(
             model.UvaCode,
             model.ProgramCode,
             model.Description,
@@ -37,9 +37,9 @@ public static partial class DomainPersistenceMapper
             model.UpdatedAt);
     }
 
-    public static DomainEntities.VolProgram.ProgramCollaborator ToDomain(PersistenceModels.VolProgram.ProgramCollaborator model)
+    public static DomainEntities.VolProgram.VolProgramCollaborator ToDomain(PersistenceModels.VolProgram.VolProgramCollaborator model)
     {
-        return DomainEntities.VolProgram.ProgramCollaborator.Rehydrate(
+        return DomainEntities.VolProgram.VolProgramCollaborator.Rehydrate(
             model.UvaCode,
             model.ProgramCode,
             model.ProfileCode,
@@ -65,9 +65,9 @@ public static partial class DomainPersistenceMapper
         };
     }
 
-    public static PersistenceModels.VolProgram.ProgramContent ToPersistence(DomainEntities.VolProgram.ProgramContent entity)
+    public static PersistenceModels.VolProgram.VolProgramContent ToPersistence(DomainEntities.VolProgram.VolProgramContent entity)
     {
-        return new PersistenceModels.VolProgram.ProgramContent
+        return new PersistenceModels.VolProgram.VolProgramContent
         {
             UvaCode = entity.UvaCode,
             ProgramCode = entity.ProgramCode,
@@ -84,9 +84,9 @@ public static partial class DomainPersistenceMapper
         };
     }
 
-    public static PersistenceModels.VolProgram.ProgramCollaborator ToPersistence(DomainEntities.VolProgram.ProgramCollaborator entity)
+    public static PersistenceModels.VolProgram.VolProgramCollaborator ToPersistence(DomainEntities.VolProgram.VolProgramCollaborator entity)
     {
-        return new PersistenceModels.VolProgram.ProgramCollaborator
+        return new PersistenceModels.VolProgram.VolProgramCollaborator
         {
             UvaCode = entity.UvaCode,
             ProgramCode = entity.ProgramCode,

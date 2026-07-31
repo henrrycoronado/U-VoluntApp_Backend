@@ -1,16 +1,16 @@
-namespace U_VoluntApp_Backend.Src.Application.Services;
+namespace U_VoluntApp_Core.Src.Application.Services;
 
-using U_VoluntApp_Backend.Src.Application.DTOs;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Domain.Entities.Activity;
-using U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
-using U_VoluntApp_Backend.Src.Domain.Utils.Enums;
-using U_VoluntApp_Backend.Src.Domain.Utils.Factories;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
+using U_VoluntApp_Core.Src.Application.DTOs;
+using U_VoluntApp_Core.Src.Application.Interfaces;
+using U_VoluntApp_Core.Src.Domain.Entities.Activity;
+using U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
+using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
+using U_VoluntApp_Core.Src.Domain.Utils.Constants;
+using U_VoluntApp_Core.Src.Domain.Utils.Enums;
+using U_VoluntApp_Core.Src.Domain.Utils.Factories;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Activity;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 
 public class ActivityService : IActivityService
 {
@@ -191,7 +191,7 @@ public class ActivityService : IActivityService
         activity.ApplyUpdate(
             activity.ResponsibleProfileCode,
             dto.ActivityTypeCode ?? activity.ActivityTypeCode,
-            activity.ActivityRecurrencePatternCode,
+            activity.VolProgramPatternCode,
             dto.Name ?? activity.Name,
             dto.Description ?? activity.Description,
             dto.StartDate ?? activity.StartDate,

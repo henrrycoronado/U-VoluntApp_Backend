@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.Enrollment;
+namespace U_VoluntApp_Core.Src.Domain.Entities.Enrollment;
 
 public class GroupEnrollment
 {

@@ -13,7 +13,7 @@ API REST para la gestión de voluntariado universitario. Digitaliza control de a
 
 ## Estructura del proyecto
 ```
-U_VoluntApp_Backend/
+U_VoluntApp_Core/
 ├── Program.cs             ← Punto de entrada
 ├── Src/                   ← Código fuente principal
 │   ├── Domain/            ← Entidades y lógica central
@@ -33,7 +33,7 @@ U_VoluntApp_Backend/
 ### 1. Clonar el repositorio
 ```bash
 git clone [url-del-repo]
-cd U-VoluntApp_Backend
+cd U-VoluntApp_Core
 dotnet tool restore
 dotnet husky install
 ```
@@ -54,7 +54,7 @@ DB_CONNECTION_STRING=Host=postgres_db;Port=5432;Database=uvoluntapp;Username=uvo
 
 # JWT
 JWT_SECRET=dev_secret_local_minimo_32_caracteres
-JWT_ISSUER=U_VoluntApp_Backend.Src
+JWT_ISSUER=U_VoluntApp_Core.Src
 JWT_AUDIENCE=UVoluntapp.Client
 JWT_EXPIRY_MINUTES=60
 
@@ -150,7 +150,7 @@ dotnet ef database update --context AppDbContext
 ```
 
 - Requisitos y notas:
-	- El paquete `Microsoft.EntityFrameworkCore.Design` ya está referenciado en el proyecto (ver [U-VoluntApp_Backend.csproj](U-VoluntApp_Backend.csproj#L1)).
+	- El paquete `Microsoft.EntityFrameworkCore.Design` ya está referenciado en el proyecto (ver [U-VoluntApp_Core.csproj](U-VoluntApp_Core.csproj#L1)).
 	- Si recibes errores relacionados con el proveedor de base de datos, verifica la cadena de conexión en las variables de entorno o `appsettings` y que `Npgsql.EntityFrameworkCore.PostgreSQL` esté instalado.
 
 ---

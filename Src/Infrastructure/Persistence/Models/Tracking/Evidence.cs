@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking;
 
 public partial class Evidence
 {

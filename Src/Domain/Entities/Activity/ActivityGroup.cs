@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.Activity;
+namespace U_VoluntApp_Core.Src.Domain.Entities.Activity;
 
 public class ActivityGroup
 {

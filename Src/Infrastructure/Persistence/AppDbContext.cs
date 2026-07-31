@@ -1,15 +1,15 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Activity;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Auth;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Contract;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Enrollment;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Profile;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.Tracking;
-using U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models.VolProgram;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Activity;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Auth;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Contract;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Enrollment;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Profile;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.Tracking;
+using U_VoluntApp_Core.Src.Infrastructure.Persistence.Models.VolProgram;
 
 public partial class AppDbContext : IdentityDbContext<IdentityUser>
 {
@@ -22,13 +22,15 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
 
     public virtual DbSet<ActivityGroup> ActivityGroups { get; set; }
 
-    public virtual DbSet<ActivityRecurrenceDetail> ActivityRecurrenceDetails { get; set; }
+    public virtual DbSet<VolProgramPatternDetail> VolProgramPatternDetails { get; set; }
 
-    public virtual DbSet<ActivityRecurrencePattern> ActivityRecurrencePatterns { get; set; }
+    public virtual DbSet<VolProgramPattern> VolProgramPatterns { get; set; }
 
     public virtual DbSet<ActivityRule> ActivityRules { get; set; }
 
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+
+    public virtual DbSet<UserSecurityAudit> UserSecurityAudits { get; set; }
 
     public virtual DbSet<Enrollment> Enrollments { get; set; }
 
@@ -46,9 +48,9 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
 
     public virtual DbSet<Profile> Profiles { get; set; }
 
-    public virtual DbSet<ProgramCollaborator> ProgramCollaborators { get; set; }
+    public virtual DbSet<VolProgramCollaborator> VolProgramCollaborators { get; set; }
 
-    public virtual DbSet<ProgramContent> ProgramContents { get; set; }
+    public virtual DbSet<VolProgramContent> VolProgramContents { get; set; }
 
     public virtual DbSet<RoleRequest> RoleRequests { get; set; }
 
@@ -72,7 +74,7 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.ActivityRecurrencePatternCode).HasColumnName("activity_recurrence_pattern_code");
+            entity.Property(e => e.VolProgramPatternCode).HasColumnName("vol_program_pattern_code");
             entity.Property(e => e.ActivityTypeCode).HasColumnName("activity_type_code");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
@@ -96,10 +98,10 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasColumnName("state_code");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
 
-            entity.HasOne(d => d.ActivityRecurrencePattern).WithMany(p => p.Activities)
-                .HasForeignKey(d => d.ActivityRecurrencePatternCode)
+            entity.HasOne(d => d.VolProgramPattern).WithMany(p => p.Activities)
+                .HasForeignKey(d => d.VolProgramPatternCode)
                 .HasPrincipalKey(p => p.UvaCode)
-                .HasConstraintName("activities_activity_recurrence_pattern_id_fkey");
+                .HasConstraintName("activities_vol_program_pattern_id_fkey");
 
             entity.HasOne(d => d.Program).WithMany(p => p.Activities)
                 .HasForeignKey(d => d.ProgramCode)
@@ -147,17 +149,17 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasConstraintName("activity_group_activity_id_fkey");
         });
 
-        modelBuilder.Entity<ActivityRecurrenceDetail>(entity =>
+        modelBuilder.Entity<VolProgramPatternDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("activity_recurrence_detail_pkey");
+            entity.HasKey(e => e.Id).HasName("vol_program_pattern_details_pkey");
 
-            entity.ToTable("activity_recurrence_detail");
+            entity.ToTable("vol_program_pattern_details");
 
             entity.HasIndex(e => e.UvaCode).IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.UvaCode).HasColumnName("uva_code");
-            entity.Property(e => e.ActivityRecurrencePatternCode).HasColumnName("activity_recurrence_pattern_code");
+            entity.Property(e => e.VolProgramPatternCode).HasColumnName("vol_program_pattern_code");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
@@ -172,18 +174,18 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasColumnName("state_code");
             entity.Property(e => e.DeletedAt).HasColumnName("deleted_at");
 
-            entity.HasOne(d => d.ActivityRecurrencePattern).WithMany(p => p.ActivityRecurrenceDetails)
-                .HasForeignKey(d => d.ActivityRecurrencePatternCode)
+            entity.HasOne(d => d.VolProgramPattern).WithMany(p => p.VolProgramPatternDetails)
+                .HasForeignKey(d => d.VolProgramPatternCode)
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("activity_recurrence_detail_activity_recurrence_pattern_id_fkey");
+                .HasConstraintName("vol_program_pattern_details_vol_program_pattern_id_fkey");
         });
 
-        modelBuilder.Entity<ActivityRecurrencePattern>(entity =>
+        modelBuilder.Entity<VolProgramPattern>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("activity_recurrence_patterns_pkey");
+            entity.HasKey(e => e.Id).HasName("vol_program_patterns_pkey");
 
-            entity.ToTable("activity_recurrence_patterns");
+            entity.ToTable("vol_program_patterns");
 
             entity.HasIndex(e => e.UvaCode).IsUnique();
 
@@ -203,11 +205,11 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasColumnName("state_code");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
 
-            entity.HasOne(d => d.Program).WithMany(p => p.ActivityRecurrencePatterns)
+            entity.HasOne(d => d.Program).WithMany(p => p.VolProgramPatterns)
                 .HasForeignKey(d => d.ProgramCode)
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("activity_recurrence_patterns_program_id_fkey");
+                .HasConstraintName("vol_program_patterns_program_id_fkey");
         });
 
         modelBuilder.Entity<ActivityRule>(entity =>
@@ -467,11 +469,11 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasConstraintName("profiles_identity_user_id_fkey");
         });
 
-        modelBuilder.Entity<ProgramCollaborator>(entity =>
+        modelBuilder.Entity<VolProgramCollaborator>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("program_collaborators_pkey");
+            entity.HasKey(e => e.Id).HasName("vol_program_collaborators_pkey");
 
-            entity.ToTable("program_collaborators");
+            entity.ToTable("vol_program_collaborators");
 
             entity.HasIndex(e => e.UvaCode).IsUnique();
 
@@ -493,29 +495,29 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
                 .HasColumnName("state_code");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
 
-            entity.HasOne(d => d.AssignedByProfile).WithMany(p => p.ProgramCollaboratorAssignedByProfiles)
+            entity.HasOne(d => d.AssignedByProfile).WithMany(p => p.VolProgramCollaboratorAssignedByProfiles)
                 .HasForeignKey(d => d.AssignedByProfileCode)
                 .HasPrincipalKey(p => p.UvaCode)
-                .HasConstraintName("program_collaborators_assigned_by_profile_id_fkey");
+                .HasConstraintName("vol_program_collaborators_assigned_by_profile_id_fkey");
 
-            entity.HasOne(d => d.Profile).WithMany(p => p.ProgramCollaboratorProfiles)
+            entity.HasOne(d => d.Profile).WithMany(p => p.VolProgramCollaboratorProfiles)
                 .HasForeignKey(d => d.ProfileCode)
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("program_collaborators_profile_id_fkey");
+                .HasConstraintName("vol_program_collaborators_profile_id_fkey");
 
-            entity.HasOne(d => d.Program).WithMany(p => p.ProgramCollaborators)
+            entity.HasOne(d => d.Program).WithMany(p => p.VolProgramCollaborators)
                 .HasForeignKey(d => d.ProgramCode)
                 .HasPrincipalKey(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("program_collaborators_program_id_fkey");
+                .HasConstraintName("vol_program_collaborators_program_id_fkey");
         });
 
-        modelBuilder.Entity<ProgramContent>(entity =>
+        modelBuilder.Entity<VolProgramContent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("program_content_pkey");
+            entity.HasKey(e => e.Id).HasName("vol_program_contents_pkey");
 
-            entity.ToTable("program_content");
+            entity.ToTable("vol_program_contents");
 
             entity.HasIndex(e => e.UvaCode).IsUnique();
             entity.HasIndex(e => e.ProgramCode, "program_content_program_id_key").IsUnique();
@@ -536,11 +538,11 @@ public partial class AppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(e => e.ScheduleInfo).HasColumnName("schedule_info");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
 
-            entity.HasOne(d => d.Program).WithOne(p => p.ProgramContent)
-                .HasForeignKey<ProgramContent>(d => d.ProgramCode)
+            entity.HasOne(d => d.Program).WithOne(p => p.VolProgramContent)
+                .HasForeignKey<VolProgramContent>(d => d.ProgramCode)
                 .HasPrincipalKey<VolProgram>(p => p.UvaCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("program_content_program_id_fkey");
+                .HasConstraintName("vol_program_contents_program_id_fkey");
         });
 
         modelBuilder.Entity<RoleRequest>(entity =>

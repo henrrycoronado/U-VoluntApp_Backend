@@ -1,6 +1,6 @@
-namespace U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
+namespace U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
 
-public class ProgramCollaborator
+public class VolProgramCollaborator
 {
     public string UvaCode { get; private set; } = string.Empty;
 
@@ -18,7 +18,7 @@ public class ProgramCollaborator
 
     public DateTime? DeletedAt { get; private set; }
 
-    public static ProgramCollaborator Create(
+    public static VolProgramCollaborator Create(
         string programCode,
         string profileCode,
         string assignedByProfileCode,
@@ -45,7 +45,7 @@ public class ProgramCollaborator
             throw new InvalidOperationException("El formato del código de estado es inválido");
         }
 
-        return new ProgramCollaborator
+        return new VolProgramCollaborator
         {
             UvaCode = Guid.NewGuid().ToString(),
             ProgramCode = programCode,
@@ -111,7 +111,7 @@ public class ProgramCollaborator
         UpdatedAt = nowUtc;
     }
 
-    internal static ProgramCollaborator Rehydrate(
+    internal static VolProgramCollaborator Rehydrate(
         string uvaCode,
         string programCode,
         string profileCode,
@@ -121,7 +121,7 @@ public class ProgramCollaborator
         DateTime? updatedAt,
         DateTime? deletedAt)
     {
-        return new ProgramCollaborator
+        return new VolProgramCollaborator
         {
             UvaCode = uvaCode,
             ProgramCode = programCode,

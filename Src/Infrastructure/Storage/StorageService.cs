@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Storage;
+namespace U_VoluntApp_Core.Src.Infrastructure.Storage;
 
 using System;
 using System.IO;
@@ -7,15 +7,14 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using U_VoluntApp_Backend.Src.Application.Interfaces;
-using U_VoluntApp_Backend.Src.Domain.Utils.Constants;
+using U_VoluntApp_Core.Src.Application.Interfaces;
+using U_VoluntApp_Core.Src.Domain.Utils.Constants;
 
 public class StorageService : IStorageService
 {
     private readonly IAmazonS3 _s3Client;
     private readonly string _publicBaseUrl;
     private readonly string _uploadBucket;
-    private readonly string _defaultsBucket;
 
     public StorageService(IAmazonS3 s3Client, IConfiguration configuration)
     {
@@ -25,15 +24,32 @@ public class StorageService : IStorageService
             ?? StorageConstants.PublicBaseUrl;
         _uploadBucket = configuration["STORAGE_UPLOAD_BUCKET"]
             ?? StorageConstants.UploadBucket;
-        _defaultsBucket = configuration["STORAGE_DEFAULTS_BUCKET"]
-            ?? StorageConstants.DefaultsBucket;
     }
 
     public async Task<string> UploadAsync(IFormFile file, string folder)
     {
-        if (string.Equals(_uploadBucket, _defaultsBucket, StringComparison.OrdinalIgnoreCase))
+        if (file == null || file.Length == 0)
         {
-            throw new InvalidOperationException("La configuracion de STORAGE_UPLOAD_BUCKET no puede apuntar al bucket de defaults");
+            throw new ArgumentException("El archivo es obligatorio y no puede estar vacío");
+        }
+
+        const long maxSizeBytes = 5 * 1024 * 1024; // 5 MB
+        if (file.Length > maxSizeBytes)
+        {
+            throw new InvalidOperationException("El archivo supera el tamaño máximo permitido de 5 MB");
+        }
+
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+        if (!allowedExtensions.Contains(extension))
+        {
+            throw new InvalidOperationException("El formato del archivo no está permitido. Solo se permiten imágenes (.jpg, .jpeg, .png, .webp, .gif)");
+        }
+
+        var allowedMimeTypes = new[] { "image/jpeg", "image/png", "image/webp", "image/gif" };
+        if (!allowedMimeTypes.Contains(file.ContentType.ToLowerInvariant()))
+        {
+            throw new InvalidOperationException("El tipo de contenido del archivo no está permitido. Solo se permiten imágenes");
         }
 
         if (string.IsNullOrWhiteSpace(folder))

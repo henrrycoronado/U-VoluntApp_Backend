@@ -1,17 +1,17 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Interfaces.VolProgram;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Interfaces.VolProgram;
 
-using U_VoluntApp_Backend.Src.Domain.Entities.VolProgram;
-using U_VoluntApp_Backend.Src.Domain.Utils.Configuration;
+using U_VoluntApp_Core.Src.Domain.Entities.VolProgram;
+using U_VoluntApp_Core.Src.Domain.Utils.Configuration;
 
-public interface IProgramRecurrenceRepository
+public interface IVolProgramPatternRepository
 {
-    Task<ActivityRecurrencePattern?> GetByCodeAsync(string uvaCode);
+    Task<VolProgramPattern?> GetByCodeAsync(string uvaCode);
 
-    Task<IEnumerable<ActivityRecurrencePattern>> GetByProgramCodeAsync(string programCode, RequestFilter filter);
+    Task<IEnumerable<VolProgramPattern>> GetByProgramCodeAsync(string programCode, RequestFilter filter);
 
-    Task AddAsync(ActivityRecurrencePattern pattern);
+    Task AddAsync(VolProgramPattern pattern);
 
-    Task UpdateAsync(ActivityRecurrencePattern pattern);
+    Task UpdateAsync(VolProgramPattern pattern);
 
     Task DeleteAsync(string uvaCode);
 }

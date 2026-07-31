@@ -1,8 +1,8 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Persistence.Mappers;
+namespace U_VoluntApp_Core.Src.Infrastructure.Persistence.Mappers;
 
 using System;
-using DomainEntities = U_VoluntApp_Backend.Src.Domain.Entities;
-using PersistenceModels = U_VoluntApp_Backend.Src.Infrastructure.Persistence.Models;
+using DomainEntities = U_VoluntApp_Core.Src.Domain.Entities;
+using PersistenceModels = U_VoluntApp_Core.Src.Infrastructure.Persistence.Models;
 
 public static partial class DomainPersistenceMapper
 {

@@ -1,4 +1,4 @@
-namespace U_VoluntApp_Backend.Src.Presentation.Extensions;
+namespace U_VoluntApp_Core.Src.Presentation.Extensions;
 
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

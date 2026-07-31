@@ -1,6 +1,6 @@
-namespace U_VoluntApp_Backend.Src.Infrastructure.Reports;
+namespace U_VoluntApp_Core.Src.Infrastructure.Reports;
 
-using U_VoluntApp_Backend.Src.Domain.Entities.Profile;
+using U_VoluntApp_Core.Src.Domain.Entities.Profile;
 
 public interface IPdfReportService
 {
