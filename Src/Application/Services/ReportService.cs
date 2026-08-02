@@ -109,6 +109,21 @@ public class ReportService : IReportService
         await _reportRepository.RefreshMaterializedViewsAsync();
     }
 
+    public async Task<AdminHomeSummaryDto> GetAdminHomeSummaryAsync()
+    {
+        var programs = await _reportRepository.GetProgramAnalyticsAsync();
+        var volunteers = await _reportRepository.GetVolunteerHistoryAsync();
+        var scholarships = await _reportRepository.GetScholarshipPerformanceAsync();
+
+        return new AdminHomeSummaryDto
+        {
+            TotalVolunteers = volunteers.Count(),
+            MonthlyLoggedHours = programs.Sum(p => p.TotalGeneratedHours), // Aproximación
+            ActivePrograms = programs.Count(),
+            ActiveScholarships = scholarships.Count()
+        };
+    }
+
     private static ScholarshipPerformanceDto MapToDto(ScholarshipPerformance entity)
     {
         return new ScholarshipPerformanceDto

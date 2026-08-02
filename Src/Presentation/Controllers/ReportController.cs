@@ -227,6 +227,22 @@ public class ReportController : ControllerBase
     }
 
     /// <summary>
+    /// Procesa la acción GetAdminHomeSummary para el panel de control del administrador.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [HttpGet("admin/home-summary")]
+    [Authorize(Roles = $"{RoleConstants.AdminRole}, {RoleConstants.SuperUserRole}")]
+    public async Task<IActionResult> GetAdminHomeSummary()
+    {
+        var result = await _reportService.GetAdminHomeSummaryAsync();
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Procesa la acción RefreshAnalytics para un reporte.
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>

@@ -22,6 +22,8 @@ public interface IReportService
 
     Task<HomeSummaryDto> GetHomeSummaryAsync(string profileCode, int? year, int? month);
 
+    Task<AdminHomeSummaryDto> GetAdminHomeSummaryAsync();
+
     Task<byte[]> GenerateScholarshipPdfAsync(string? scholarshipType);
 
     Task RefreshAnalyticsAsync();

@@ -95,3 +95,14 @@ public class HomeSummaryDto
 
     public List<DailyActivityDto> CurrentMonthDailyActivities { get; set; } = new List<DailyActivityDto>();
 }
+
+public class AdminHomeSummaryDto
+{
+    public long TotalVolunteers { get; set; }
+
+    public decimal MonthlyLoggedHours { get; set; }
+
+    public long ActivePrograms { get; set; }
+
+    public long ActiveScholarships { get; set; }
+}
