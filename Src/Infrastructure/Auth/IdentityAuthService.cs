@@ -372,9 +372,9 @@ public class IdentityAuthService : IAuthService
         }
 
         var domain = match.Groups[1].Value.ToLowerInvariant();
-        if (domain != "autonoma.cl" && domain != "uautonoma.cl")
+        if (domain != "autonoma.cl" && domain != "uautonoma.cl" && domain != "ucb.edu.bo")
         {
-            throw new InvalidOperationException("Solo se permiten correos institucionales de la Universidad Autónoma.");
+            throw new InvalidOperationException("Solo se permiten correos institucionales (Autónoma o UCB).");
         }
     }
 
