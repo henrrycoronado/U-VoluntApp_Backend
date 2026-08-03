@@ -105,4 +105,8 @@ public class AdminHomeSummaryDto
     public long ActivePrograms { get; set; }
 
     public long ActiveScholarships { get; set; }
+
+    public List<MonthlyAttendanceDto> MonthlyAttendance { get; set; } = new();
+
+    public List<ScholarshipAlertDto> ScholarshipAlerts { get; set; } = new();
 }

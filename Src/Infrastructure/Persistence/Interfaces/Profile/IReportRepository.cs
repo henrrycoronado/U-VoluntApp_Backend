@@ -24,5 +24,9 @@ public interface IReportRepository
 
     Task<HomeSummary?> GetLiveHomeSummaryByProfileCodeAsync(string profileCode, int year, int month);
 
+    Task<List<Tuple<string, decimal>>> GetMonthlyAttendanceAsync(int months);
+
+    Task<long> GetTotalProfilesAsync();
+
     Task RefreshMaterializedViewsAsync();
 }

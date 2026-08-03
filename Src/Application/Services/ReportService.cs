@@ -112,15 +112,38 @@ public class ReportService : IReportService
     public async Task<AdminHomeSummaryDto> GetAdminHomeSummaryAsync()
     {
         var programs = await _reportRepository.GetProgramAnalyticsAsync();
-        var volunteers = await _reportRepository.GetVolunteerHistoryAsync();
+        var totalVolunteers = await _reportRepository.GetTotalProfilesAsync();
         var scholarships = await _reportRepository.GetScholarshipPerformanceAsync();
+
+        var attendanceData = await _reportRepository.GetMonthlyAttendanceAsync(6);
+        var alerts = scholarships
+            .Where(s => s.RequiredHours > 0 && s.CompletionPercentage < 50 && s.EndDate.HasValue && (s.EndDate.Value - DateTime.UtcNow).TotalDays < 30)
+            .OrderBy(s => s.CompletionPercentage)
+            .Take(5)
+            .Select(s => new ScholarshipAlertDto
+            {
+                ProfileCode = s.ProfileCode,
+                FullName = $"{s.FirstName} {s.LastName}",
+                AvatarUrl = null,
+                ScholarshipType = s.ScholarshipType,
+                AlertReason = "Riesgo de incumplimiento"
+            })
+            .ToList();
+
+        var monthlyAttendance = attendanceData.Select(a => new MonthlyAttendanceDto
+        {
+            Month = a.Item1,
+            Hours = a.Item2
+        }).ToList();
 
         return new AdminHomeSummaryDto
         {
-            TotalVolunteers = volunteers.Count(),
-            MonthlyLoggedHours = programs.Sum(p => p.TotalGeneratedHours), // Aproximación
+            TotalVolunteers = totalVolunteers,
+            MonthlyLoggedHours = monthlyAttendance.LastOrDefault()?.Hours ?? 0,
             ActivePrograms = programs.Count(),
-            ActiveScholarships = scholarships.Count()
+            ActiveScholarships = scholarships.Count(),
+            MonthlyAttendance = monthlyAttendance,
+            ScholarshipAlerts = alerts
         };
     }
 

@@ -305,9 +305,14 @@ public class IdentityAuthService : IAuthService
             var fingerprint = _httpContextAccessor.HttpContext?.Request.Headers["X-Device-Fingerprint"].ToString() ?? "google-oauth-device";
             var ip = GetRequestIp();
 
-            await _deviceService.RegisterDeviceAsync(profile.UvaCode, ip, fingerprint, true);
+            await _deviceService.RegisterDeviceAsync(profile.UvaCode, ip, fingerprint, false);
+            await _verificationService.SendOtpAsync(identityUser.Email!, "DeviceVerification");
 
-            return await GenerateAuthResponseAsync(profile, identityUser);
+            return new AuthResponseDto
+            {
+                Email = email,
+                RequiresVerification = true
+            };
         }
         else
         {
@@ -351,6 +356,20 @@ public class IdentityAuthService : IAuthService
 
             var fingerprint = _httpContextAccessor.HttpContext?.Request.Headers["X-Device-Fingerprint"].ToString() ?? "google-oauth-device";
             var ip = GetRequestIp();
+
+            var isTrusted = await _deviceService.IsDeviceTrustedAsync(profile.UvaCode, fingerprint);
+
+            if (!isTrusted)
+            {
+                await _deviceService.RegisterDeviceAsync(profile.UvaCode, ip, fingerprint, false);
+                await _verificationService.SendOtpAsync(identityUser.Email!, "DeviceVerification");
+
+                return new AuthResponseDto
+                {
+                    Email = email,
+                    RequiresVerification = true
+                };
+            }
 
             await _deviceService.RegisterDeviceAsync(profile.UvaCode, ip, fingerprint, true);
 

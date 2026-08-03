@@ -189,8 +189,40 @@ public class ReportRepository : IReportRepository
         await _context.Database.ExecuteSqlRawAsync(
             "REFRESH MATERIALIZED VIEW CONCURRENTLY public.mv_program_analytics");
         await _context.Database.ExecuteSqlRawAsync(
-            "REFRESH MATERIALIZED VIEW CONCURRENTLY public.mv_activity_analytics");
-        await _context.Database.ExecuteSqlRawAsync(
             "REFRESH MATERIALIZED VIEW CONCURRENTLY public.mv_volunteer_history");
+    }
+
+    public async Task<List<Tuple<string, decimal>>> GetMonthlyAttendanceAsync(int months)
+    {
+        var startDate = DateTime.UtcNow.AddMonths(-months + 1);
+        var startOfFirstMonth = new DateTime(startDate.Year, startDate.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        var logs = await _context.TrackingLogs
+            .AsNoTracking()
+            .Where(t => t.StateCode == "stage-2" && t.DeletedAt == null && t.EntryTime >= startOfFirstMonth)
+            .ToListAsync();
+
+        var result = new List<Tuple<string, decimal>>();
+        var culture = new System.Globalization.CultureInfo("es-ES");
+
+        for (int i = months - 1; i >= 0; i--)
+        {
+            var targetDate = DateTime.UtcNow.AddMonths(-i);
+            var monthName = culture.DateTimeFormat.GetAbbreviatedMonthName(targetDate.Month);
+            var capitalizedMonth = char.ToUpper(monthName[0]) + monthName.Substring(1);
+
+            var hours = logs
+                .Where(t => t.EntryTime.HasValue && t.EntryTime.Value.Year == targetDate.Year && t.EntryTime.Value.Month == targetDate.Month)
+                .Sum(t => t.CalculatedHours);
+
+            result.Add(new Tuple<string, decimal>(capitalizedMonth, hours));
+        }
+
+        return result;
+    }
+
+    public async Task<long> GetTotalProfilesAsync()
+    {
+        return await _context.Profiles.CountAsync(p => p.DeletedAt == null);
     }
 }
